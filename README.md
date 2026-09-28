@@ -5,8 +5,9 @@
 1. [Project Overview and Goals](#1-project-overview-and-goals)
    - [1.1 D2CSharp and Delphi2CSharp](#11-d2csharp-and-delphi2csharp)
    - [1.2 Rule-Based Translation](#12-rule-based-translation)
-   - [1.3 Project Scope and Development Status](#13-project-scope-and-development-status)
-   - [1.4 Documentation](#14-documentation)
+   - [1.3 Project Scope](#13-project-scope)
+   - [1.4 Current Development Status](#14-current-development-status)
+   - [1.5 Documentation](#15-documentation)
 2. [Requirements](#2-requirements)
    - [2.1 C# and .NET](#21-c-and-net)
    - [2.2 Requirements for Delphi Sources](#22-requirements-for-delphi-sources)
@@ -86,7 +87,7 @@ AI tools may of course be used when contributing to the development of the proje
 
 In particular, proprietary original source code from the Delphi RTL or from other components that are not appropriately licensed must not be copied or incorporated into the free RTL without the necessary rights.
 
-## 1.3 Project Scope and Development Status
+## 1.3 Project Scope
 
 The current focus of the project is the Delphi Runtime Library and fundamental Delphi language constructs.
 
@@ -102,7 +103,42 @@ The test structure is intended precisely to make such unsupported cases visible 
 
 As development progresses, the proportion of Delphi programs that can be translated correctly to C# without manual post-processing should continue to increase.
 
-## 1.4 Documentation
+## 1.4 Current Development Status
+
+The project is still at an early stage of development, but the current repository already provides a working basis for further development and testing.
+
+The current test suite contains 66 Delphi test files. At present, 40 of them are translated without requiring manual corrections to the generated C# code.
+
+Test cases that are not yet fully functional are temporarily disabled where necessary so that the complete test application can still be built and executed.
+
+The current RTL implementation includes a comparatively complete `System.cs`.
+
+`SysUtils.cs` is already present, but many of its routines are still stubs and therefore do not yet provide the required runtime behavior.
+
+Several RTL units required by the existing tests have not yet been implemented. These currently include:
+
+- `StrUtils`
+- `Math`
+- `Classes`
+- `DateUtils`
+
+Problems found in the current test set can have several different causes:
+
+1. A required RTL unit has not yet been implemented.
+2. A required routine in `SysUtils.cs` is still only a stub.
+3. A required routine is missing from an RTL unit that already exists.
+4. An existing RTL routine may be incomplete or incorrectly implemented.
+5. The converter itself may still require changes.
+
+The differences between `TestsGenerated` and `TestsWorking` show where the generated C# code currently requires manual post-processing.
+
+Files that are identical in both directories require no manual changes. Files that differ indicate cases that still need investigation or correction.
+
+At this stage, further changes to `D2CSharp.exe` are expected to be necessary as additional language constructs and RTL functionality are covered by the tests.
+
+As the converter, the MockRTL, and the D2CSharp RTL are improved, the number of manually reworked test files should gradually decrease.
+
+## 1.5 Documentation
 
 A complete standalone user manual for D2CSharp is currently not part of this repository.
 

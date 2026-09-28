@@ -1,0 +1,20 @@
+D2CSharp RTL
+
+This library originates from the D2CSharp project by t2t-soft.
+It includes Delphi declarations and mock implementations used as input
+for translation, generated and manually completed C# RTL implementations,
+supporting runtime helper code, and associated tests and documentation.
+
+The library project uses Apache License, Version 2.0, as its default license.
+Directly implemented C# runtime helper files bearing MPL-2.0 notices are
+provided under the Mozilla Public License, Version 2.0. Other separately
+identified components remain governed by their respective licenses.
+See LICENSE, LICENSE-MPL-2.0.txt and the individual file notices.
+
+Copyright and attribution notices for individual components are included
+in the respective source files and, where applicable, accompanying
+third-party notices. Bundled programs are separately licensed; see bin/README.txt
+and bin/THIRD-PARTY-NOTICES.txt.
+
+This attribution does not imply endorsement of derived products by
+t2t-soft or other contributors.
