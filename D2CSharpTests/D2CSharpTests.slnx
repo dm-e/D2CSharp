@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="D2CSharpRTL/D2CSharpRTL.csproj" />
+  <Project Path="Formatting/GeneratedFormatting.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="Formatting/WorkingFormatting.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="Tests/Tests.csproj" Id="c5862083-5dff-4192-905a-ad2d489057df" />
+</Solution>

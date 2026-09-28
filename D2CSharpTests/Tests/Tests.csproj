@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\TestsWorking\d7_abstract_classes.cs" Link="d7_abstract_classes.cs" />
+    <Compile Include="..\..\TestsWorking\d7_ansi_case.cs" Link="d7_ansi_case.cs" />
+    <Compile Include="..\..\TestsWorking\d7_ansi_compare.cs" Link="d7_ansi_compare.cs" />
+    <Compile Include="..\..\TestsWorking\d7_ansi_lookup.cs" Link="d7_ansi_lookup.cs" />
+    <Compile Include="..\..\TestsWorking\d7_arrays.cs" Link="d7_arrays.cs" />
+    <Compile Include="..\..\TestsWorking\d7_bit_operations.cs" Link="d7_bit_operations.cs" />
+    <Compile Include="..\..\TestsWorking\d7_case_statements.cs" Link="d7_case_statements.cs" />
+    <Compile Include="..\..\TestsWorking\d7_character_types.cs" Link="d7_character_types.cs" />
+    <Compile Include="..\..\TestsWorking\d7_classes.cs" Link="d7_classes.cs" />
+    <Compile Include="..\..\TestsWorking\d7_concat.cs" Link="d7_concat.cs" />
+    <Compile Include="..\..\TestsWorking\d7_currency.cs" Link="d7_currency.cs" />
+    <Compile Include="..\..\TestsWorking\d7_data_types.cs" Link="d7_data_types.cs" />
+    <Compile Include="..\..\TestsWorking\d7_datetime.cs" Link="d7_datetime.cs" />
+    <Compile Include="..\..\TestsWorking\d7_datetime_formatting.cs" Link="d7_datetime_formatting.cs" />
+    <Compile Include="..\..\TestsWorking\d7_exceptions.cs" Link="d7_exceptions.cs" />
+    <Compile Include="..\..\TestsWorking\d7_extract_file_path.cs" Link="d7_extract_file_path.cs" />
+    <Compile Include="..\..\TestsWorking\d7_file_age.cs" Link="d7_file_age.cs" />
+    <Compile Include="..\..\TestsWorking\d7_file_rename.cs" Link="d7_file_rename.cs" />
+    <Compile Include="..\..\TestsWorking\d7_file_search.cs" Link="d7_file_search.cs" />
+    <Compile Include="..\..\TestsWorking\d7_fill_char.cs" Link="d7_fill_char.cs" />
+    <Compile Include="..\..\TestsWorking\d7_float_to_strf.cs" Link="d7_float_to_strf.cs" />
+    <Compile Include="..\..\TestsWorking\d7_formatting.cs" Link="d7_formatting.cs" />
+    <Compile Include="..\..\TestsWorking\d7_for_loops.cs" Link="d7_for_loops.cs" />
+    <Compile Include="..\..\TestsWorking\d7_free_and_nil.cs" Link="d7_free_and_nil.cs" />
+    <Compile Include="..\..\TestsWorking\d7_free_mem.cs" Link="d7_free_mem.cs" />
+    <Compile Include="..\..\TestsWorking\d7_functions.cs" Link="d7_functions.cs" />
+    <Compile Include="..\..\TestsWorking\d7_get_mem.cs" Link="d7_get_mem.cs" />
+    <Compile Include="..\..\TestsWorking\d7_goto.cs" Link="d7_goto.cs" />
+    <Compile Include="..\..\TestsWorking\d7_inherited.cs" Link="d7_inherited.cs" />
+    <Compile Include="..\..\TestsWorking\d7_interfaces_basic.cs" Link="d7_interfaces_basic.cs" />
+    <Compile Include="..\..\TestsWorking\d7_int_to_str.cs" Link="d7_int_to_str.cs" />
+    <Compile Include="..\..\TestsWorking\d7_is_operator.cs" Link="d7_is_operator.cs" />
+    <Compile Include="..\..\TestsWorking\d7_math.cs" Link="d7_math.cs" />
+    <Compile Include="..\..\TestsWorking\d7_max.cs" Link="d7_max.cs" />
+    <Compile Include="..\..\TestsWorking\d7_min.cs" Link="d7_min.cs" />
+    <Compile Include="..\..\TestsWorking\d7_move_memory.cs" Link="d7_move_memory.cs" />
+    <Compile Include="..\..\TestsWorking\d7_overloads_basic.cs" Link="d7_overloads_basic.cs" />
+    <Compile Include="..\..\TestsWorking\d7_overrides.cs" Link="d7_overrides.cs" />
+    <Compile Include="..\..\TestsWorking\d7_pointers.cs" Link="d7_pointers.cs" />
+    <Compile Include="..\..\TestsWorking\d7_position_search.cs" Link="d7_position_search.cs" />
+    <Compile Include="..\..\TestsWorking\d7_procedures.cs" Link="d7_procedures.cs" />
+    <Compile Include="..\..\TestsWorking\d7_properties_basic.cs" Link="d7_properties_basic.cs" />
+    <Compile Include="..\..\TestsWorking\d7_realloc_mem.cs" Link="d7_realloc_mem.cs" />
+    <Compile Include="..\..\TestsWorking\d7_records.cs" Link="d7_records.cs" />
+    <Compile Include="..\..\TestsWorking\d7_sets.cs" Link="d7_sets.cs" />
+    <Compile Include="..\..\TestsWorking\d7_set_exclude.cs" Link="d7_set_exclude.cs" />
+    <Compile Include="..\..\TestsWorking\d7_set_include.cs" Link="d7_set_include.cs" />
+    <Compile Include="..\..\TestsWorking\d7_set_length.cs" Link="d7_set_length.cs" />
+    <Compile Include="..\..\TestsWorking\d7_set_string.cs" Link="d7_set_string.cs" />
+    <Compile Include="..\..\TestsWorking\d7_string_boundaries.cs" Link="d7_string_boundaries.cs" />
+    <Compile Include="..\..\TestsWorking\d7_string_conversions.cs" Link="d7_string_conversions.cs" />
+    <Compile Include="..\..\TestsWorking\d7_string_list.cs" Link="d7_string_list.cs" />
+    <Compile Include="..\..\TestsWorking\d7_string_processor.cs" Link="d7_string_processor.cs" />
+    <Compile Include="..\..\TestsWorking\d7_string_utilities.cs" Link="d7_string_utilities.cs" />
+    <Compile Include="..\..\TestsWorking\d7_str_procedure.cs" Link="d7_str_procedure.cs" />
+    <Compile Include="..\..\TestsWorking\d7_tdatetime.cs" Link="d7_tdatetime.cs" />
+    <Compile Include="..\..\TestsWorking\d7_text_append.cs" Link="d7_text_append.cs" />
+    <Compile Include="..\..\TestsWorking\d7_text_read.cs" Link="d7_text_read.cs" />
+    <Compile Include="..\..\TestsWorking\d7_text_write.cs" Link="d7_text_write.cs" />
+    <Compile Include="..\..\TestsWorking\d7_threadvar.cs" Link="d7_threadvar.cs" />
+    <Compile Include="..\..\TestsWorking\d7_tlist.cs" Link="d7_tlist.cs" />
+    <Compile Include="..\..\TestsWorking\d7_try_blocks.cs" Link="d7_try_blocks.cs" />
+    <Compile Include="..\..\TestsWorking\d7_with_statement.cs" Link="d7_with_statement.cs" />
+    <Compile Include="..\..\TestsWorking\factory.cs" Link="factory.cs" />
+    <Compile Include="..\..\TestsWorking\objfree.cs" Link="objfree.cs" />
+    <Compile Include="..\..\TestsWorking\vstatic.cs" Link="vstatic.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\D2CSharpRTL\D2CSharpRTL.csproj" />
+  </ItemGroup>
+
+</Project>
