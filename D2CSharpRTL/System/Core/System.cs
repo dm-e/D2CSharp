@@ -1153,36 +1153,73 @@ namespace System
 	{
 		return 0;
 	}
-	public static string Concat(string S1, string S2)
-	{
-		return (S1 ?? string.Empty) + (S2 ?? string.Empty);
-	}
+        public static string Concat(params string[] strings)
+        {
+            return strings == null ? string.Empty : string.Concat(strings);
+        }
 
-	// Delphi Concat accepts string-compatible arguments.  In particular a
-	// character literal remains a C# char in current D2CSharp output.
-	public static string Concat(params object[] Values)
-	{
-		if (Values == null || Values.Length == 0)
-			return string.Empty;
+        // Resolve the empty call independently of other params overloads.
+        public static string Concat() => string.Empty;
 
-		global::System.Text.StringBuilder Builder =
-			new global::System.Text.StringBuilder();
+        // Generated Delphi string expressions may contain individual Char values.
+        // Do not silently format numbers or arbitrary objects as strings.
+        public static string Concat(params object[] values)
+        {
+            if (values == null)
+                return string.Empty;
 
-		foreach (object Value in Values)
-		{
-			if (Value == null)
-				continue;
+            var builder = new global::System.Text.StringBuilder();
+            foreach (object value in values)
+            {
+                switch (value)
+                {
+                    case null:
+                        break;
+                    case string text:
+                        builder.Append(text);
+                        break;
+                    case char character:
+                        builder.Append(character);
+                        break;
+                    case AnsiString ansiText:
+                        builder.Append(ansiText.Decode());
+                        break;
+                    case ShortString shortText:
+                        builder.Append(shortText.Decode());
+                        break;
+                    default:
+                        throw new ArgumentException(
+                         "Concat requires string or character arguments.", nameof(values));
+                }
+            }
+            return builder.ToString();
+        }
 
-			AnsiString AnsiValue = Value as AnsiString;
-			if (AnsiValue != null)
-				Builder.Append(AnsiValue.Decode());
-			else
-				Builder.Append(Value.ToString());
-		}
+        // Require two arrays to avoid treating Concat(string[]) as an array copy.
+        public static T[] Concat<T>(T[] first, T[] second, params T[][] remaining)
+        {
+            int length = checked((first?.Length ?? 0) + (second?.Length ?? 0));
+            if (remaining != null)
+                foreach (T[] part in remaining)
+                    length = checked(length + (part?.Length ?? 0));
 
-		return Builder.ToString();
-	}
-	public static void SetLength(ref string S, int NewLength)
+            T[] result = new T[length];
+            int offset = 0;
+            void Append(T[] part)
+            {
+                if (part == null || part.Length == 0)
+                    return;
+                Array.Copy(part, 0, result, offset, part.Length);
+                offset += part.Length;
+            }
+            Append(first);
+            Append(second);
+            if (remaining != null)
+                foreach (T[] part in remaining)
+                    Append(part);
+            return result;
+        }
+        public static void SetLength(ref string S, int NewLength)
 	{
 		if (NewLength < 0)
 			throw new global::System.ArgumentOutOfRangeException(nameof(NewLength));
