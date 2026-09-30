@@ -95,6 +95,17 @@ type
   HRESULT = LongInt;
   HResult = HRESULT;
 
+  {
+    Managed MockRTL representation of a Delphi resource-string record.
+    The native module/identifier layout is intentionally not modeled here.
+    The completed C# RTL provides the managed TResStringRec implementation.
+  }
+  TResStringRec = record
+    FMessage: string;
+  end;
+
+  PResStringRec = ^TResStringRec;
+
   TTypeKind = (
     tkUnknown,
     tkInteger,
@@ -119,28 +130,6 @@ type
     tkPointer,
     tkProcedure
   );
-  
-{
-  Delphi-compatible declarations for the public System resource-string types.
-
-  Independent source basis:
-  Embarcadero RAD Studio API documentation for System.TResStringRec,
-  System.PResStringRec and System.HMODULE.
-
-  Insert these declarations in the type section of the MockRTL System.pas.
-  HMODULE should only be declared here if it is not already present in System.pas.
-}
-
-  { System.HMODULE is publicly documented as Cardinal. }
-  HMODULE = Cardinal;
-
-  PResStringRec = ^TResStringRec;
-
-  TResStringRec = packed record
-    Module: ^HMODULE;
-    Identifier: NativeUInt;
-  end;
-  
 
   PTypeInfo = ^TTypeInfo;
   TTypeInfo = record

@@ -38,39 +38,39 @@ namespace D7_str_procedure
 
     public class D7_str_procedureInterface
     {
-        //public static bool RunStrProcedureChecks()
-        //{
-        //    bool result = false;
-        //    string Text = string.Empty;
-        //    int IntegerValue = 0;
-        //    double RealValue = 0.0D;
-        //    bool CheckResult1 = false;
-        //    bool CheckResult2 = false;
-        //    bool CheckResult3 = false;
-        //    bool CheckResult4 = false;
-        //    bool CheckResult5 = false;
-        //    bool CheckResult6 = false;
-        //    IntegerValue = -731;
-        //    Str(IntegerValue, Text);
-        //    CheckResult1 = Text == "-731";
-        //    result = CheckResult1;
-        //    Str(IntegerValue, 8, Text);
-        //    CheckResult2 = (Text == "    -731");
-        //    result = result && CheckResult2;
-        //    RealValue = 48.375D;
-        //    Str(RealValue, 0, 3, Text);
-        //    CheckResult3 = (Text == "48.375");
-        //    result = result && CheckResult3;
-        //    Str(RealValue, 10, 1, Text);
-        //    CheckResult4 = (Text == "      48.4");
-        //    result = result && CheckResult4;
-        //    Str(RealValue, Text);
-        //    CheckResult5 = (Text.IndexOf("4.8375") + 1 > 0);
-        //    result = result && CheckResult5;
-        //    CheckResult6 = (Text.IndexOf("E+") + 1 > 0);
-        //    result = result && CheckResult6;
-        //    return result;
-        //}
+        public static bool RunStrProcedureChecks()
+        {
+            bool result = false;
+            string Text = string.Empty;
+            int IntegerValue = 0;
+            double RealValue = 0.0D;
+            bool CheckResult1 = false;
+            bool CheckResult2 = false;
+            bool CheckResult3 = false;
+            bool CheckResult4 = false;
+            bool CheckResult5 = false;
+            bool CheckResult6 = false;
+            IntegerValue = -731;
+            Str(IntegerValue, ref Text);
+            CheckResult1 = Text == "-731";
+            result = CheckResult1;
+            Str(IntegerValue, 8, ref Text);
+            CheckResult2 = (Text == "    -731");
+            result = result && CheckResult2;
+            RealValue = 48.375D;
+            Str(RealValue, 0, 3, ref Text);
+            CheckResult3 = (Text == "48.375");
+            result = result && CheckResult3;
+            Str(RealValue, 10, 1, ref Text);
+            CheckResult4 = (Text == "      48.4");
+            result = result && CheckResult4;
+            Str(RealValue, ref Text);
+            CheckResult5 = (Text.IndexOf("4.8375") + 1 > 0);
+            result = result && CheckResult5;
+            CheckResult6 = (Text.IndexOf("E+") + 1 > 0);
+            result = result && CheckResult6;
+            return result;
+        }
 
     } // class D7_str_procedureInterface
 

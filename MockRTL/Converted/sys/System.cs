@@ -36,11 +36,25 @@ namespace System
 public class SystemInterface
 {
 
+  /*
+    Managed MockRTL representation of a Delphi resource-string record.
+    The native module/identifier layout is intentionally not modeled here.
+    The completed C# RTL provides the managed TResStringRec implementation.
+  */
+
 	public struct TResStringRec
 	{
-		public Pointer<uint> Module;
-		public uint Identifier;
-		public static TResStringRec CreateRecord(){return new TResStringRec();}
+		public string FMessage;
+		public void CreateRecordMembers()
+		{
+			FMessage = string.Empty;
+		}
+		public static TResStringRec CreateRecord()
+		{
+			TResStringRec tmp = new TResStringRec();
+			tmp.CreateRecordMembers();
+			return tmp;
+		}
 	}	
 
 	public struct TTypeInfo
@@ -400,23 +414,6 @@ public class SystemInterface
                 tkClassRef,
                 tkPointer,
                 tkProcedure };
-
-  
-/*
-  Delphi-compatible declarations for the public System resource-string types.
-
-  Independent source basis:
-  Embarcadero RAD Studio API documentation for System.TResStringRec,
-  System.PResStringRec and System.HMODULE.
-
-  Insert these declarations in the type section of the MockRTL System.pas.
-  HMODULE should only be declared here if it is not already present in System.pas.
-*/
-
-  /* System.HMODULE is publicly documented as Cardinal. */
-	//#pragma pack (push, 1)
-
-	//#pragma pack (pop)
 
 
   /*

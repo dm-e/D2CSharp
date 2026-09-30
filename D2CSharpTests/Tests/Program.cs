@@ -130,7 +130,7 @@ namespace Tests
             b = b && D7_set_length.D7_set_lengthInterface.RunSetLengthChecks();
             b = b && D7_set_string.D7_set_stringInterface.RunSetStringChecks();
             b = b && D7_sets.D7_setsInterface.RunSetChecks();
-            //b = b && D7_str_procedure.D7_str_procedureInterface.RunStrProcedureChecks();
+            b = b && D7_str_procedure.D7_str_procedureInterface.RunStrProcedureChecks();
             //b = b && D7_string_boundaries.D7_string_boundariesInterface.RunStringBoundaryChecks();
             //b = b && D7_string_conversions.D7_string_conversionsInterface.RunStringConversionChecks();
             //b = b && D7_string_list.D7_string_listInterface.RunStringListChecks();

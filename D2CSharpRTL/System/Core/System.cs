@@ -1636,10 +1636,7 @@ namespace System
             return result;
         }
 
-        public static void Str(int X, ref string S)
-        {
-            S = X.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
-        }
+        // Str -> Str.cs
 
         public static void Val(string S, UntypedPointer V, ref int Code)
         {
