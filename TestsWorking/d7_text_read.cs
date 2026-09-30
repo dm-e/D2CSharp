@@ -38,64 +38,64 @@ namespace D7_text_read
 
     public class D7_text_readInterface
     {
-        //public static bool RunTextReadChecks()
-        //{
-        //    bool result = false;
-        //    TextFile DataFile = TextFile.CreateRecord();
-        //    string FileName = string.Empty;
-        //    int FirstValue = 0;
-        //    int SecondValue = 0;
-        //    string StateText = string.Empty;
-        //    bool CheckResult1 = false;
-        //    bool CheckResult2 = false;
-        //    bool CheckResult3 = false;
-        //    bool CheckResult4 = false;
-        //    bool CheckResult5 = false;
-        //    FileName = "d7_read_probe.tmp";
-        //    AssignFile(DataFile, FileName);
-        //    Rewrite(DataFile);
-        //    try
-        //    {
-        //        WriteLn(DataFile, "12 30");
-        //        WriteLn(DataFile, "ready");
-        //    }
-        //    finally
-        //    {
-        //        CloseFile(DataFile);
-        //    }
-        //    try
-        //    {
-        //        AssignFile(DataFile, FileName);
-        //        Reset(DataFile);
-        //        try
-        //        {
-        //            Read(DataFile, ref FirstValue);
-        //            Read(DataFile, ref SecondValue);
-        //            ReadLn(DataFile);
-        //            ReadLn(DataFile, ref StateText);
-        //            CheckResult1 = (FirstValue == 12);
-        //            result = CheckResult1;
-        //            CheckResult2 = (SecondValue == 30);
-        //            result = result && CheckResult2;
-        //            CheckResult3 = (StateText == "ready");
-        //            result = result && CheckResult3;
-        //            CheckResult4 = Eof(DataFile);
-        //            result = result && CheckResult4;
-        //            CheckResult5 = CheckTypedRead();
-        //            result = result && CheckResult5;
-        //        }
-        //        finally
-        //        {
-        //            CloseFile(DataFile);
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        if (FileExists(FileName))
-        //            DeleteFile(FileName);
-        //    }
-        //    return result;
-        //}
+        public static bool RunTextReadChecks()
+        {
+            bool result = false;
+            TextFile DataFile = TextFile.CreateRecord();
+            string FileName = string.Empty;
+            int FirstValue = 0;
+            int SecondValue = 0;
+            string StateText = string.Empty;
+            bool CheckResult1 = false;
+            bool CheckResult2 = false;
+            bool CheckResult3 = false;
+            bool CheckResult4 = false;
+            bool CheckResult5 = false;
+            FileName = "d7_read_probe.tmp";
+            AssignFile(DataFile, FileName);
+            Rewrite(DataFile);
+            try
+            {
+                WriteLn(DataFile, "12 30");
+                WriteLn(DataFile, "ready");
+            }
+            finally
+            {
+                CloseFile(DataFile);
+            }
+            try
+            {
+                AssignFile(DataFile, FileName);
+                Reset(DataFile);
+                try
+                {
+                    Read(DataFile, ref FirstValue);
+                    Read(DataFile, ref SecondValue);
+                    ReadLn(DataFile);
+                    ReadLn(DataFile, ref StateText);
+                    CheckResult1 = (FirstValue == 12);
+                    result = CheckResult1;
+                    CheckResult2 = (SecondValue == 30);
+                    result = result && CheckResult2;
+                    CheckResult3 = (StateText == "ready");
+                    result = result && CheckResult3;
+                    CheckResult4 = Eof(DataFile);
+                    result = result && CheckResult4;
+                    CheckResult5 = CheckTypedRead();
+                    result = result && CheckResult5;
+                }
+                finally
+                {
+                    CloseFile(DataFile);
+                }
+            }
+            finally
+            {
+                if (FileExists(FileName))
+                    DeleteFile(FileName);
+            }
+            return result;
+        }
 
     } // class D7_text_readInterface
 
@@ -114,49 +114,49 @@ namespace D7_text_read
             }
         }
 
-        //public static bool CheckTypedRead()
-        //{
-        //    bool result = false;
-        //    TypedFile<TReadEntry> DataFile = TypedFile<TReadEntry>.CreateRecord();
-        //    string FileName = string.Empty;
-        //    TReadEntry Entry = TReadEntry.CreateRecord();
-        //    byte SavedFileMode = 0;
-        //    FileName = "d7_read_record.tmp";
-        //    AssignFile(DataFile, FileName);
-        //    Rewrite(DataFile);
-        //    try
-        //    {
-        //        Entry.Code = 51;
-        //        Entry.Active = true;
-        //        Write(DataFile, Entry);
-        //    }
-        //    finally
-        //    {
-        //        CloseFile(DataFile);
-        //    }
-        //    SavedFileMode = SystemInterface.FileMode;
-        //    try
-        //    {
-        //        SystemInterface.FileMode = (byte)fmOpenRead;
-        //        Reset(DataFile);
-        //        try
-        //        {
-        //            Read(DataFile, ref Entry);
-        //            result = Eof(DataFile) && (Entry.Code == 51) && Entry.Active;
-        //        }
-        //        finally
-        //        {
-        //            CloseFile(DataFile);
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        SystemInterface.FileMode = SavedFileMode;
-        //        if (FileExists(FileName))
-        //            DeleteFile(FileName);
-        //    }
-        //    return result;
-        //}
+        public static bool CheckTypedRead()
+        {
+            bool result = false;
+            TypedFile<TReadEntry> DataFile = TypedFile<TReadEntry>.CreateRecord();
+            string FileName = string.Empty;
+            TReadEntry Entry = TReadEntry.CreateRecord();
+            byte SavedFileMode = 0;
+            FileName = "d7_read_record.tmp";
+            AssignFile(DataFile, FileName);
+            Rewrite(DataFile);
+            try
+            {
+                Entry.Code = 51;
+                Entry.Active = true;
+                Write(DataFile, Entry);
+            }
+            finally
+            {
+                CloseFile(DataFile);
+            }
+            SavedFileMode = SystemInterface.FileMode;
+            try
+            {
+                SystemInterface.FileMode = (byte)fmOpenRead;
+                Reset(DataFile);
+                try
+                {
+                    Read(DataFile, ref Entry);
+                    result = Eof(DataFile) && (Entry.Code == 51) && Entry.Active;
+                }
+                finally
+                {
+                    CloseFile(DataFile);
+                }
+            }
+            finally
+            {
+                SystemInterface.FileMode = SavedFileMode;
+                if (FileExists(FileName))
+                    DeleteFile(FileName);
+            }
+            return result;
+        }
     } // class D7_text_readImplementation
 
 }  // namespace D7_text_read

@@ -38,48 +38,48 @@ namespace D7_file_rename
 
     public class D7_file_renameInterface
     {
-        //public static bool RunFileRenameChecks()
-        //{
-        //    bool result = false;
-        //    TextFile DataFile = TextFile.CreateRecord();
-        //    string OriginalName = string.Empty;
-        //    string RenamedName = string.Empty;
-        //    bool CheckResult1 = false;
-        //    bool CheckResult2 = false;
-        //    OriginalName = "d7_rename_source.tmp";
-        //    RenamedName = "d7_rename_target.tmp";
-        //    if (FileExists(OriginalName))
-        //        DeleteFile(OriginalName);
-        //    if (FileExists(RenamedName))
-        //        DeleteFile(RenamedName);
-        //    AssignFile(DataFile, OriginalName);
-        //    Rewrite(DataFile);
-        //    try
-        //    {
-        //        WriteLn(DataFile, "rename");
-        //    }
-        //    finally
-        //    {
-        //        CloseFile(DataFile);
-        //    }
-        //    try
-        //    {
-        //        AssignFile(DataFile, OriginalName);
-        //        Rename(DataFile, RenamedName);
-        //        CheckResult1 = !FileExists(OriginalName);
-        //        result = CheckResult1;
-        //        CheckResult2 = FileExists(RenamedName);
-        //        result = result && CheckResult2;
-        //    }
-        //    finally
-        //    {
-        //        if (FileExists(OriginalName))
-        //            DeleteFile(OriginalName);
-        //        if (FileExists(RenamedName))
-        //            DeleteFile(RenamedName);
-        //    }
-        //    return result;
-        //}
+        public static bool RunFileRenameChecks()
+        {
+            bool result = false;
+            TextFile DataFile = TextFile.CreateRecord();
+            string OriginalName = string.Empty;
+            string RenamedName = string.Empty;
+            bool CheckResult1 = false;
+            bool CheckResult2 = false;
+            OriginalName = "d7_rename_source.tmp";
+            RenamedName = "d7_rename_target.tmp";
+            if (FileExists(OriginalName))
+                DeleteFile(OriginalName);
+            if (FileExists(RenamedName))
+                DeleteFile(RenamedName);
+            AssignFile(DataFile, OriginalName);
+            Rewrite(DataFile);
+            try
+            {
+                WriteLn(DataFile, "rename");
+            }
+            finally
+            {
+                CloseFile(DataFile);
+            }
+            try
+            {
+                AssignFile(DataFile, OriginalName);
+                Rename(DataFile, RenamedName);
+                CheckResult1 = !FileExists(OriginalName);
+                result = CheckResult1;
+                CheckResult2 = FileExists(RenamedName);
+                result = result && CheckResult2;
+            }
+            finally
+            {
+                if (FileExists(OriginalName))
+                    DeleteFile(OriginalName);
+                if (FileExists(RenamedName))
+                    DeleteFile(RenamedName);
+            }
+            return result;
+        }
 
     } // class D7_file_renameInterface
 

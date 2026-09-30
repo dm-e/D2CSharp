@@ -312,6 +312,11 @@ const
   Nil = Pointer(0);
 
 var
+  { Standard text files documented by the public System API. }
+  Input: Text;
+  Output: Text;
+  ErrOutput: Text;
+
   { Public System.FileMode variable used by Reset for typed and untyped files. }
   FileMode: Byte = 2;
 
@@ -576,6 +581,7 @@ procedure Read(var F: File; var V); overload;
 procedure Read(var V); overload;
 procedure Read(var V: string); overload;
 procedure Read(F: Text; var V: string); overload;
+procedure Read(F: Text; var V: Integer); overload;
 
 procedure ReadLn; overload;
 procedure ReadLn(var F: File); overload;
@@ -600,6 +606,8 @@ procedure WriteLn(const V: string); overload;
 procedure WriteLn(const V: string; MinWidth: Integer); overload;
 procedure WriteLn(F: Text; const V: string); overload;
 procedure WriteLn(F: Text; const V: string; MinWidth: Integer); overload;
+procedure WriteLn(F: Text; V: Integer); overload;
+procedure WriteLn(F: Text; V: Double; MinWidth: Integer; Decimals: Integer); overload;
 
 procedure Str(X: Integer; var S: String); overload;
 procedure Str(X: Int64; var S: String); overload;
@@ -1558,6 +1566,10 @@ procedure Read(F: Text; var V: string);
 begin
 end;
 
+procedure Read(F: Text; var V: Integer);
+begin
+end;
+
 procedure ReadLn;
 begin
 end;
@@ -1639,6 +1651,14 @@ begin
 end;
 
 procedure WriteLn(F: Text; const V: string; MinWidth: Integer);
+begin
+end;
+
+procedure WriteLn(F: Text; V: Integer);
+begin
+end;
+
+procedure WriteLn(F: Text; V: Double; MinWidth: Integer; Decimals: Integer);
 begin
 end;
 

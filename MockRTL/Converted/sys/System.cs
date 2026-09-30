@@ -448,6 +448,8 @@ public class SystemInterface
 	public const int fmOutput = 55218;             /* $D7B2 */
 	public const int fmInOut = 55219;             /* $D7B3 */
 	public const Pointer Nil = ((Pointer) 0);
+  /* Standard text files documented by the public System API. */
+
   /* Public System.FileMode variable used by Reset for typed and untyped files. */
 	public static byte FileMode = 2;
 
@@ -1086,6 +1088,9 @@ public class SystemInterface
 	public static void Read(TextFile F, ref string V)
 	{
 	}
+	public static void Read(TextFile F, ref int V)
+	{
+	}
 	public static void ReadLn()
 	{
 	}
@@ -1147,6 +1152,12 @@ public class SystemInterface
 	{
 	}
 	public static void WriteLn(TextFile F, string V, int MinWidth)
+	{
+	}
+	public static void WriteLn(TextFile F, int V)
+	{
+	}
+	public static void WriteLn(TextFile F, double V, int MinWidth, int Decimals)
 	{
 	}
 	public static void Str(int X, ref string S)

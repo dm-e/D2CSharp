@@ -181,8 +181,58 @@ namespace System
             return checked((uint)charactersUsed + 1);
         }
 
+        public static void Move(
+            AnsiString? source,
+            int sourceIndex,
+            ref AnsiString? destination,
+            int destinationIndex,
+            int count)
+        {
+            if (sourceIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(sourceIndex));
+            if (destinationIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(destinationIndex));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (count == 0)
+                return;
+
+            AnsiString actualSource = AnsiString.Normalize(source);
+            AnsiString actualDestination = AnsiString.Normalize(destination);
+
+            if (sourceIndex > actualSource.Length - count)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (destinationIndex > actualDestination.Length - count)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            byte[] sourceBytes = actualSource.AsSpan().ToArray();
+            byte[] destinationBytes = actualDestination.AsSpan().ToArray();
+
+            Array.Copy(
+                sourceBytes,
+                sourceIndex,
+                destinationBytes,
+                destinationIndex,
+                count);
+
+            destination = AnsiString.FromBytes(
+                destinationBytes,
+                actualDestination.CodePage);
+        }
+
         public static string UTF8Decode(AnsiString? value)
             => UTF8ToUnicodeString(value);
+
+        public static string UTF8ToUnicodeString(AnsiString? value)
+        {
+            AnsiString actual = AnsiString.Normalize(value);
+            if (actual.Length == 0)
+                return string.Empty;
+
+            return AnsiString.FromBytes(
+                actual.AsSpan(),
+                AnsiStringSettings.Utf8CodePage).Decode();
+        }
 
         public static string UTF8ToUnicodeString(PAnsiChar value)
             => value.IsNull()

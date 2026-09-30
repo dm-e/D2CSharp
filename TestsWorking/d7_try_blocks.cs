@@ -85,17 +85,17 @@ namespace D7_try_blocks
 
 
             public EStageError(string Msg) : base(Msg) { }
-            //           public EStageError(string Msg, params TVarRec[] Args) : base(Msg, Args) { }
-            //           public EStageError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) { }
-            //           public EStageError(string Msg, int AHelpContext) : base(Msg, AHelpContext) { }
-            //           public EStageError(uint Ident) : base(Ident) { }
-            ////           public EStageError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) { }
-            //           public EStageError(uint Ident, params TVarRec[] Args) : base(Ident, Args) { }
-            //            public EStageError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) { }
-            //            public EStageError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) { }
-            //public EStageError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) { }
-            //public EStageError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) { }
-            //            public EStageError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) { }
+            public EStageError(string Msg, params TVarRec[] Args) : base(Msg, Args) { }
+            public EStageError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) { }
+            public EStageError(string Msg, int AHelpContext) : base(Msg, AHelpContext) { }
+            public EStageError(uint Ident) : base(Ident) { }
+            public EStageError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) { }
+            public EStageError(uint Ident, params TVarRec[] Args) : base(Ident, Args) { }
+            public EStageError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) { }
+            public EStageError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) { }
+            public EStageError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) { }
+            public EStageError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) { }
+            public EStageError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) { }
         }
     } // class D7_try_blocksImplementation
 

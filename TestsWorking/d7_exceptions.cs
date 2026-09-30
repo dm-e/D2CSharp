@@ -85,17 +85,17 @@ namespace D7_exceptions
 
 
             public EProbeError(string Msg) : base(Msg) { }
-            //           public EProbeError(string Msg, params TVarRec[] Args) : base(Msg, Args) { }
-            //           public EProbeError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) { }
+            public EProbeError(string Msg, params TVarRec[] Args) : base(Msg, Args) { }
+            public EProbeError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) { }
             public EProbeError(string Msg, int AHelpContext) : base(Msg, AHelpContext) { }
-            //            public EProbeError(uint Ident) : base(Ident) { }
-            //            public EProbeError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) { }
-            //           public EProbeError(uint Ident, params TVarRec[] Args) : base(Ident, Args) { }
-            //            public EProbeError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) { }
-            //            public EProbeError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) { }
-            //            public EProbeError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) { }
-            //            public EProbeError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) { }
-            //            public EProbeError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) { }
+            public EProbeError(uint Ident) : base(Ident) { }
+            public EProbeError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) { }
+            public EProbeError(uint Ident, params TVarRec[] Args) : base(Ident, Args) { }
+            public EProbeError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) { }
+            public EProbeError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) { }
+            public EProbeError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) { }
+            public EProbeError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) { }
+            public EProbeError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) { }
         }
 
         public static void RequirePositive(int AValue)

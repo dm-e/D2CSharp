@@ -38,17 +38,17 @@ namespace D7_text_write
 
     public class D7_text_writeInterface
     {
-        //public static bool RunTextWriteChecks()
-        //{
-        //    bool result = false;
-        //    bool CheckResult1 = false;
-        //    bool CheckResult2 = false;
-        //    CheckResult1 = CheckTextOutput();
-        //    result = CheckResult1;
-        //    CheckResult2 = CheckTypedOutput();
-        //    result = result && CheckResult2;
-        //    return result;
-        //}
+        public static bool RunTextWriteChecks()
+        {
+            bool result = false;
+            bool CheckResult1 = false;
+            bool CheckResult2 = false;
+            CheckResult1 = CheckTextOutput();
+            result = CheckResult1;
+            CheckResult2 = CheckTypedOutput();
+            result = result && CheckResult2;
+            return result;
+        }
 
     } // class D7_text_writeInterface
 
@@ -67,96 +67,96 @@ namespace D7_text_write
             }
         }
 
-        //public static bool CheckTextOutput()
-        //{
-        //    bool result = false;
-        //    TextFile OutputFile = TextFile.CreateRecord();
-        //    string FileName = string.Empty;
-        //    string FirstLine = string.Empty;
-        //    string SecondLine = string.Empty;
-        //    FileName = "d7_write_text.tmp";
-        //    AssignFile(OutputFile, FileName);
-        //    Rewrite(OutputFile);
-        //    try
-        //    {
-        //        Write(OutputFile, "value=");
-        //        WriteLn(OutputFile, 42);
-        //        WriteLn(OutputFile, 7.25D, 6, 2);
-        //    }
-        //    finally
-        //    {
-        //        CloseFile(OutputFile);
-        //    }
-        //    try
-        //    {
-        //        AssignFile(OutputFile, FileName);
-        //        Reset(OutputFile);
-        //        try
-        //        {
-        //            ReadLn(OutputFile, ref FirstLine);
-        //            ReadLn(OutputFile, ref SecondLine);
-        //        }
-        //        finally
-        //        {
-        //            CloseFile(OutputFile);
-        //        }
-        //        result = (FirstLine == "value=42") && (SecondLine == "  7.25");
-        //    }
-        //    finally
-        //    {
-        //        if (FileExists(FileName))
-        //            DeleteFile(FileName);
-        //    }
-        //    return result;
-        //}
+        public static bool CheckTextOutput()
+        {
+            bool result = false;
+            TextFile OutputFile = TextFile.CreateRecord();
+            string FileName = string.Empty;
+            string FirstLine = string.Empty;
+            string SecondLine = string.Empty;
+            FileName = "d7_write_text.tmp";
+            AssignFile(OutputFile, FileName);
+            Rewrite(OutputFile);
+            try
+            {
+                Write(OutputFile, "value=");
+                WriteLn(OutputFile, 42);
+                WriteLn(OutputFile, 7.25D, 6, 2);
+            }
+            finally
+            {
+                CloseFile(OutputFile);
+            }
+            try
+            {
+                AssignFile(OutputFile, FileName);
+                Reset(OutputFile);
+                try
+                {
+                    ReadLn(OutputFile, ref FirstLine);
+                    ReadLn(OutputFile, ref SecondLine);
+                }
+                finally
+                {
+                    CloseFile(OutputFile);
+                }
+                result = (FirstLine == "value=42") && (SecondLine == "  7.25");
+            }
+            finally
+            {
+                if (FileExists(FileName))
+                    DeleteFile(FileName);
+            }
+            return result;
+        }
 
-        //public static bool CheckTypedOutput()
-        //{
-        //    bool result = false;
-        //    TypedFile<TProbeEntry> OutputFile = TypedFile<TProbeEntry>.CreateRecord();
-        //    string FileName = string.Empty;
-        //    TProbeEntry Entry = TProbeEntry.CreateRecord();
-        //    byte SavedFileMode = 0;
-        //    FileName = "d7_write_record.tmp";
-        //    AssignFile(OutputFile, FileName);
-        //    Rewrite(OutputFile);
-        //    try
-        //    {
-        //        Entry.Code = 17;
-        //        Entry.Enabled = false;
-        //        Write(OutputFile, Entry);
-        //        Entry.Code = 29;
-        //        Entry.Enabled = true;
-        //        Write(OutputFile, Entry);
-        //    }
-        //    finally
-        //    {
-        //        CloseFile(OutputFile);
-        //    }
-        //    SavedFileMode = SystemInterface.FileMode;
-        //    try
-        //    {
-        //        SystemInterface.FileMode = (byte)fmOpenRead;
-        //        Reset(OutputFile);
-        //        try
-        //        {
-        //            Read(OutputFile, ref Entry);
-        //            Read(OutputFile, ref Entry);
-        //            result = Eof(OutputFile) && (Entry.Code == 29) && Entry.Enabled;
-        //        }
-        //        finally
-        //        {
-        //            CloseFile(OutputFile);
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        SystemInterface.FileMode = SavedFileMode;
-        //        if (FileExists(FileName))
-        //            DeleteFile(FileName);
-        //    }
-        //    return result;
-        //}
+        public static bool CheckTypedOutput()
+        {
+            bool result = false;
+            TypedFile<TProbeEntry> OutputFile = TypedFile<TProbeEntry>.CreateRecord();
+            string FileName = string.Empty;
+            TProbeEntry Entry = TProbeEntry.CreateRecord();
+            byte SavedFileMode = 0;
+            FileName = "d7_write_record.tmp";
+            AssignFile(OutputFile, FileName);
+            Rewrite(OutputFile);
+            try
+            {
+                Entry.Code = 17;
+                Entry.Enabled = false;
+                Write(OutputFile, Entry);
+                Entry.Code = 29;
+                Entry.Enabled = true;
+                Write(OutputFile, Entry);
+            }
+            finally
+            {
+                CloseFile(OutputFile);
+            }
+            SavedFileMode = SystemInterface.FileMode;
+            try
+            {
+                SystemInterface.FileMode = (byte)fmOpenRead;
+                Reset(OutputFile);
+                try
+                {
+                    Read(OutputFile, ref Entry);
+                    Read(OutputFile, ref Entry);
+                    result = Eof(OutputFile) && (Entry.Code == 29) && Entry.Enabled;
+                }
+                finally
+                {
+                    CloseFile(OutputFile);
+                }
+            }
+            finally
+            {
+                SystemInterface.FileMode = SavedFileMode;
+                if (FileExists(FileName))
+                    DeleteFile(FileName);
+            }
+            return result;
+        }
     } // class D7_text_writeImplementation
 
 }  // namespace D7_text_write

@@ -217,232 +217,7 @@ namespace System
 		}
 	}	
 
-    //public class TObject
-    //{
-    //    protected bool FDisposed;
-
-    //    public virtual void Destroy()
-    //    {
-    //        if (!FDisposed)
-    //        {
-    //            FDisposed = true;
-    //            GC.SuppressFinalize(this);
-    //        }
-    //    }
-
-    //    public void Free()
-    //    {
-    //        Destroy();
-    //    }
-
-    //    public static void Free(TObject obj)
-    //    {
-    //        if (obj != null)
-    //        {
-    //            obj.Destroy();
-    //        }
-    //    }
-
-    //    public TClass ClassType()
-    //    {
-    //        return TClass.Of(GetType());
-    //    }
-
-    //    public string ClassName()
-    //    {
-    //        return ClassType().ClassName();
-    //    }
-
-    //    public bool ClassNameIs(string name)
-    //    {
-    //        return ClassType().ClassNameIs(name);
-    //    }
-
-    //    public TClass ClassParent()
-    //    {
-    //        return ClassType().ClassParent();
-    //    }
-
-    //    public bool InheritsFrom(TClass aClass)
-    //    {
-    //        return ClassType().InheritsFrom(aClass);
-    //    }
-
-    //    // dme from old code
-    //    public string InterfaceName()  
-    //    {
-    //        return this.ToString();
-    //    }
-    //}
-
-
-    //public sealed class TClass : global::System.IEquatable<TClass>
-    //{
-    //    private readonly global::System.Type _type;
-
-    //    private TClass(global::System.Type type)
-    //    {
-    //        _type = type ?? throw new ArgumentNullException(nameof(type));
-    //    }
-
-    //    public global::System.Type Type
-    //    {
-    //        get
-    //        {
-    //            return _type;
-    //        }
-    //    }
-
-    //    // Do not constrain T to TObject here.
-    //    // TClass must also be able to represent and create DException-derived types,
-    //    // which are translated to C# exceptions and therefore do not derive from TObject.
-    //    public static TClass Of<T>()
-    //    {
-    //        return new TClass(typeof(T));
-    //    }
-
-    //    public static TClass Of(global::System.Type type)
-    //    {
-    //        if (type == null)
-    //        {
-    //            return null;
-    //        }
-
-    //        return new TClass(type);
-    //    }
-
-    //    public TObject Create()
-    //    {
-    //        return (TObject)global::System.Activator.CreateInstance(_type);
-    //    }
-
-    //    public object Create(params object[] args)
-    //    {
-    //        return global::System.Activator.CreateInstance(_type, args);
-    //    }
-
-    //    public global::System.Exception CreateException(params object[] args)
-    //    {
-    //        return (global::System.Exception)global::System.Activator.CreateInstance(_type, args);
-    //    }
-
-    //    public string ClassName()
-    //    {
-    //        return _type.Name;
-    //    }
-
-    //    public string QualifiedClassName()
-    //    {
-    //        return _type.FullName ?? _type.Name;
-    //    }
-
-    //    public string UnitName()
-    //    {
-    //        return _type.Namespace ?? string.Empty;
-    //    }
-
-    //    public string UnitScope()
-    //    {
-    //        string ns = _type.Namespace ?? string.Empty;
-    //        int index = ns.LastIndexOf('.');
-
-    //        if (index < 0)
-    //        {
-    //            return ns;
-    //        }
-
-    //        return ns.Substring(0, index);
-    //    }
-
-    //    public TClass ClassParent()
-    //    {
-    //        global::System.Type baseType = _type.BaseType;
-
-    //        if (baseType == null || baseType == typeof(object))
-    //        {
-    //            return null;
-    //        }
-
-    //        return Of(baseType);
-    //    }
-
-    //    public bool InheritsFrom(TClass aClass)
-    //    {
-    //        if (aClass == null)
-    //        {
-    //            return false;
-    //        }
-
-    //        return aClass._type.IsAssignableFrom(_type);
-    //    }
-
-    //    public bool ClassNameIs(string name)
-    //    {
-    //        return string.Equals(ClassName(), name, global::System.StringComparison.OrdinalIgnoreCase);
-    //    }
-
-    //    public bool Equals(TClass other)
-    //    {
-    //        return other != null && _type == other._type;
-    //    }
-
-    //    public override bool Equals(object obj)
-    //    {
-    //        return Equals(obj as TClass);
-    //    }
-
-    //    public override int GetHashCode()
-    //    {
-    //        return _type.GetHashCode();
-    //    }
-
-    //    public object InvokeClassMethod(string methodName, params object[] args)
-    //    {
-    //        global::System.Reflection.MethodInfo method = Type.GetMethod(
-    //            methodName,
-    //            global::System.Reflection.BindingFlags.Public |
-    //            global::System.Reflection.BindingFlags.Static |
-    //            global::System.Reflection.BindingFlags.FlattenHierarchy);
-
-    //        if (method == null)
-    //        {
-    //            throw new global::System.MissingMethodException(Type.FullName, methodName);
-    //        }
-
-    //        return method.Invoke(null, args);
-    //    }
-
-    //    public TResult InvokeClassMethod<TResult>(string methodName, params object[] args)
-    //    {
-    //        object result = InvokeClassMethod(methodName, args);
-
-    //        if (result == null)
-    //        {
-    //            return default(TResult);
-    //        }
-
-    //        return (TResult)result;
-    //    }
-    //    public static bool operator ==(TClass left, TClass right)
-    //    {
-    //        if (ReferenceEquals(left, right))
-    //        {
-    //            return true;
-    //        }
-
-    //        if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
-    //        {
-    //            return false;
-    //        }
-
-    //        return left.Equals(right);
-    //    }
-
-    //    public static bool operator !=(TClass left, TClass right)
-    //    {
-    //        return !(left == right);
-    //    }
-    //}
+    // public class TObject -> TObject.cs
 
         /*
          * TTextRec and TFileRec are parser placeholder types in the Delphi
@@ -452,16 +227,6 @@ namespace System
          * nested declaration would shadow those concrete types in all partial
          * SystemInterface source files, including the AnsiString adapters.
          */
-
-	public class List
-	{
-		public List(){}
-		//# missing function body: public int Length();
-		//# missing function body: public int High();
-		//# missing function body: public int Low();
-		//# missing function body: public /*#procedure*/ object Copy();
-		//# missing function body: public int CopyRange();
-	};	
 
 	public class TDateTimeBase
 	{
@@ -575,26 +340,28 @@ namespace System
 	public const int fmInput = 55217;             /* $D7B1 */
 	public const int fmOutput = 55218;             /* $D7B2 */
 	public const int fmInOut = 55219;             /* $D7B3 */
-//	public const Pointer Nil = ((Pointer) 0);
+        //	public const Pointer Nil = ((Pointer) 0);
 
-/* Numeric intrinsics */
-	//# output of equivalent "Abs" function suppressed
-	//# missing function body: public static long Abs(long X);
-	//# missing function body: public static float Abs(float X);
-	//# missing function body: public static double Abs(double X);
-	//# output of equivalent "Abs" function suppressed
-	//# output of equivalent "Sqr" function suppressed
-	//# missing function body: public static long Sqr(long X);
-	//# missing function body: public static float Sqr(float X);
-	//# missing function body: public static double Sqr(double X);
-	//# output of equivalent "Sqr" function suppressed
-	//# output of equivalent "Round" function suppressed
-	//# missing function body: public static long Round(double X);
-	//# output of equivalent "Round" function suppressed
-	//# output of equivalent "Trunc" function suppressed
-	//# missing function body: public static long Trunc(double X);
-	//# output of equivalent "Trunc" function suppressed
-	public static bool Odd(int X)
+        /* Numeric intrinsics */
+        public static T Abs<T>(T value)
+        {
+            dynamic d = value;
+            return d < 0 ? -d : d;
+        }
+
+
+        //# output of equivalent "Sqr" function suppressed
+        //# missing function body: public static long Sqr(long X);
+        //# missing function body: public static float Sqr(float X);
+        //# missing function body: public static double Sqr(double X);
+        //# output of equivalent "Sqr" function suppressed
+        //# output of equivalent "Round" function suppressed
+        //# missing function body: public static long Round(double X);
+        //# output of equivalent "Round" function suppressed
+        //# output of equivalent "Trunc" function suppressed
+        //# missing function body: public static long Trunc(double X);
+        //# output of equivalent "Trunc" function suppressed
+    public static bool Odd(int X)
 	{
 		return false;
 	}
@@ -1153,6 +920,26 @@ namespace System
 	{
 		return 0;
 	}
+
+        // Helper used by generated Substring calls for Delphi Copy(...).
+        // C# Substring requires the requested length to fit in the
+        // remaining part of the source string.
+        public static int MaxSubstringLength(
+            string value,
+            int startIndex,
+            int requestedLength)
+        {
+            if (value == null)
+                throw new global::System.ArgumentNullException(nameof(value));
+            if (startIndex < 0 || startIndex > value.Length)
+                throw new global::System.ArgumentOutOfRangeException(nameof(startIndex));
+            if (requestedLength < 0)
+                throw new global::System.ArgumentOutOfRangeException(nameof(requestedLength));
+
+            return global::System.Math.Min(
+                requestedLength,
+                value.Length - startIndex);
+        }
         public static string Concat(params string[] strings)
         {
             return strings == null ? string.Empty : string.Concat(strings);
@@ -1314,327 +1101,7 @@ namespace System
 		return default;
 	}
 
-	/* Text and file intrinsics */
-		public static void Assign(UntypedPointer F, string FileName)
-		{
-		}
-
-        public static void AssignFile(
-            global::System.DelphiFileRecord fileRecord,
-            string fileName)
-        {
-            if (fileRecord == null)
-                throw new global::System.ArgumentNullException(nameof(fileRecord));
-
-            fileRecord.Assign(fileName);
-        }
-
-		public static void AssignFile(UntypedPointer F, string FileName)
-		{
-		}
-
-		public static void Reset(UntypedPointer F)
-		{
-		}
-		//# missing function body: public static void Reset(UntypedPointer F, int RecSize);
-		public static void Rewrite(UntypedPointer F)
-		{
-		}
-		//# missing function body: public static void Rewrite(UntypedPointer F, int RecSize);
-		public static void Append(ref TextFile F)
-		{
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            F.Append();
-		}
-		public static void Close(UntypedPointer F)
-		{
-		}
-		public static void CloseFile(UntypedPointer F)
-		{
-		}
-		public static void Erase(UntypedPointer F)
-		{
-		}
-
-        public static void Rename(
-            global::System.DelphiFileRecord fileRecord,
-            string newName)
-        {
-            if (fileRecord == null)
-                throw new global::System.ArgumentNullException(nameof(fileRecord));
-
-            fileRecord.Rename(newName);
-        }
-
-		public static void Rename(UntypedPointer F, string NewName)
-		{
-		}
-		public static void Flush(ref TextFile F)
-		{
-            F?.Writer?.Flush();
-		}
-		public static void SetTextBuf(ref TextFile F, UntypedPointer Buf)
-		{
-		}
-		//# missing function body: public static void SetTextBuf(ref TextFile F, UntypedPointer Buf, int Size);
-		public static bool Eof()
-		{
-			return global::System.Console.In.Peek() < 0;
-		}
-		//# missing function body: public static bool Eof(UntypedPointer F);
-		public static bool Eoln()
-		{
-            int value = global::System.Console.In.Peek();
-			return value < 0 || value == '\r' || value == '\n';
-		}
-		//# missing function body: public static bool Eoln(UntypedPointer F);
-		public static bool SeekEof()
-		{
-			return Eof();
-		}
-		//# missing function body: public static bool SeekEof(UntypedPointer F);
-		public static bool SeekEoln()
-		{
-			return Eoln();
-		}
-		//# missing function body: public static bool SeekEoln(UntypedPointer F);
-		public static void Seek(UntypedPointer F, int N)
-		{
-		}
-		public static int FilePos(UntypedPointer F)
-		{
-			return 0;
-		}
-		public static int FileSize(UntypedPointer F)
-		{
-			return 0;
-		}
-		public static void Truncate(UntypedPointer F)
-		{
-		}
-		public static void BlockRead(UntypedPointer F, UntypedPointer Buf, int Count)
-		{
-		}
-		//# missing function body: public static void BlockRead(UntypedPointer F, UntypedPointer Buf, int Count, ref int Result);
-		public static void BlockWrite(UntypedPointer F, UntypedPointer Buf, int Count)
-		{
-		}
-		//# missing function body: public static void BlockWrite(UntypedPointer F, UntypedPointer Buf, int Count, ref int Result);
-
-        public static void GetDir(byte D, ref string S)
-        {
-            /*
-             * Drive 0 means the current drive in Delphi.  For non-zero drive
-             * values the precise per-drive current-directory semantics are
-             * Windows-specific.  The working RTL currently exposes the process
-             * current directory, which is also the useful cross-platform
-             * fallback.
-             */
-            S = global::System.IO.Directory.GetCurrentDirectory();
-        }
-
-        public static void ChDir(string Path)
-        {
-            global::System.IO.Directory.SetCurrentDirectory(Path);
-        }
-
-        /*
-         * Explicit Unicode overloads generated from the extended System.pas
-         * mock.  These are the Unicode core API used by the AnsiString adapter
-         * partial class.
-         */
-        public static void Read()
-        {
-        }
-
-        public static void Read(ref string V)
-        {
-            V = global::System.Console.ReadLine() ?? string.Empty;
-        }
-
-        public static void Read(
-            global::System.TTextRec F,
-            ref string V)
-        {
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            V = F.ReadString();
-        }
-
-        public static void Read(
-            global::System.TextFile F,
-            ref string V)
-        {
-            Read((global::System.TTextRec)F, ref V);
-        }
-
-        public static void ReadLn()
-        {
-            global::System.Console.ReadLine();
-        }
-
-        public static void ReadLn(ref string V)
-        {
-            V = global::System.Console.ReadLine() ?? string.Empty;
-        }
-
-        public static void ReadLn(global::System.TTextRec F)
-        {
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            F.SkipLine();
-        }
-
-        public static void ReadLn(
-            global::System.TTextRec F,
-            ref string V)
-        {
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            V = F.ReadLine();
-        }
-
-        public static void ReadLn(
-            global::System.TextFile F,
-            ref string V)
-        {
-            ReadLn((global::System.TTextRec)F, ref V);
-        }
-
-        /* Preserve the spelling emitted by older mock translations. */
-        public static void Readln()
-        {
-            ReadLn();
-        }
-
-        public static void Write()
-        {
-        }
-
-        public static void Write(string V)
-        {
-            global::System.Console.Write(V ?? string.Empty);
-        }
-
-        public static void Write(string V, int MinWidth)
-        {
-            global::System.Console.Write(FormatTextField(V, MinWidth));
-        }
-
-        public static void Write(
-            global::System.TTextRec F,
-            string V)
-        {
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            F.Write(V ?? string.Empty);
-        }
-
-        public static void Write(
-            global::System.TTextRec F,
-            string V,
-            int MinWidth)
-        {
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            F.Write(FormatTextField(V, MinWidth));
-        }
-
-        public static void Write(
-            global::System.TextFile F,
-            string V)
-        {
-            Write((global::System.TTextRec)F, V);
-        }
-
-        public static void Write(
-            global::System.TextFile F,
-            string V,
-            int MinWidth)
-        {
-            Write((global::System.TTextRec)F, V, MinWidth);
-        }
-
-        public static void WriteLn()
-        {
-            global::System.Console.WriteLine();
-        }
-
-        public static void WriteLn(string V)
-        {
-            global::System.Console.WriteLine(V ?? string.Empty);
-        }
-
-        public static void WriteLn(string V, int MinWidth)
-        {
-            global::System.Console.WriteLine(FormatTextField(V, MinWidth));
-        }
-
-        public static void WriteLn(global::System.TTextRec F)
-        {
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            F.WriteLine();
-        }
-
-        public static void WriteLn(
-            global::System.TTextRec F,
-            string V)
-        {
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            F.WriteLine(V ?? string.Empty);
-        }
-
-        public static void WriteLn(
-            global::System.TTextRec F,
-            string V,
-            int MinWidth)
-        {
-            if (F == null)
-                throw new global::System.ArgumentNullException(nameof(F));
-
-            F.WriteLine(FormatTextField(V, MinWidth));
-        }
-
-        public static void WriteLn(
-            global::System.TextFile F,
-            string V)
-        {
-            WriteLn((global::System.TTextRec)F, V);
-        }
-
-        public static void WriteLn(
-            global::System.TextFile F,
-            string V,
-            int MinWidth)
-        {
-            WriteLn((global::System.TTextRec)F, V, MinWidth);
-        }
-
-        /* Preserve the spelling emitted by older mock translations. */
-        public static void Writeln()
-        {
-            WriteLn();
-        }
-
-        private static string FormatTextField(string value, int minWidth)
-        {
-            string result = value ?? string.Empty;
-            if (minWidth > result.Length)
-                return result.PadLeft(minWidth);
-
-            return result;
-        }
+	/* Text and file intrinsics -> System.TextIO.cs */
 
         // Str -> Str.cs
 
