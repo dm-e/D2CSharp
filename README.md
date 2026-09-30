@@ -1,5 +1,15 @@
 # D2CSharp
 
+> **Development tools**
+>
+> The required executables are not stored in the Git repository.
+> Download the current **D2CSharp Development Build** from the repository's
+> **Releases** section and extract the `D2CSharp.zip` asset into the repository's
+> `bin` directory.
+>
+> The archive contains `D2CSharp.exe`, `ExtractReworked.exe`, the accompanying
+> README, and the required license and third-party notice files.
+
 ## Table of Contents
 
 1. [Project Overview and Goals](#1-project-overview-and-goals)
@@ -149,6 +159,8 @@ Its operation and basic concepts are similar in many respects to Delphi2CSharp. 
 
 The workflows specific to this repository, including the MockRTL, test translation, post-processing, and verification, are documented in this README and in `CONTRIBUTING.md`.
 
+Additional details about the helper batch files in the `Projects` directory are documented in `Projects/README.md`.
+
 ---
 
 # 2. Requirements
@@ -207,11 +219,11 @@ This is indicated by the `d7_` prefix and does not mean that Delphi 7 is the pre
 
 ## 3.1 Setting Up the bin Directory
 
-The executable tools `D2CSharp.exe` and `ExtractReworked.exe` are not stored in the Git history of the repository.
+The executable tools `D2CSharp.exe` and `ExtractReworked.exe` are not stored in the Git repository.
 
-They are provided separately as release assets.
+They are provided in the current **D2CSharp Development Build** under the repository's **Releases** section.
 
-After downloading the release package, extract its contents into the repository's `bin` directory.
+Download the `D2CSharp.zip` release asset and extract its contents into the repository's `bin` directory.
 
 The resulting structure should include at least:
 
@@ -223,6 +235,8 @@ bin/
   Licenses/
 ```
 
+The archive contains the executables, the accompanying README, and the required license and third-party notice files.
+
 The license files supplied with the programs must be kept together with the executables.
 
 The licensing of these programs is separate from the licensing of the remaining repository files.
@@ -231,20 +245,27 @@ The files under `Projects` expect the executable programs at the predefined path
 
 D2CSharp currently does not provide freely configurable paths for these tools.
 
+The **D2CSharp Development Build** is a pre-release and may be updated frequently.
+
 ## 3.2 Getting Started as a Developer
 
 After cloning the repository, the basic steps for a first test are:
 
-1. Download the current D2CSharp release asset.
-2. Extract the contents of the release package into the `bin` directory.
-3. Verify that `D2CSharp.exe` and `ExtractReworked.exe` are present there.
-4. Run `Projects/D2CSharp.bat`.
-5. Compare the generated files under `TestsGenerated` with the versions under `TestsWorking`.
-6. Apply corrections under `TestsWorking` if required.
-7. Open the solution under `D2CSharpTests` in Visual Studio.
-8. Build and verify the RTL and test projects.
+1. Open the repository's **Releases** section.
+2. Download the current **D2CSharp Development Build**.
+3. Extract the `D2CSharp.zip` asset into the repository's `bin` directory.
+4. Verify that `D2CSharp.exe` and `ExtractReworked.exe` are present there.
+5. Run `Projects/D2CSharp.bat`.
+6. Compare the generated files under `TestsGenerated` with the versions under `TestsWorking`.
+7. Apply corrections under `TestsWorking` if required.
+8. Open the solution under `D2CSharpTests` in Visual Studio.
+9. Build and verify the RTL and test projects.
 
 After changes to tests, the MockRTL, or RTL files, the regeneration and comparison workflow is run again.
+
+If only the C# source formatting needs to be refreshed, `Projects/FormatAll.bat` can be used without running the full conversion again.
+
+For details about the batch files and generated log files, see `Projects/README.md`.
 
 ---
 
@@ -277,7 +298,7 @@ These include in particular:
 - the associated README
 - the associated license files
 
-The executable files themselves are distributed as release assets and are not stored in the Git history.
+The executable files themselves are distributed in `D2CSharp.zip` as part of the current **D2CSharp Development Build** under GitHub Releases and are not stored in the Git history.
 
 ## 4.3 MockRTL
 
@@ -405,13 +426,23 @@ The number of files contained there therefore also indicates which existing test
 
 ## 4.9 Projects
 
-The `Projects` directory contains files used to control conversion processes within the repository.
+The `Projects` directory contains the helper batch files used to run the conversion and formatting workflow.
 
-For distribution, `D2CSharp.bat` is currently the main file intended to be included.
+The public repository currently includes in particular:
 
-Running this batch file starts the central regeneration and comparison workflow.
+- `D2CSharp.bat`
+- `FormatAll.bat`
+- `README.md`
 
-Additional project or batch files that may exist during development are not necessarily part of the public distribution.
+`D2CSharp.bat` runs the complete regeneration workflow described in Section 6.
+
+`FormatAll.bat` formats the generated and working C# files without rerunning the Delphi-to-C# conversion. This is useful after manual changes or before comparing files with a diff tool.
+
+Running the conversion also creates a local log file in the `Projects` directory, currently named `D2CSharp_log.txt`.
+
+The log records conversion progress and diagnostic messages. It is a local development artifact and is excluded from Git by the repository `.gitignore` rule for `*_log.txt`.
+
+For details about these helper files, relative paths, formatting requirements, and the conversion log, see `Projects/README.md`.
 
 ## 4.10 D2CSharpTests
 
@@ -517,6 +548,8 @@ The Delphi test file therefore defines the result considered acceptable for all 
 
 `Projects/D2CSharp.bat` automates the main workflow used to regenerate the tests while preserving existing manual corrections.
 
+For a concise description of the available helper batch files, see `Projects/README.md`.
+
 ## 6.1 Detecting Existing Manual Changes
 
 First, `ExtractReworked.exe` is executed.
@@ -536,6 +569,10 @@ Next, `D2CSharp.exe` is executed.
 The Delphi test files under `Tests` are translated again to C# and written to `TestsGenerated`.
 
 `TestsGenerated` then contains the current unchanged output of the converter.
+
+During conversion, D2CSharp also creates a local log file in the `Projects` directory.
+
+The log is excluded from Git and can be used to review preprocessing, parsing, and diagnostic messages.
 
 ## 6.3 Copying the Generated Files to TestsWorking
 
@@ -558,6 +595,8 @@ Finally, `D2CSharpTests/Formatting/FormatAll.cmd` is executed.
 The files under `TestsGenerated` and `TestsWorking` are formatted consistently.
 
 Both versions can then be compared directly, for example with WinMerge.
+
+If only formatting is required, `Projects/FormatAll.bat` can be run separately without repeating the complete conversion.
 
 ## 6.6 Review After Regeneration
 
@@ -681,11 +720,17 @@ In particular:
 - `ExtractReworked.exe`: `bin/Licenses/ExtractReworked.LICENSE.txt` and any additional applicable license texts
 - third-party components: the license and attribution notices supplied with the relevant binary package
 
+The executables and their license files are distributed together in the `D2CSharp.zip` asset of the current **D2CSharp Development Build**.
+
 The presence of a `LICENSE` file in the repository root does not relicense these separately licensed programs under Apache-2.0.
 
 ## 9.3 Availability of the D2CSharp Tool
 
 Publicly released versions of the D2CSharp command-line tool may be made available free of charge under the separate license supplied with the tool.
+
+The current development version is distributed through the repository's GitHub **Releases** section as the **D2CSharp Development Build**.
+
+The development asset may be updated frequently.
 
 The converter source code is not thereby licensed under Apache-2.0 or MPL-2.0.
 
