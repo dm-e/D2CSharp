@@ -1,5 +1,4 @@
 using System.Sysutils;
-using System.Text;
 using System;
 using static D7_text_append.D7_text_appendImplementation;
 using static D7_text_append.D7_text_appendInterface;
@@ -112,17 +111,17 @@ namespace D7_text_append
         public static bool CheckStringBuilderAppend()
         {
             bool result = false;
-            System.Sysutils.SysutilsInterface.StringBuilder Builder = default;
-            Builder = new System.Sysutils.SysutilsInterface.StringBuilder();
+            TStringBuilder Builder = default;
+            Builder = new TStringBuilder();
             try
             {
                 Builder.AppendLine("phase");
                 Builder.Append('#').Append(3);
-                result = Builder.ToString() == "phase" + SLineBreak + "#3";
+                result = Builder.ToString() == "phase" + sLineBreak + "#3";
             }
             finally
             {
-                // Builder.Free;;
+                TObject.Free(Builder);
             }
             return result;
         }

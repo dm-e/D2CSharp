@@ -66,6 +66,7 @@ type
   TWriter = class;
   TBytesStream = class;
   TResourceStream = class;
+  TThread = class;
   TThreadList = class;
   TStringsEnumerator = class;
   TStringReader = class;
@@ -679,6 +680,26 @@ type
       ResType: PChar);
     destructor Destroy; override;
     function Write(const Buffer; Count: Longint): Longint; override;
+  end;
+
+  TThread = class(TObject)
+  private
+    FFreeOnTerminate: Boolean;
+    FFinished: Boolean;
+    FTerminated: Boolean;
+  protected
+    procedure Execute; virtual; abstract;
+  public
+    constructor Create(CreateSuspended: Boolean);
+    destructor Destroy; override;
+    procedure Start;
+    procedure Resume;
+    procedure Suspend;
+    procedure Terminate;
+    function WaitFor: Cardinal;
+    property Finished: Boolean read FFinished;
+    property FreeOnTerminate: Boolean read FFreeOnTerminate write FFreeOnTerminate;
+    property Terminated: Boolean read FTerminated;
   end;
 
   TThreadList = class(TObject)
@@ -2204,6 +2225,38 @@ begin
 end;
 
 function TResourceStream.Write(const Buffer; Count: Longint): Longint;
+begin
+  Result := 0;
+end;
+
+{ TThread }
+
+constructor TThread.Create(CreateSuspended: Boolean);
+begin
+end;
+
+destructor TThread.Destroy;
+begin
+  inherited;
+end;
+
+procedure TThread.Start;
+begin
+end;
+
+procedure TThread.Resume;
+begin
+end;
+
+procedure TThread.Suspend;
+begin
+end;
+
+procedure TThread.Terminate;
+begin
+end;
+
+function TThread.WaitFor: Cardinal;
 begin
   Result := 0;
 end;

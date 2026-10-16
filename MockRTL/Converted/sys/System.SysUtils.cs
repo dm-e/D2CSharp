@@ -42,6 +42,1463 @@ namespace Sysutils
 */
 
 
+public static class TStringHelper
+{
+	public static char GetChars(this string helped, int Index)
+	{
+		char result = '\0';
+		return result;
+	}
+	public static int GetLength(this string helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static string Create(char C, int Count)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Create(char[] Value, int StartIndex, int Length)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Create(char[] Value)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static int Compare(string StrA, string StrB)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int Compare(string StrA, string StrB, bool IgnoreCase)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int Compare(string StrA, int IndexA, string StrB, int IndexB, int Length)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int Compare(string StrA, int IndexA, string StrB, int IndexB, int Length, bool IgnoreCase)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int CompareOrdinal(string StrA, string StrB)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int CompareOrdinal(string StrA, int IndexA, string StrB, int IndexB, int Length)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int CompareText(string A, string B)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int CompareTo(this string helped, string StrB)
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool Contains(this string helped, string Value)
+	{
+		bool result = false;
+		return result;
+	}
+	public static string Copy(string Str)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static void CopyTo(this string helped, int SourceIndex, ref char[] Destination, int DestinationIndex, int Count)
+	{
+	}
+	public static int CountChar(this string helped, char C)
+	{
+		int result = 0;
+		return result;
+	}
+	public static string DeQuotedString(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string DeQuotedString(this string helped, char AQuoteChar)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static bool EndsText(string ASubText, string AText)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool EndsWith(this string helped, string Value)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool EndsWith(this string helped, string Value, bool IgnoreCase)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool Equals(this string helped, string Value)
+	{
+		bool result = false;
+		return result;
+	}
+	//# output of conflicting "Equals" class function suppressed
+	public static string Format(string AFormat, params TVarRec[] Args)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static int GetHashCode(this string helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOf(this string helped, char Value)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOf(this string helped, string Value)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOf(this string helped, char Value, int StartIndex)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOf(this string helped, string Value, int StartIndex)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOf(this string helped, char Value, int StartIndex, int Count)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOf(this string helped, string Value, int StartIndex, int Count)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOfAny(this string helped, char[] AnyOf)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOfAny(this string helped, char[] AnyOf, int StartIndex)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOfAny(this string helped, char[] AnyOf, int StartIndex, int Count)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOfAnyUnquoted(this string helped, char[] AnyOf, char StartQuote, char EndQuote)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOfAnyUnquoted(this string helped, char[] AnyOf, char StartQuote, char EndQuote, int StartIndex)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOfAnyUnquoted(this string helped, char[] AnyOf, char StartQuote, char EndQuote, int StartIndex, int Count)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int IndexOfAnyUnquoted(this string helped, string[] AnyOf, char StartQuote, char EndQuote, int StartIndex, out int Matched)
+	{
+		Matched = 0; //# clear out parameter
+		int result = 0;
+		return result;
+	}
+	public static string Insert(this string helped, int StartIndex, string Value)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static bool IsDelimiter(this string helped, string Delimiters, int Index)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsEmpty(this string helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsNullOrEmpty(string Value)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsNullOrWhiteSpace(string Value)
+	{
+		bool result = false;
+		return result;
+	}
+	public static string Join(string Separator, params TVarRec[] Values)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Join(string Separator, string[] Values)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Join(string Separator, string[] Values, int StartIndex, int Count)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static int LastDelimiter(this string helped, string Delims)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOf(this string helped, char Value)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOf(this string helped, string Value)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOf(this string helped, char Value, int StartIndex)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOf(this string helped, string Value, int StartIndex)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOf(this string helped, char Value, int StartIndex, int Count)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOf(this string helped, string Value, int StartIndex, int Count)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOfAny(this string helped, char[] AnyOf)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOfAny(this string helped, char[] AnyOf, int StartIndex)
+	{
+		int result = 0;
+		return result;
+	}
+	public static int LastIndexOfAny(this string helped, char[] AnyOf, int StartIndex, int Count)
+	{
+		int result = 0;
+		return result;
+	}
+	public static string PadLeft(this string helped, int TotalWidth)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string PadLeft(this string helped, int TotalWidth, char PaddingChar)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string PadRight(this string helped, int TotalWidth)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string PadRight(this string helped, int TotalWidth, char PaddingChar)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Parse(int Value)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Parse(long Value)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Parse(bool Value)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Parse(double Value)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string QuotedString(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string QuotedString(this string helped, char AQuoteChar)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Remove(this string helped, int StartIndex)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Remove(this string helped, int StartIndex, int Count)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Replace(this string helped, char OldChar, char NewChar)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Replace(this string helped, char OldChar, char NewChar, TSet ReplaceFlags)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Replace(this string helped, string OldValue, string NewValue)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Replace(this string helped, string OldValue, string NewValue, TSet ReplaceFlags)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator, int Count)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator, TStringSplitOptions Options)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator, int Count, TStringSplitOptions Options)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator, int Count)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator, TStringSplitOptions Options)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator, int Count, TStringSplitOptions Options)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator, char Quote)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, TStringSplitOptions Options)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, int Count)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, int Count, TStringSplitOptions Options)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator, char Quote)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, TStringSplitOptions Options)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, int Count)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static T<string> Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, int Count, TStringSplitOptions Options)
+	{
+		T<string> result = null;
+		return result;
+	}
+	public static bool StartsText(string ASubText, string AText)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool StartsWith(this string helped, string Value)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool StartsWith(this string helped, string Value, bool IgnoreCase)
+	{
+		bool result = false;
+		return result;
+	}
+	public static string Substring(this string helped, int StartIndex)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Substring(this string helped, int StartIndex, int Length)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static bool ToBoolean(this string helped)
+	{
+		bool result = false;
+		return result;
+	}
+	//# output of conflicting "ToBoolean" class function suppressed
+	public static T<char> ToCharArray(this string helped)
+	{
+		T<char> result = null;
+		return result;
+	}
+	public static T<char> ToCharArray(this string helped, int StartIndex, int Length)
+	{
+		T<char> result = null;
+		return result;
+	}
+	public static double ToDouble(this string helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	//# output of conflicting "ToDouble" class function suppressed
+	public static double ToExtended(this string helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	//# output of conflicting "ToExtended" class function suppressed
+	public static long ToInt64(this string helped)
+	{
+		long result = 0;
+		return result;
+	}
+	//# output of conflicting "ToInt64" class function suppressed
+	public static int ToInteger(this string helped)
+	{
+		int result = 0;
+		return result;
+	}
+	//# output of conflicting "ToInteger" class function suppressed
+	public static float ToSingle(this string helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	//# output of conflicting "ToSingle" class function suppressed
+	public static string ToLower(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToLowerInvariant(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToUpper(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToUpperInvariant(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Trim(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string Trim(this string helped, char[] TrimChars)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string TrimEnd(this string helped, char[] TrimChars)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string TrimLeft(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string TrimLeft(this string helped, char[] TrimChars)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string TrimRight(this string helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string TrimRight(this string helped, char[] TrimChars)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string TrimStart(this string helped, char[] TrimChars)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string UpperCase(string S)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	/*property Chars [Index: integer]: char read GetChars;*/
+	public static char ReadPropertyChars(this string helped, int Index) { return GetChars(helped, Index);}
+	/*property Length : int read GetLength;*/
+	public static int ReadPropertyLength(this string helped) { return GetLength(helped);}
+}
+
+public static class TBooleanHelper
+{
+	public static bool Parse(string S)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool TryToParse(string S, out bool Value)
+	{
+		Value = false; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static int ToInteger(this bool helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static string ToString(this bool helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TByteBoolHelper
+{
+	public static bool Parse(string S)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool TryToParse(string S, out bool Value)
+	{
+		Value = false; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static int ToInteger(this bool helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static string ToString(this bool helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TWordBoolHelper
+{
+	public static bool Parse(string S)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool TryToParse(string S, out bool Value)
+	{
+		Value = false; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static int ToInteger(this bool helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static string ToString(this bool helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TLongBoolHelper
+{
+	public static int Parse(string S)
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool TryToParse(string S, out int Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static int ToInteger(this int helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static string ToString(this int helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TShortIntHelper
+{
+	public static sbyte Parse(string S)
+	{
+		sbyte result = 0;
+		return result;
+	}
+	public static bool TryParse(string S, out sbyte Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool ToBoolean(this sbyte helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static float ToSingle(this sbyte helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static double ToDouble(this sbyte helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static double ToExtended(this sbyte helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static string ToHexString(this sbyte helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToHexString(this sbyte helped, int MinDigits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this sbyte helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TByteHelper
+{
+	public static byte Parse(string S)
+	{
+		byte result = 0;
+		return result;
+	}
+	public static bool TryParse(string S, out byte Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool ToBoolean(this byte helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static float ToSingle(this byte helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static double ToDouble(this byte helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static double ToExtended(this byte helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static string ToHexString(this byte helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToHexString(this byte helped, int MinDigits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this byte helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TSmallIntHelper
+{
+	public static short Parse(string S)
+	{
+		short result = 0;
+		return result;
+	}
+	public static bool TryParse(string S, out short Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool ToBoolean(this short helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static float ToSingle(this short helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static double ToDouble(this short helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static double ToExtended(this short helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static string ToHexString(this short helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToHexString(this short helped, int MinDigits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this short helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TWordHelper
+{
+	public static ushort Parse(string S)
+	{
+		ushort result = 0;
+		return result;
+	}
+	public static bool TryParse(string S, out ushort Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool ToBoolean(this ushort helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static float ToSingle(this ushort helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static double ToDouble(this ushort helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static double ToExtended(this ushort helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static string ToHexString(this ushort helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToHexString(this ushort helped, int MinDigits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this ushort helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TIntegerHelper
+{
+	public static int Parse(string S)
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool TryParse(string S, out int Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool ToBoolean(this int helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static float ToSingle(this int helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static double ToDouble(this int helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static double ToExtended(this int helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static string ToHexString(this int helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToHexString(this int helped, int MinDigits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this int helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TCardinalHelper
+{
+	public static uint Parse(string S)
+	{
+		uint result = 0;
+		return result;
+	}
+	public static bool TryParse(string S, out uint Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool ToBoolean(this uint helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static float ToSingle(this uint helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static double ToDouble(this uint helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static double ToExtended(this uint helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static string ToHexString(this uint helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToHexString(this uint helped, int MinDigits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this uint helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TInt64Helper
+{
+	public static long Parse(string S)
+	{
+		long result = 0;
+		return result;
+	}
+	public static bool TryParse(string S, out long Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool ToBoolean(this long helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static float ToSingle(this long helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static double ToDouble(this long helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static double ToExtended(this long helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static string ToHexString(this long helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToHexString(this long helped, int MinDigits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this long helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TUInt64Helper
+{
+	public static ulong Parse(string S)
+	{
+		ulong result = 0;
+		return result;
+	}
+	public static bool TryParse(string S, out ulong Value)
+	{
+		Value = 0; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static bool ToBoolean(this ulong helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static float ToSingle(this ulong helped)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static double ToDouble(this ulong helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static double ToExtended(this ulong helped)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static string ToHexString(this ulong helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToHexString(this ulong helped, int MinDigits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this ulong helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TSingleHelper
+{
+	public static float Parse(string S)
+	{
+		float result = 0.0F;
+		return result;
+	}
+	public static bool TryParse(string S, out float Value)
+	{
+		Value = 0.0F; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static void BuildUp(this float helped, bool SignFlag, ulong Mantissa, int Exponent)
+	{
+	}
+	public static int Exponent(this float helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static ulong Fraction(this float helped)
+	{
+		ulong result = 0;
+		return result;
+	}
+	public static ulong Mantissa(this float helped)
+	{
+		ulong result = 0;
+		return result;
+	}
+	public static TFloatSpecial SpecialType(this float helped)
+	{
+		TFloatSpecial result = TFloatSpecial.fsZero;
+		return result;
+	}
+	public static bool IsNan(this float helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsInfinity(this float helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsNegativeInfinity(this float helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsPositiveInfinity(this float helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static string ToString(this float helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this float helped, TFloatFormat Format, int Precision, int Digits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this float helped, TFloatFormat Format, int Precision, int Digits, TFormatSettings AFormatSettings)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TDoubleHelper
+{
+	public static double Parse(string S)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static bool TryParse(string S, out double Value)
+	{
+		Value = 0.0D; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static void BuildUp(this double helped, bool SignFlag, ulong Mantissa, int Exponent)
+	{
+	}
+	public static int Exponent(this double helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static ulong Fraction(this double helped)
+	{
+		ulong result = 0;
+		return result;
+	}
+	public static ulong Mantissa(this double helped)
+	{
+		ulong result = 0;
+		return result;
+	}
+	public static TFloatSpecial SpecialType(this double helped)
+	{
+		TFloatSpecial result = TFloatSpecial.fsZero;
+		return result;
+	}
+	public static bool IsNan(this double helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsInfinity(this double helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsNegativeInfinity(this double helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsPositiveInfinity(this double helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static string ToString(this double helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this double helped, TFloatFormat Format, int Precision, int Digits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this double helped, TFloatFormat Format, int Precision, int Digits, TFormatSettings AFormatSettings)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TExtendedHelper
+{
+	public static double Parse(string S)
+	{
+		double result = 0.0D;
+		return result;
+	}
+	public static bool TryParse(string S, out double Value)
+	{
+		Value = 0.0D; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static void BuildUp(this double helped, bool SignFlag, ulong Mantissa, int Exponent)
+	{
+	}
+	public static int Exponent(this double helped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static ulong Fraction(this double helped)
+	{
+		ulong result = 0;
+		return result;
+	}
+	public static ulong Mantissa(this double helped)
+	{
+		ulong result = 0;
+		return result;
+	}
+	public static TFloatSpecial SpecialType(this double helped)
+	{
+		TFloatSpecial result = TFloatSpecial.fsZero;
+		return result;
+	}
+	public static bool IsNan(this double helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsInfinity(this double helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsNegativeInfinity(this double helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static bool IsPositiveInfinity(this double helped)
+	{
+		bool result = false;
+		return result;
+	}
+	public static string ToString(this double helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this double helped, TFloatFormat Format, int Precision, int Digits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this double helped, TFloatFormat Format, int Precision, int Digits, TFormatSettings AFormatSettings)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TCurrencyHelper
+{
+	public static Currency Parse(string S)
+	{
+		Currency result = 0.0M;
+		return result;
+	}
+	public static bool TryParse(string S, out Currency Value)
+	{
+		Value = 0.0M; //# clear out parameter
+		bool result = false;
+		return result;
+	}
+	public static int Size()
+	{
+		int result = 0;
+		return result;
+	}
+	public static string ToString(this Currency helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this Currency helped, TFloatFormat Format, int Digits)
+	{
+		string result = string.Empty;
+		return result;
+	}
+	public static string ToString(this Currency helped, TFloatFormat Format, int Digits, TFormatSettings AFormatSettings)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
+public static class TGUIDHelper
+{
+	public static Guid Create(string S)
+	{
+		Guid result = new Guid();
+		return result;
+	}
+	public static Guid Create(byte[] B)
+	{
+		Guid result = new Guid();
+		return result;
+	}
+	public static Guid Create(uint A, ushort B, ushort C, byte D, byte E, byte F, byte G, byte H, byte I, byte J, byte K)
+	{
+		Guid result = new Guid();
+		return result;
+	}
+	public static Guid NewGuid()
+	{
+		Guid result = new Guid();
+		return result;
+	}
+	public static byte[] ToByteArray(this ref Guid helped)
+	{
+		byte[] result = new byte[]{};
+		return result;
+	}
+	public static string ToString(this ref Guid helped)
+	{
+		string result = string.Empty;
+		return result;
+	}
+}
+
 public class SysutilsInterface
 {
 
@@ -111,6 +1568,375 @@ public class SysutilsInterface
 			TWin32FindData tmp = new TWin32FindData();
 			tmp.CreateRecordMembers();
 			return tmp;
+		}
+	}	
+
+	public class TStringBuilder : TObject
+	{
+
+
+
+/* TStringBuilder */
+		private int GetCapacity()
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		private void SetCapacity(int Value)
+		{
+		}
+		private char GetChars(int Index)
+		{
+			char result = '\0';
+			result = '\x00';
+			return result;
+		}
+		private void SetChars(int Index, char Value)
+		{
+		}
+		private int GetLength()
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		private void SetLength(int Value)
+		{
+		}
+		private int GetMaxCapacity()
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		public TStringBuilder()
+		{
+		}
+		public TStringBuilder(int ACapacity)
+		{
+		}
+		public TStringBuilder(string Value)
+		{
+		}
+		public TStringBuilder(int ACapacity, int AMaxCapacity)
+		{
+		}
+		public TStringBuilder(string Value, int ACapacity)
+		{
+		}
+		public TStringBuilder(string Value, int StartIndex, int ALength, int ACapacity)
+		{
+		}
+		public TStringBuilder Append(bool Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(byte Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(char Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(Currency Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(double Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(short Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(int Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(long Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(TObject Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(sbyte Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(float Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(string Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(ulong Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(char Value, int RepeatCount)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(T<char> Value, int StartIndex, int CharCount)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Append(string Value, int StartIndex, int Count = -1)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder AppendFormat(string AFormat, params TVarRec[] Args)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder AppendLine()
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder AppendLine(string Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public void Clear()
+		{
+		}
+		public void CopyTo(int SourceIndex, ref T<char> Destination, int DestinationIndex, int Count)
+		{
+		}
+		public int EnsureCapacity(int Capacity)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		public bool Equals(TStringBuilder Value)/*# reintroduce */
+		{
+			bool result = false;
+			result = false;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, bool Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, byte Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, char Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, Currency Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, double Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, short Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, int Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, long Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, TObject Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, sbyte Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, float Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, string Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, ulong Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Insert(int Index, T<char> Value)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Remove(int StartIndex, int RemLength)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Replace(char OldChar, char NewChar)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Replace(string OldValue, string NewValue)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Replace(char OldChar, char NewChar, int StartIndex, int Count)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public TStringBuilder Replace(string OldValue, string NewValue, int StartIndex, int Count)
+		{
+			TStringBuilder result = default;
+			result = this;
+			return result;
+		}
+		public override string ToString()
+		{
+			string result = string.Empty;
+			result = "";
+			return result;
+		}
+		public string ToString(bool UpdateCapacity)/*# reintroduce */
+		{
+			string result = string.Empty;
+			result = "";
+			return result;
+		}
+		public string ToString(int StartIndex, int StrLength)/*# reintroduce */
+		{
+			string result = string.Empty;
+			result = "";
+			return result;
+		}
+		/*property Capacity : int read GetCapacity write SetCapacity;*/
+		public int Capacity
+		{
+			get
+			{
+				return GetCapacity();
+			}
+			set
+			{
+				SetCapacity(value);
+			}
+		}
+		/*property Chars [Index: integer]: char read GetChars write SetChars default ;*/
+		public char ReadPropertyChars(int Index) { return GetChars(Index);}
+		public void WritePropertyChars(int Index, char Value){SetChars(Index, Value);}
+		public char this[int Index]
+		{
+			get
+			{
+				return GetChars(Index);
+			}
+			set
+			{
+				SetChars(Index, value);
+			}
+		}
+		/*property Length : int read GetLength write SetLength;*/
+		public int Length
+		{
+			get
+			{
+				return GetLength();
+			}
+			set
+			{
+				SetLength(value);
+			}
+		}
+		/*property MaxCapacity : int read GetMaxCapacity;*/
+		public int MaxCapacity
+		{
+			get
+			{
+				return GetMaxCapacity();
+			}
 		}
 	}	
 
@@ -204,6 +2030,8 @@ public class SysutilsInterface
 			return tmp;
 		}
 	}	
+
+/* Additional System.SysUtils primitive type helpers. */
 
 	public struct TSearchRec
 	{
@@ -1445,6 +3273,9 @@ public class SysutilsInterface
                    rfIgnoreCase };
 	public enum TTextLineBreakStyle {tlbsCRLF,
                           tlbsLF };
+	public enum TStringSplitOptions {None,
+                          ExcludeEmpty,
+                          ExcludeLastEmpty };
 	public enum TFilenameCaseMatch {mkNone,
                          mkExactMatch,
                          mkSingleMatch,
@@ -1832,8 +3663,6 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 		string result = string.Empty;
 		return result;
 	}
-	//# missing function body: public static string CurrToStrF(Currency Value, TFloatFormat Format, int Digits);
-	//# missing function body: public static string CurrToStrF(Currency Value, TFloatFormat Format, int Digits, TFormatSettings AFormatSettings);
 	public static Currency StrToCurr(string S)
 	{
 		Currency result = 0.0M;

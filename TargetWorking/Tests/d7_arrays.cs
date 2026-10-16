@@ -52,10 +52,10 @@ namespace D7_arrays
             result = result && CheckResult2;
             CheckResult3 = CheckDynamicArrays();
             result = result && CheckResult3;
-            //            CheckResult4 = CheckOpenArrays();
-            //            result = result && CheckResult4;
-            //CheckResult5 = CheckArraySlice();
-            //result = result && CheckResult5;
+            CheckResult4 = CheckOpenArrays();
+            result = result && CheckResult4;
+            CheckResult5 = CheckArraySlice();
+            result = result && CheckResult5;
             return result;
         }
 
@@ -158,15 +158,15 @@ namespace D7_arrays
             return result;
         }
 
-        //public static void FillLetterBuffer(ref char[] ABuffer)
-        //{
-        //    int Index = 0;
-        //    Array.Resize(ref ABuffer, 4);
-        //    for (Index = 0; Index <= ABuffer.Length - 1 /*# High(ABuffer) */; Index++)
-        //    {
-        //        ABuffer[Index] = Chr((int)('K') + Index);
-        //    }
-        //}
+        public static void FillLetterBuffer(ref char[] ABuffer)
+        {
+            int Index = 0;
+            Array.Resize(ref ABuffer, 4);
+            for (Index = 0; Index <= ABuffer.Length - 1 /*# High(ABuffer) */; Index++)
+            {
+                ABuffer[Index] = Chr((int)('K') + Index);
+            }
+        }
 
         public static string JoinCharacters(char[] ACharacters)
         {
@@ -192,19 +192,19 @@ namespace D7_arrays
             return result;
         }
 
-        //public static bool CheckOpenArrays()
-        //{
-        //    bool result = false;
-        //    char[] Buffer = new char[] { };
-        //    char[] FixedText = new char[4/*# range 0..3*/];
-        //    FillLetterBuffer(ref Buffer);
-        //    FixedText[0] = 'T';
-        //    FixedText[1] = 'E';
-        //    FixedText[2] = 'S';
-        //    FixedText[3] = 'T';
-        //    result = (JoinCharacters(Buffer) == "KLMN") && (JoinCharacters(FixedText) == "TEST") && (JoinCharacters(new char[] { }) == "") && (JoinConstCharacters(new TVarRec[] { 'O', 'K' }) == "OK");
-        //    return result;
-        //}
+        public static bool CheckOpenArrays()
+        {
+            bool result = false;
+            char[] Buffer = new char[] { };
+            char[] FixedText = new char[4/*# range 0..3*/];
+            FillLetterBuffer(ref Buffer);
+            FixedText[0] = 'T';
+            FixedText[1] = 'E';
+            FixedText[2] = 'S';
+            FixedText[3] = 'T';
+            result = (JoinCharacters(Buffer) == "KLMN") && (JoinCharacters(FixedText) == "TEST") && (JoinCharacters(new char[] { }) == "") && (JoinConstCharacters(new TVarRec[] { 'O', 'K' }) == "OK");
+            return result;
+        }
 
         public static bool CheckSliceValues(int[] AValues)
         {
@@ -213,18 +213,18 @@ namespace D7_arrays
             return result;
         }
 
-        //public static bool CheckArraySlice()
-        //{
-        //    bool result = false;
-        //    int[] Source = new int[6/*# range 0..5*/];
-        //    int Index = 0;
-        //    for (Index = 0 /*# Low(Source) */; Index <= 5 /*# High(Source) */; Index++)
-        //    {
-        //        Source[Index] = (Index + 1) * 10;
-        //    }
-        //    result = CheckSliceValues(Slice(Source, 4));
-        //    return result;
-        //}
+        public static bool CheckArraySlice()
+        {
+            bool result = false;
+            int[] Source = new int[6/*# range 0..5*/];
+            int Index = 0;
+            for (Index = 0 /*# Low(Source) */; Index <= 5 /*# High(Source) */; Index++)
+            {
+                Source[Index] = (Index + 1) * 10;
+            }
+            result = CheckSliceValues(Slice(Source, 4));
+            return result;
+        }
     } // class D7_arraysImplementation
 
 }  // namespace D7_arrays

@@ -76,8 +76,8 @@ namespace D7_string_boundaries
             result = result && CheckResult8;
             CheckResult9 = MessageText.EndsWith("stored");
             result = result && CheckResult9;
-            //CheckResult10 = TStringHelper.EndsText("STORED", MessageText);
-            //result = result && CheckResult10;
+            CheckResult10 = TStringHelper.EndsText("STORED", MessageText);
+            result = result && CheckResult10;
             CheckResult11 = AnsiContainsText(AnsiMessage.Decode(), "build ready");
             result = result && CheckResult11;
             return result;

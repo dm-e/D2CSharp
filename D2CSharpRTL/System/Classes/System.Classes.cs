@@ -54,7 +54,7 @@ public class ClassesInterface
 /* TInterfacedPersistent */
 		protected virtual int QueryInterface(Guid IID, out object Obj)
 		{
-            Obj = default;
+			Obj = default;
 			int result = 0;
 			result = E_NOINTERFACE;
 			return result;
@@ -151,142 +151,167 @@ public class ClassesInterface
 
 	public class TList : TObject
 	{
-		private Pointer[] FList = new Pointer[]{};
-		private int FCount;
-		private int FCapacity;
-		private Pointer Get(int Index)
-		{
-			Pointer result = default;
-			result = default;
-			return result;
-		}
-		private void Put(int Index, Pointer Item)
-		{
-		}
-		private void SetCapacity(int NewCapacity)
-		{
-		}
-		private void SetCount(int NewCount)
-		{
-		}
+		private readonly global::System.Collections.Generic.List<Pointer> FItems =
+			new global::System.Collections.Generic.List<Pointer>();
+
 		protected virtual void Notify(Pointer Ptr, TListNotification Action)
 		{
 		}
 
-/* TList */
+		private Pointer Get(int Index)
+		{
+			if ((uint)Index >= (uint)FItems.Count)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Index));
+			return FItems[Index];
+		}
+
+		private void Put(int Index, Pointer Item)
+		{
+			if ((uint)Index >= (uint)FItems.Count)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Index));
+			FItems[Index] = Item;
+		}
+
+		private void SetCapacity(int NewCapacity)
+		{
+			if (NewCapacity < FItems.Count)
+				throw new global::System.ArgumentOutOfRangeException(nameof(NewCapacity));
+			FItems.Capacity = NewCapacity;
+		}
+
+		private void SetCount(int NewCount)
+		{
+			if (NewCount < 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(NewCount));
+			while (FItems.Count < NewCount)
+				FItems.Add(default);
+			while (FItems.Count > NewCount)
+				FItems.RemoveAt(FItems.Count - 1);
+		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				FItems.Clear();
+				base.Destroy();
 			}
 		}
+
 		public int Add(Pointer Item)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			int Result = FItems.Count;
+			FItems.Add(Item);
+			Notify(Item, TListNotification.lnAdded);
+			return Result;
 		}
+
 		public virtual void Clear()
 		{
+			for (int Index = FItems.Count - 1; Index >= 0; Index--)
+				Notify(FItems[Index], TListNotification.lnDeleted);
+			FItems.Clear();
 		}
+
 		public void Delete(int Index)
 		{
+			Pointer Item = Get(Index);
+			FItems.RemoveAt(Index);
+			Notify(Item, TListNotification.lnDeleted);
 		}
+
 		public static void Error(string Msg, int Data)
 		{
+			throw new global::System.ArgumentOutOfRangeException(nameof(Data), Data, Msg);
 		}
+
 		public static void Error(Pointer<TResStringRec> Msg, int Data)
 		{
+			throw new global::System.ArgumentOutOfRangeException(nameof(Data), Data, "TList error");
 		}
+
 		public void Exchange(int Index1, int Index2)
 		{
+			Pointer Temp = Get(Index1);
+			FItems[Index1] = Get(Index2);
+			FItems[Index2] = Temp;
 		}
+
 		public Pointer Extract(Pointer Item)
 		{
-			Pointer result = default;
-			result = default;
-			return result;
+			int Index = IndexOf(Item);
+			if (Index < 0)
+				return default;
+			Pointer Result = FItems[Index];
+			FItems.RemoveAt(Index);
+			Notify(Result, TListNotification.lnExtracted);
+			return Result;
 		}
-		public Pointer First()
-		{
-			Pointer result = default;
-			result = default;
-			return result;
-		}
-		public int IndexOf(Pointer Item)
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
+
+		public Pointer First() => FItems.Count == 0 ? default : FItems[0];
+
+		public int IndexOf(Pointer Item) => FItems.IndexOf(Item);
+
 		public void Insert(int Index, Pointer Item)
 		{
+			if ((uint)Index > (uint)FItems.Count)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Index));
+			FItems.Insert(Index, Item);
+			Notify(Item, TListNotification.lnAdded);
 		}
-		public Pointer Last()
-		{
-			Pointer result = default;
-			result = default;
-			return result;
-		}
-		public TListEnumerator GetEnumerator()
-		{
-			TListEnumerator result = default;
-			result = default;
-			return result;
-		}
+
+		public Pointer Last() => FItems.Count == 0 ? default : FItems[FItems.Count - 1];
+
+		public TListEnumerator GetEnumerator() => new TListEnumerator(this);
+
 		public void Move(int CurIndex, int NewIndex)
 		{
+			Pointer Item = Get(CurIndex);
+			FItems.RemoveAt(CurIndex);
+			FItems.Insert(NewIndex, Item);
 		}
+
 		public void Pack()
 		{
+			for (int Index = FItems.Count - 1; Index >= 0; Index--)
+				if (FItems[Index].Equals(default(Pointer)))
+					FItems.RemoveAt(Index);
 		}
+
 		public int Remove(Pointer Item)
 		{
-			int result = 0;
-			result = -1;
-			return result;
+			int Index = IndexOf(Item);
+			if (Index >= 0)
+				Delete(Index);
+			return Index;
 		}
+
 		public void Sort(TListSortCompare Compare)
 		{
+			if (Compare == null)
+				throw new global::System.ArgumentNullException(nameof(Compare));
+			FItems.Sort((Left, Right) => Compare(Left, Right));
 		}
-		/*property Capacity : int read FCapacity write SetCapacity;*/
+
 		public int Capacity
 		{
-			get
-			{
-				return FCapacity;
-			}
-			set
-			{
-				SetCapacity(value);
-			}
+			get => FItems.Capacity;
+			set => SetCapacity(value);
 		}
-		/*property Count : int read FCount write SetCount;*/
+
 		public int Count
 		{
-			get
-			{
-				return FCount;
-			}
-			set
-			{
-				SetCount(value);
-			}
+			get => FItems.Count;
+			set => SetCount(value);
 		}
-		/*property Items [Index: integer]: Pointer read Get write Put default ;*/
-		public Pointer ReadPropertyItems(int Index) { return Get(Index);}
-		public void WritePropertyItems(int Index, Pointer Item){Put(Index, Item);}
+
+		public Pointer ReadPropertyItems(int Index) => Get(Index);
+		public void WritePropertyItems(int Index, Pointer Item) => Put(Index, Item);
+
 		public Pointer this[int Index]
 		{
-			get
-			{
-				return Get(Index);
-			}
-			set
-			{
-				Put(Index, value);
-			}
+			get => Get(Index);
+			set => Put(Index, value);
 		}
 
 		public TList() {}
@@ -294,84 +319,79 @@ public class ClassesInterface
 
 	public class TListEnumerator : TObject
 	{
-		private TList FList;
+		private readonly TList FList;
 		private int FIndex;
+
 		private Pointer GetCurrent()
 		{
-			Pointer result = default;
-			result = default;
-			return result;
+			if (FIndex < 0 || FIndex >= FList.Count)
+				return default;
+			return FList[FIndex];
 		}
 
-/* TListEnumerator */
 		public TListEnumerator(TList AList)
 		{
-			;
+			FList = AList ?? throw new global::System.ArgumentNullException(nameof(AList));
+			FIndex = -1;
 		}
+
 		public bool MoveNext()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			FIndex++;
+			return FIndex < FList.Count;
 		}
-		/*property Current : Pointer read GetCurrent;*/
-		public Pointer Current
-		{
-			get
-			{
-				return GetCurrent();
-			}
-		}
+
+		public Pointer Current => GetCurrent();
 	}	
 
 	public class TBits : TObject
 	{
-		private int FSize;
+		private bool[] FBits = global::System.Array.Empty<bool>();
 
-/* TBits */
 		private bool GetBit(int Index)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			if ((uint)Index >= (uint)FBits.Length)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Index));
+			return FBits[Index];
 		}
+
 		private void SetBit(int Index, bool Value)
 		{
+			if (Index < 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Index));
+			if (Index >= FBits.Length)
+				SetSize(Index + 1);
+			FBits[Index] = Value;
 		}
+
 		private void SetSize(int Value)
 		{
+			if (Value < 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Value));
+			global::System.Array.Resize(ref FBits, Value);
 		}
+
 		public int OpenBit()
 		{
-			int result = 0;
-			result = -1;
-			return result;
+			for (int Index = 0; Index < FBits.Length; Index++)
+				if (!FBits[Index])
+					return Index;
+			return FBits.Length;
 		}
-		/*property Bits [Index: integer]: bool read GetBit write SetBit default ;*/
-		public bool ReadPropertyBits(int Index) { return GetBit(Index);}
-		public void WritePropertyBits(int Index, bool Value){SetBit(Index, Value);}
+
+		public bool ReadPropertyBits(int Index) => GetBit(Index);
+		public void WritePropertyBits(int Index, bool Value) => SetBit(Index, Value);
+
 		public bool this[int Index]
 		{
-			get
-			{
-				return GetBit(Index);
-			}
-			set
-			{
-				SetBit(Index, value);
-			}
+			get => GetBit(Index);
+			set => SetBit(Index, value);
 		}
-		/*property Size : int read FSize write SetSize;*/
+
 		public int Size
 		{
-			get
-			{
-				return FSize;
-			}
-			set
-			{
-				SetSize(value);
-			}
+			get => FBits.Length;
+			set => SetSize(value);
 		}
 
 		public TBits() {}
@@ -379,128 +399,79 @@ public class ClassesInterface
 
 	public class TInterfaceList : TInterfacedObject, IInterfaceList, IInterfaceListEx
 	{
-		private IInterface[] FItems = new IInterface[]{};
-		private int FCount;
-		private int FCapacity;
+		private readonly global::System.Collections.Generic.List<IInterface> FItems =
+			new global::System.Collections.Generic.List<IInterface>();
+		private readonly object FLock = new object();
 
-/* TInterfaceList */
-		public int GetCapacity()
-		{
-			int result = 0;
-			result = FCapacity;
-			return result;
-		}
-		public int GetCount()
-		{
-			int result = 0;
-			result = FCount;
-			return result;
-		}
-		public IInterface GetItem(int Index)
-		{
-			IInterface result = default;
-			result = default;
-			return result;
-		}
+		public int GetCapacity() => FItems.Capacity;
+		public int GetCount() => FItems.Count;
+		public IInterface GetItem(int Index) => FItems[Index];
+
 		public void SetCapacity(int NewCapacity)
 		{
+			if (NewCapacity < FItems.Count)
+				throw new global::System.ArgumentOutOfRangeException(nameof(NewCapacity));
+			FItems.Capacity = NewCapacity;
 		}
-		public void SetItem(int Index, IInterface Item)
-		{
-		}
+
+		public void SetItem(int Index, IInterface Item) => FItems[Index] = Item;
+
 		public int Add(IInterface Item)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			int Result = FItems.Count;
+			FItems.Add(Item);
+			return Result;
 		}
-		public void Clear()
-		{
-		}
-		public void Delete(int Index)
-		{
-		}
+
+		public void Clear() => FItems.Clear();
+		public void Delete(int Index) => FItems.RemoveAt(Index);
+
 		public void Exchange(int Index1, int Index2)
 		{
+			IInterface Temp = FItems[Index1];
+			FItems[Index1] = FItems[Index2];
+			FItems[Index2] = Temp;
 		}
+
 		public TInterfaceList Expand()
 		{
-			TInterfaceList result = default;
-			result = this;
-			return result;
+			if (FItems.Count == FItems.Capacity)
+				FItems.Capacity = FItems.Capacity == 0 ? 4 : FItems.Capacity * 2;
+			return this;
 		}
-		public IInterface First()
-		{
-			IInterface result = default;
-			result = default;
-			return result;
-		}
-		public TInterfaceListEnumerator GetEnumerator()
-		{
-			TInterfaceListEnumerator result = default;
-			result = default;
-			return result;
-		}
-		public int IndexOf(IInterface Item)
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
-		public void Insert(int Index, IInterface Item)
-		{
-		}
-		public IInterface Last()
-		{
-			IInterface result = default;
-			result = default;
-			return result;
-		}
+
+		public IInterface First() => FItems.Count == 0 ? default : FItems[0];
+		public TInterfaceListEnumerator GetEnumerator() => new TInterfaceListEnumerator(this);
+		public int IndexOf(IInterface Item) => FItems.IndexOf(Item);
+		public void Insert(int Index, IInterface Item) => FItems.Insert(Index, Item);
+		public IInterface Last() => FItems.Count == 0 ? default : FItems[FItems.Count - 1];
+
 		public int Remove(IInterface Item)
 		{
-			int result = 0;
-			result = -1;
-			return result;
+			int Index = FItems.IndexOf(Item);
+			if (Index >= 0)
+				FItems.RemoveAt(Index);
+			return Index;
 		}
-		public void Lock()
-		{
-		}
-		public void Unlock()
-		{
-		}
-		/*property Capacity : int read GetCapacity write SetCapacity;*/
+
+		public void Lock() => global::System.Threading.Monitor.Enter(FLock);
+		public void Unlock() => global::System.Threading.Monitor.Exit(FLock);
+
 		public int Capacity
 		{
-			get
-			{
-				return GetCapacity();
-			}
-			set
-			{
-				SetCapacity(value);
-			}
+			get => GetCapacity();
+			set => SetCapacity(value);
 		}
-		/*property Count : int read GetCount;*/
-		public int Count
-		{
-			get
-			{
-				return GetCount();
-			}
-		}
-		/*property Items [Index: integer]: IInterface read GetItem write SetItem default ;*/
-		public IInterface ReadPropertyItems(int Index) { return GetItem(Index);}
-		public void WritePropertyItems(int Index, IInterface Item){SetItem(Index, Item);}
+
+		public int Count => GetCount();
+
+		public IInterface ReadPropertyItems(int Index) => GetItem(Index);
+		public void WritePropertyItems(int Index, IInterface Item) => SetItem(Index, Item);
+
 		public IInterface this[int Index]
 		{
-			get
-			{
-				return GetItem(Index);
-			}
-			set
-			{
-				SetItem(Index, value);
-			}
+			get => GetItem(Index);
+			set => SetItem(Index, value);
 		}
 
 		public TInterfaceList() {}
@@ -508,138 +479,164 @@ public class ClassesInterface
 
 	public class TInterfaceListEnumerator : TObject
 	{
-		private TInterfaceList FList;
+		private readonly TInterfaceList FList;
 		private int FIndex;
+
 		private IInterface GetCurrent()
 		{
-			IInterface result = default;
-			result = default;
-			return result;
+			if (FIndex < 0 || FIndex >= FList.Count)
+				return default;
+			return FList[FIndex];
 		}
 
-/* TInterfaceListEnumerator */
 		public TInterfaceListEnumerator(TInterfaceList AList)
 		{
-			;
+			FList = AList ?? throw new global::System.ArgumentNullException(nameof(AList));
+			FIndex = -1;
 		}
+
 		public bool MoveNext()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			FIndex++;
+			return FIndex < FList.Count;
 		}
-		/*property Current : IInterface read GetCurrent;*/
-		public IInterface Current
-		{
-			get
-			{
-				return GetCurrent();
-			}
-		}
+
+		public IInterface Current => GetCurrent();
 	}	
 
 	public class TObservers : TObject
 	{
 		private TCanObserveEvent FOnCanObserve;
 		private TObserverAddedEvent FOnObserverAdded;
+		private readonly global::System.Collections.Generic.Dictionary<int,
+			global::System.Collections.Generic.List<IInterface>> FObservers =
+			new global::System.Collections.Generic.Dictionary<int,
+				global::System.Collections.Generic.List<IInterface>>();
 
-/* TObservers */
 		public TObservers()
 		{
-			;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				FObservers.Clear();
+				base.Destroy();
 			}
 		}
+
 		public virtual void AddObserver(int ID, IInterface AIntf)
 		{
+			if (AIntf == null)
+				throw new global::System.ArgumentNullException(nameof(AIntf));
+			if (!CanObserve(ID))
+				return;
+
+			if (!FObservers.TryGetValue(ID, out var List))
+			{
+				List = new global::System.Collections.Generic.List<IInterface>();
+				FObservers.Add(ID, List);
+			}
+			if (!List.Contains(AIntf))
+			{
+				List.Add(AIntf);
+				FOnObserverAdded?.Invoke(ID, AIntf as IObserver);
+			}
 		}
+
 		public virtual void AddObserver(int[] IDs, IInterface AIntf)
 		{
+			if (IDs == null)
+				throw new global::System.ArgumentNullException(nameof(IDs));
+			foreach (int ID in IDs)
+				AddObserver(ID, AIntf);
 		}
+
 		public virtual bool CanObserve(int ID)
 		{
-			bool result = false;
-			result = true;
-			return result;
+			return FOnCanObserve == null || FOnCanObserve(ID);
 		}
+
 		public virtual bool IsObserving(int ID)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return FObservers.TryGetValue(ID, out var List) && List.Count != 0;
 		}
+
 		public virtual void RemoveObserver(int ID, IInterface AIntf)
 		{
+			if (!FObservers.TryGetValue(ID, out var List))
+				return;
+			List.Remove(AIntf);
+			if (List.Count == 0)
+				FObservers.Remove(ID);
 		}
+
 		public virtual bool TryIsObserving(int ID, out IInterface AIntf)
 		{
-			AIntf = default; //# clear out parameter
-			bool result = false;
-
 			AIntf = default;
-			result = false;
-			return result;
+			if (!FObservers.TryGetValue(ID, out var List) || List.Count == 0)
+				return false;
+			AIntf = List[0];
+			return true;
 		}
-		/*property OnCanObserve : TCanObserveEvent read FOnCanObserve write FOnCanObserve;*/
+
 		public TCanObserveEvent OnCanObserve
 		{
-			get
-			{
-				return FOnCanObserve;
-			}
-			set
-			{
-				FOnCanObserve = value;
-			}
+			get => FOnCanObserve;
+			set => FOnCanObserve = value;
 		}
-		/*property OnObserverAdded : TObserverAddedEvent read FOnObserverAdded write FOnObserverAdded;*/
+
 		public TObserverAddedEvent OnObserverAdded
 		{
-			get
-			{
-				return FOnObserverAdded;
-			}
-			set
-			{
-				FOnObserverAdded = value;
-			}
+			get => FOnObserverAdded;
+			set => FOnObserverAdded = value;
 		}
 	}	
 
 	public class TObserverMapping : TObject
 	{
+		private static readonly object FSyncRoot = new object();
+		private static readonly TObserverMapping FInstance = new TObserverMapping();
+		private readonly global::System.Collections.Generic.HashSet<TClass> FEnabledClasses =
+			new global::System.Collections.Generic.HashSet<TClass>();
+
 		protected static TObserverMapping Instance()
 		{
-			TObserverMapping result = default;
-			result = default;
-			return result;
+			return FInstance;
 		}
 
 /* TObserverMapping */
 		public TObserverMapping()
 		{
-			;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				lock (FSyncRoot)
+					FEnabledClasses.Clear();
+				base.Destroy();
 			}
 		}
+
 		public static void Clear()
 		{
+			lock (FSyncRoot)
+				Instance().FEnabledClasses.Clear();
 		}
+
 		public static void EnableObservers(TClass AClass)
 		{
+			lock (FSyncRoot)
+				Instance().FEnabledClasses.Add(AClass);
 		}
+
 		public static void DisableObservers(TClass AClass)
 		{
+			lock (FSyncRoot)
+				Instance().FEnabledClasses.Remove(AClass);
 		}
 	}	
 
@@ -650,9 +647,7 @@ public class ClassesInterface
 /* TLinkObservers */
 		public static bool IsObserving(TObservers AObservers, int ID)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return AObservers != null && AObservers.IsObserving(ID);
 		}
 
 		public TLinkObservers() {}
@@ -660,23 +655,30 @@ public class ClassesInterface
 
 	public class TPersistent : TObject
 	{
-
-
-/* TPersistent */
 		protected void AssignError(TPersistent Source)
 		{
+			throw new global::System.ArgumentException(
+				"Cannot assign " +
+				(Source == null ? "nil" : Source.GetType().FullName) +
+				" to " + GetType().FullName + ".", nameof(Source));
 		}
+
 		protected virtual void AssignTo(TPersistent Dest)
 		{
+			Dest?.AssignError(this);
 		}
+
 		public virtual void Assign(TPersistent Source)
 		{
+			if (Source == null)
+				AssignError(Source);
+			else
+				Source.AssignTo(this);
 		}
+
 		public virtual string GetNamePath()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			return GetType().Name;
 		}
 
 		public TPersistent() {}
@@ -686,892 +688,1117 @@ public class ClassesInterface
 	{
 		private TCollection FCollection;
 		private int FID;
+		private string FDisplayName = string.Empty;
+
 		private int GetIndex()
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			return FCollection == null ? -1 : FCollection.IndexOfItem(this);
 		}
+
 		private void SetCollection(TCollection Value)
 		{
+			if (global::System.Object.ReferenceEquals(FCollection, Value))
+				return;
+			FCollection?.RemoveItem(this);
+			Value?.AddExistingItem(this);
 		}
+
 		private void SetIndex(int Value)
 		{
+			FCollection?.SetItemIndex(this, Value);
 		}
+
 		protected virtual string GetDisplayName()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			return string.IsNullOrEmpty(FDisplayName) ? GetType().Name : FDisplayName;
 		}
+
 		protected virtual void SetDisplayName(string Value)
 		{
+			FDisplayName = Value ?? string.Empty;
 		}
+
 		protected virtual void SetItemName()
 		{
 		}
 
-/* TCollectionItem */
+		internal void InvokeSetItemName() => SetItemName();
+		internal void SetCollectionDirect(TCollection Value) => FCollection = Value;
+		internal void SetIDDirect(int Value) => FID = Value;
+
 		public TCollectionItem(TCollection Collection)
 		{
-			;
+			if (Collection != null)
+				Collection.AddExistingItem(this);
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				FCollection?.RemoveItem(this);
+				FCollection = null;
+				base.Destroy();
 			}
 		}
-		/*property Collection : TCollection read FCollection write SetCollection;*/
+
 		public TCollection Collection
 		{
-			get
-			{
-				return FCollection;
-			}
-			set
-			{
-				SetCollection(value);
-			}
+			get => FCollection;
+			set => SetCollection(value);
 		}
-		/*property ID : int read FID;*/
-		public int ID
-		{
-			get
-			{
-				return FID;
-			}
-		}
-		/*property Index : int read GetIndex write SetIndex;*/
+
+		public int ID => FID;
+
 		public int Index
 		{
-			get
-			{
-				return GetIndex();
-			}
-			set
-			{
-				SetIndex(value);
-			}
+			get => GetIndex();
+			set => SetIndex(value);
 		}
-		/*property DisplayName : string read GetDisplayName write SetDisplayName;*/
+
 		public string DisplayName
 		{
-			get
-			{
-				return GetDisplayName();
-			}
-			set
-			{
-				SetDisplayName(value);
-			}
+			get => GetDisplayName();
+			set => SetDisplayName(value);
 		}
 	}	
 
 	public class TCollection : TPersistent
 	{
 		private TClass FItemClass;
-		private int GetCount()
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		private TCollectionItem GetItem(int Index)
-		{
-			TCollectionItem result = default;
-			result = default;
-			return result;
-		}
+		private readonly global::System.Collections.Generic.List<TCollectionItem> FItems =
+			new global::System.Collections.Generic.List<TCollectionItem>();
+		private int FNextID;
+		private int FUpdateCount;
+
+		private int GetCount() => FItems.Count;
+		private TCollectionItem GetItem(int Index) => FItems[Index];
+
 		private void SetItem(int Index, TCollectionItem Value)
 		{
-		}
-		protected TCollectionItem Add()
-		{
-			TCollectionItem result = default;
-			result = default;
-			return result;
-		}
-		protected virtual void Added(ref TCollectionItem Item)
-		{
-		}
-		protected virtual void Deleting(TCollectionItem Item)
-		{
-		}
-		protected virtual TClass GetItemClass()
-		{
-			TClass result = default;
-			result = FItemClass;
-			return result;
-		}
-		protected virtual string GetItemName()
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		protected virtual TPersistent GetOwner()
-		{
-			TPersistent result = default;
-			result = default;
-			return result;
-		}
-		protected virtual void Notify(TCollectionItem Item, TCollectionNotification Action)
-		{
-		}
-		protected virtual void PropertyNameChanged()
-		{
-		}
-		protected virtual void SetItemName(TCollectionItem Item)
-		{
-		}
-		protected virtual void Update(TCollectionItem Item)
-		{
+			if (Value == null)
+				throw new global::System.ArgumentNullException(nameof(Value));
+			if (global::System.Object.ReferenceEquals(FItems[Index], Value))
+				return;
+
+			TCollectionItem Old = FItems[Index];
+			Old.SetCollectionDirect(null);
+			Value.Collection?.RemoveItem(Value);
+			Value.SetCollectionDirect(this);
+			if (Value.ID == 0)
+				Value.SetIDDirect(GetItemID());
+			FItems[Index] = Value;
+			Update(Value);
 		}
 
-/* TCollection */
+		protected TCollectionItem Add()
+		{
+			TCollectionItem Item = CreateItemInstance();
+			AddExistingItem(Item);
+			return Item;
+		}
+
+		private TCollectionItem CreateItemInstance()
+		{
+			global::System.Type ItemType = null;
+			if (FItemClass != null)
+			{
+				object Boxed = FItemClass;
+				ItemType = Boxed as global::System.Type;
+			}
+			if (ItemType == null || !typeof(TCollectionItem).IsAssignableFrom(ItemType))
+				ItemType = typeof(TCollectionItem);
+
+			try
+			{
+				return (TCollectionItem)global::System.Activator.CreateInstance(
+					ItemType, new object[] { null });
+			}
+			catch
+			{
+				return new TCollectionItem(null);
+			}
+		}
+
+		internal void AddExistingItem(TCollectionItem Item)
+		{
+			if (Item == null)
+				throw new global::System.ArgumentNullException(nameof(Item));
+			if (FItems.Contains(Item))
+				return;
+			Item.Collection?.RemoveItem(Item);
+			Item.SetCollectionDirect(this);
+			if (Item.ID == 0)
+				Item.SetIDDirect(GetItemID());
+			FItems.Add(Item);
+			TCollectionItem Temp = Item;
+			Added(ref Temp);
+			Notify(Item, TCollectionNotification.cnAdded);
+			Update(Item);
+		}
+
+		internal void RemoveItem(TCollectionItem Item)
+		{
+			int Index = FItems.IndexOf(Item);
+			if (Index < 0)
+				return;
+			Deleting(Item);
+			FItems.RemoveAt(Index);
+			Item.SetCollectionDirect(null);
+			Notify(Item, TCollectionNotification.cnRemoved);
+			Update(null);
+		}
+
+		internal int IndexOfItem(TCollectionItem Item) => FItems.IndexOf(Item);
+
+		internal void SetItemIndex(TCollectionItem Item, int NewIndex)
+		{
+			int OldIndex = FItems.IndexOf(Item);
+			if (OldIndex < 0)
+				return;
+			NewIndex = global::System.Math.Max(0,
+				global::System.Math.Min(NewIndex, FItems.Count - 1));
+			if (OldIndex == NewIndex)
+				return;
+			FItems.RemoveAt(OldIndex);
+			FItems.Insert(NewIndex, Item);
+			Update(Item);
+		}
+
+		protected virtual void Added(ref TCollectionItem Item) {}
+		protected virtual void Deleting(TCollectionItem Item) {}
+		protected virtual TClass GetItemClass() => FItemClass;
+		protected virtual string GetItemName() => string.Empty;
+		protected virtual TPersistent GetOwner() => null;
+		protected virtual void Notify(TCollectionItem Item, TCollectionNotification Action) {}
+		protected virtual void PropertyNameChanged() {}
+		protected virtual void SetItemName(TCollectionItem Item) => Item?.InvokeSetItemName();
+		protected virtual void Update(TCollectionItem Item) {}
+
 		public TCollection(TClass ItemClass)
 		{
-			;
+			FItemClass = ItemClass;
+			FNextID = 0;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				Clear();
+				base.Destroy();
 			}
 		}
+
 		public override void Assign(TPersistent Source)
 		{
+			if (Source is TCollection Other)
+			{
+				BeginUpdate();
+				try
+				{
+					Clear();
+					foreach (TCollectionItem SourceItem in Other.FItems)
+					{
+						TCollectionItem Item = Add();
+						Item.Assign(SourceItem);
+					}
+				}
+				finally
+				{
+					EndUpdate();
+				}
+				return;
+			}
+			base.Assign(Source);
 		}
-		public void BeginUpdate()
-		{
-		}
+
+		public void BeginUpdate() => FUpdateCount++;
+
 		public void Clear()
 		{
+			while (FItems.Count != 0)
+			{
+				TCollectionItem Item = FItems[FItems.Count - 1];
+				FItems.RemoveAt(FItems.Count - 1);
+				Item.SetCollectionDirect(null);
+				Item.Destroy();
+			}
+			Update(null);
 		}
+
 		public void Delete(int Index)
 		{
+			TCollectionItem Item = FItems[Index];
+			FItems.RemoveAt(Index);
+			Item.SetCollectionDirect(null);
+			Item.Destroy();
+			Update(null);
 		}
+
 		public void EndUpdate()
 		{
+			if (FUpdateCount > 0)
+				FUpdateCount--;
+			if (FUpdateCount == 0)
+				Update(null);
 		}
+
 		public TCollectionItem FindItemID(int ID)
 		{
-			TCollectionItem result = default;
-			result = default;
-			return result;
+			foreach (TCollectionItem Item in FItems)
+				if (Item.ID == ID)
+					return Item;
+			return null;
 		}
-		public TCollectionEnumerator GetEnumerator()
-		{
-			TCollectionEnumerator result = default;
-			result = default;
-			return result;
-		}
+
+		public TCollectionEnumerator GetEnumerator() => new TCollectionEnumerator(this);
+
 		public int GetItemID()
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			return ++FNextID;
 		}
+
 		public TCollectionItem Insert(int Index)
 		{
-			TCollectionItem result = default;
-			result = default;
-			return result;
+			TCollectionItem Item = CreateItemInstance();
+			AddExistingItem(Item);
+			SetItemIndex(Item, Index);
+			return Item;
 		}
-		public TPersistent Owner()
-		{
-			TPersistent result = default;
-			result = default;
-			return result;
-		}
-		/*property Count : int read GetCount;*/
-		public int Count
-		{
-			get
-			{
-				return GetCount();
-			}
-		}
-		/*property ItemClass : TCollectionItemClass read FItemClass;*/
-		public TClass ItemClass
-		{
-			get
-			{
-				return FItemClass;
-			}
-		}
-		/*property Items [Index: integer]: TCollectionItem read GetItem write SetItem;*/
-		public TCollectionItem ReadPropertyItems(int Index) { return GetItem(Index);}
-		public void WritePropertyItems(int Index, TCollectionItem Value){SetItem(Index, Value);}
+
+		public TPersistent Owner() => GetOwner();
+
+		public int Count => GetCount();
+		public TClass ItemClass => GetItemClass();
+
+		public TCollectionItem ReadPropertyItems(int Index) => GetItem(Index);
+		public void WritePropertyItems(int Index, TCollectionItem Value) => SetItem(Index, Value);
 	}	
 
 	public class TCollectionEnumerator : TObject
 	{
-		private TCollection FCollection;
+		private readonly TCollection FCollection;
 		private int FIndex;
+
 		private TCollectionItem GetCurrent()
 		{
-			TCollectionItem result = default;
-			result = default;
-			return result;
+			if (FIndex < 0 || FIndex >= FCollection.Count)
+				return null;
+			return FCollection.ReadPropertyItems(FIndex);
 		}
 
-/* TCollectionEnumerator */
 		public TCollectionEnumerator(TCollection ACollection)
 		{
-			;
+			FCollection = ACollection ?? throw new global::System.ArgumentNullException(nameof(ACollection));
+			FIndex = -1;
 		}
+
 		public bool MoveNext()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			FIndex++;
+			return FIndex < FCollection.Count;
 		}
-		/*property Current : TCollectionItem read GetCurrent;*/
-		public TCollectionItem Current
-		{
-			get
-			{
-				return GetCurrent();
-			}
-		}
+
+		public TCollectionItem Current => GetCurrent();
 	}	
 
 	public class TOwnedCollection : TCollection
 	{
 		private TPersistent FOwner;
-		protected override TPersistent GetOwner()
-		{
-			TPersistent result = default;
-			result = FOwner;
-			return result;
-		}
 
-/* TOwnedCollection */
+		protected override TPersistent GetOwner() => FOwner;
+
 		public TOwnedCollection(TPersistent AOwner, TClass ItemClass)
-		:		base(ItemClass)
+			: base(ItemClass)
 		{
-			//# base.Create(ItemClass);
+			FOwner = AOwner;
 		}
 	}	
 
 	abstract public class TStrings : TPersistent
 	{
-		private char FDelimiter;
-		private char FQuoteChar;
-		private char FNameValueSeparator;
-		private string FLineBreak = string.Empty;
+		private char FDelimiter = ',';
+		private char FQuoteChar = '"';
+		private char FNameValueSeparator = '=';
+		private string FLineBreak = sLineBreak;
 		private bool FStrictDelimiter;
 		private int FUpdateCount;
-		private string GetCommaText()
+
+		private string QuoteDelimited(string Value)
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		private string GetDelimitedText()
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		private string GetName(int Index)
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		private string GetValue(string Name)
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		private string GetValueFromIndex(int Index)
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		private string GetTextStr()
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		private void SetCommaText(string Value)
-		{
-		}
-		private void SetDelimitedText(string Value)
-		{
-		}
-		private void SetValue(string Name, string Value)
-		{
-		}
-		private void SetValueFromIndex(int Index, string Value)
-		{
-		}
-		private void SetTextStr(string Value)
-		{
-		}
-		protected virtual void DefineProperties(TFiler Filer)
-		{
-		}
-		protected void Error(string Msg, int Data)
-		{
-		}
-		abstract protected string Get(int Index);
-		protected virtual int GetCapacity()
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		abstract protected int GetCount();
-		protected virtual TObject GetObject(int Index)
-		{
-			TObject result = default;
-			result = default;
-			return result;
-		}
-		protected virtual PChar GetText()
-		{
-			PChar result = default;
-			result = default;
-			return result;
-		}
-		protected virtual void Put(int Index, string S)
-		{
-		}
-		protected virtual void PutObject(int Index, TObject AObject)
-		{
-		}
-		protected virtual void SetCapacity(int NewCapacity)
-		{
-		}
-		protected virtual void SetUpdateState(bool Updating)
-		{
+			Value ??= string.Empty;
+			bool NeedQuote = !FStrictDelimiter &&
+				Value.IndexOfAny(new[] { FDelimiter, FQuoteChar, ' ', '\t', '\r', '\n' }) >= 0;
+			if (!NeedQuote)
+				return Value;
+			return FQuoteChar + Value.Replace(
+				FQuoteChar.ToString(),
+				new string(FQuoteChar, 2)) + FQuoteChar;
 		}
 
-/* TStrings */
-		public override void Destroy()
+		private string GetCommaText()
 		{
-			if(!FDisposed)
+			char OldDelimiter = FDelimiter;
+			char OldQuote = FQuoteChar;
+			bool OldStrict = FStrictDelimiter;
+			try
 			{
-				//# inherited;
-			}
-		}
-		public virtual int Add(string S)
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual int AddObject(string S, TObject AObject)
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual void AddStrings(TStrings Strings)
-		{
-		}
-		public virtual void AddStrings(string[] Strings)
-		{
-		}
-		public void Append(string S)
-		{
-		}
-		public override void Assign(TPersistent Source)
-		{
-		}
-		public void BeginUpdate()
-		{
-		}
-		abstract public void Clear();
-		abstract public void Delete(int Index);
-		public void EndUpdate()
-		{
-		}
-		public bool Equals(TStrings Strings)/*# reintroduce */
-		{
-			bool result = false;
-			result = false;
-			return result;
-		}
-		public virtual void Exchange(int Index1, int Index2)
-		{
-		}
-		public virtual int IndexOf(string S)
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
-		public int IndexOfName(string Name)
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
-		public int IndexOfObject(TObject AObject)
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
-		abstract public void Insert(int Index, string S);
-		public virtual void InsertObject(int Index, string S, TObject AObject)
-		{
-		}
-		public virtual void LoadFromFile(string FileName)
-		{
-		}
-		public virtual void LoadFromFile(string FileName, TEncoding Encoding)
-		{
-		}
-		public virtual void LoadFromStream(TStream Stream)
-		{
-		}
-		public virtual void LoadFromStream(TStream Stream, TEncoding Encoding)
-		{
-		}
-		public virtual void Move(int CurIndex, int NewIndex)
-		{
-		}
-		public virtual void SaveToFile(string FileName)
-		{
-		}
-		public virtual void SaveToFile(string FileName, TEncoding Encoding)
-		{
-		}
-		public virtual void SaveToStream(TStream Stream)
-		{
-		}
-		public virtual void SaveToStream(TStream Stream, TEncoding Encoding)
-		{
-		}
-		public virtual void SetText(PChar Text)
-		{
-		}
-		/*property Capacity : int read GetCapacity write SetCapacity;*/
-		public int Capacity
-		{
-			get
-			{
-				return GetCapacity();
-			}
-			set
-			{
-				SetCapacity(value);
-			}
-		}
-		/*property CommaText : string read GetCommaText write SetCommaText;*/
-		public string CommaText
-		{
-			get
-			{
-				return GetCommaText();
-			}
-			set
-			{
-				SetCommaText(value);
-			}
-		}
-		/*property Count : int read GetCount;*/
-		public int Count
-		{
-			get
-			{
-				return GetCount();
-			}
-		}
-		/*property Delimiter : char read FDelimiter write FDelimiter;*/
-		public char Delimiter
-		{
-			get
-			{
-				return FDelimiter;
-			}
-			set
-			{
-				FDelimiter = value;
-			}
-		}
-		/*property DelimitedText : string read GetDelimitedText write SetDelimitedText;*/
-		public string DelimitedText
-		{
-			get
-			{
+				FDelimiter = ',';
+				FQuoteChar = '"';
+				FStrictDelimiter = false;
 				return GetDelimitedText();
 			}
-			set
+			finally
 			{
-				SetDelimitedText(value);
+				FDelimiter = OldDelimiter;
+				FQuoteChar = OldQuote;
+				FStrictDelimiter = OldStrict;
 			}
 		}
-		/*property LineBreak : string read FLineBreak write FLineBreak;*/
-		public string LineBreak
+
+		private string GetDelimitedText()
 		{
-			get
-			{
-				return FLineBreak;
-			}
-			set
-			{
-				FLineBreak = value;
-			}
+			var Parts = new global::System.Collections.Generic.List<string>(Count);
+			for (int I = 0; I < Count; I++)
+				Parts.Add(QuoteDelimited(Get(I)));
+			return string.Join(FDelimiter.ToString(), Parts);
 		}
-		/*property Names [Index: integer]: string read GetName;*/
-		public string ReadPropertyNames(int Index) { return GetName(Index);}
-		/*property NameValueSeparator : char read FNameValueSeparator write FNameValueSeparator;*/
-		public char NameValueSeparator
+
+		private string GetName(int Index)
 		{
-			get
-			{
-				return FNameValueSeparator;
-			}
-			set
-			{
-				FNameValueSeparator = value;
-			}
+			string S = Get(Index) ?? string.Empty;
+			int P = S.IndexOf(FNameValueSeparator);
+			return P < 0 ? string.Empty : S.Substring(0, P);
 		}
-		/*property Objects [Index: integer]: TObject read GetObject write PutObject;*/
-		public TObject ReadPropertyObjects(int Index) { return GetObject(Index);}
-		public void WritePropertyObjects(int Index, TObject AObject){PutObject(Index, AObject);}
-		/*property QuoteChar : char read FQuoteChar write FQuoteChar;*/
-		public char QuoteChar
+
+		private string GetValue(string Name)
 		{
-			get
-			{
-				return FQuoteChar;
-			}
-			set
-			{
-				FQuoteChar = value;
-			}
+			int I = IndexOfName(Name);
+			return I < 0 ? string.Empty : GetValueFromIndex(I);
 		}
-		/*property StrictDelimiter : bool read FStrictDelimiter write FStrictDelimiter;*/
-		public bool StrictDelimiter
+
+		private string GetValueFromIndex(int Index)
 		{
-			get
-			{
-				return FStrictDelimiter;
-			}
-			set
-			{
-				FStrictDelimiter = value;
-			}
+			string S = Get(Index) ?? string.Empty;
+			int P = S.IndexOf(FNameValueSeparator);
+			return P < 0 ? string.Empty : S.Substring(P + 1);
 		}
-		/*property Strings [Index: integer]: string read Get write Put default ;*/
-		public string ReadPropertyStrings(int Index) { return Get(Index);}
-		public void WritePropertyStrings(int Index, string S){Put(Index, S);}
-		public string this[int Index]
+
+		private string GetTextStr()
 		{
-			get
+			if (Count == 0)
+				return string.Empty;
+			var B = new global::System.Text.StringBuilder();
+			for (int I = 0; I < Count; I++)
 			{
-				return Get(Index);
+				B.Append(Get(I) ?? string.Empty);
+				B.Append(FLineBreak ?? sLineBreak);
 			}
-			set
-			{
-				Put(Index, value);
-			}
+			return B.ToString();
 		}
-		/*property Text : string read GetTextStr write SetTextStr;*/
-		public string Text
+
+		private void SetCommaText(string Value)
 		{
-			get
+			char OldDelimiter = FDelimiter;
+			char OldQuote = FQuoteChar;
+			bool OldStrict = FStrictDelimiter;
+			try
 			{
-				return GetTextStr();
+				FDelimiter = ',';
+				FQuoteChar = '"';
+				FStrictDelimiter = false;
+				SetDelimitedText(Value);
 			}
-			set
+			finally
 			{
-				SetTextStr(value);
+				FDelimiter = OldDelimiter;
+				FQuoteChar = OldQuote;
+				FStrictDelimiter = OldStrict;
 			}
 		}
-		/*property ValueFromIndex [Index: integer]: string read GetValueFromIndex write SetValueFromIndex;*/
-		public string ReadPropertyValueFromIndex(int Index) { return GetValueFromIndex(Index);}
-		public void WritePropertyValueFromIndex(int Index, string Value){SetValueFromIndex(Index, Value);}
-		/*property Values [Name: string]: string read GetValue write SetValue;*/
-		public string ReadPropertyValues(string Name) { return GetValue(Name);}
-		public void WritePropertyValues(string Name, string Value){SetValue(Name, Value);}
+
+		private void SetDelimitedText(string Value)
+		{
+			BeginUpdate();
+			try
+			{
+				Clear();
+				if (string.IsNullOrEmpty(Value))
+					return;
+
+				int I = 0;
+				while (I < Value.Length)
+				{
+					if (!FStrictDelimiter)
+						while (I < Value.Length && char.IsWhiteSpace(Value[I]) && Value[I] != FDelimiter)
+							I++;
+
+					var B = new global::System.Text.StringBuilder();
+					bool Quoted = I < Value.Length && Value[I] == FQuoteChar;
+					if (Quoted)
+					{
+						I++;
+						while (I < Value.Length)
+						{
+							if (Value[I] == FQuoteChar)
+							{
+								if (I + 1 < Value.Length && Value[I + 1] == FQuoteChar)
+								{
+									B.Append(FQuoteChar);
+									I += 2;
+									continue;
+								}
+								I++;
+								break;
+							}
+							B.Append(Value[I++]);
+						}
+					}
+					else
+					{
+						while (I < Value.Length && Value[I] != FDelimiter)
+							B.Append(Value[I++]);
+					}
+
+					Add(B.ToString());
+					if (I < Value.Length && Value[I] == FDelimiter)
+						I++;
+				}
+			}
+			finally
+			{
+				EndUpdate();
+			}
+		}
+
+		private void SetValue(string Name, string Value)
+		{
+			int I = IndexOfName(Name);
+			if (I < 0)
+				Add((Name ?? string.Empty) + FNameValueSeparator + (Value ?? string.Empty));
+			else
+				Put(I, (Name ?? string.Empty) + FNameValueSeparator + (Value ?? string.Empty));
+		}
+
+		private void SetValueFromIndex(int Index, string Value)
+		{
+			string Name = GetName(Index);
+			Put(Index, Name + FNameValueSeparator + (Value ?? string.Empty));
+		}
+
+		private void SetTextStr(string Value)
+		{
+			BeginUpdate();
+			try
+			{
+				Clear();
+				if (string.IsNullOrEmpty(Value))
+					return;
+
+				int Start = 0;
+				for (int I = 0; I < Value.Length; I++)
+				{
+					if (Value[I] == '\r' || Value[I] == '\n')
+					{
+						Add(Value.Substring(Start, I - Start));
+						if (Value[I] == '\r' && I + 1 < Value.Length && Value[I + 1] == '\n')
+							I++;
+						Start = I + 1;
+					}
+				}
+				if (Start < Value.Length)
+					Add(Value.Substring(Start));
+			}
+			finally
+			{
+				EndUpdate();
+			}
+		}
+
+		protected virtual void DefineProperties(TFiler Filer) {}
+
+		protected void Error(string Msg, int Data)
+		{
+			throw new global::System.ArgumentOutOfRangeException(nameof(Data), Data, Msg);
+		}
+
+		abstract protected string Get(int Index);
+		protected virtual int GetCapacity() => Count;
+		abstract protected int GetCount();
+		protected virtual TObject GetObject(int Index) => null;
+		protected virtual PChar GetText() => new PChar(GetTextStr());
+		protected virtual void Put(int Index, string S) =>
+			throw new global::System.NotSupportedException("This TStrings descendant does not support item assignment.");
+		protected virtual void PutObject(int Index, TObject AObject) {}
+		protected virtual void SetCapacity(int NewCapacity) {}
+		protected virtual void SetUpdateState(bool Updating) {}
+
+		public override void Destroy()
+		{
+			if (!FDisposed)
+			{
+				Clear();
+				base.Destroy();
+			}
+		}
+
+		public virtual int Add(string S)
+		{
+			Insert(Count, S);
+			return Count - 1;
+		}
+
+		public virtual int AddObject(string S, TObject AObject)
+		{
+			int Result = Add(S);
+			PutObject(Result, AObject);
+			return Result;
+		}
+
+		public virtual void AddStrings(TStrings Strings)
+		{
+			if (Strings == null)
+				return;
+			for (int I = 0; I < Strings.Count; I++)
+				AddObject(Strings[I], Strings.ReadPropertyObjects(I));
+		}
+
+		public virtual void AddStrings(string[] Strings)
+		{
+			if (Strings == null)
+				return;
+			foreach (string S in Strings)
+				Add(S);
+		}
+
+		public void Append(string S) => Add(S);
+
+		public override void Assign(TPersistent Source)
+		{
+			if (Source is TStrings Strings)
+			{
+				BeginUpdate();
+				try
+				{
+					Clear();
+					AddStrings(Strings);
+				}
+				finally
+				{
+					EndUpdate();
+				}
+				return;
+			}
+			base.Assign(Source);
+		}
+
+		public void BeginUpdate()
+		{
+			if (FUpdateCount++ == 0)
+				SetUpdateState(true);
+		}
+
+		abstract public void Clear();
+		abstract public void Delete(int Index);
+
+		public void EndUpdate()
+		{
+			if (FUpdateCount == 0)
+				return;
+			if (--FUpdateCount == 0)
+				SetUpdateState(false);
+		}
+
+		public bool Equals(TStrings Strings)
+		{
+			if (Strings == null || Strings.Count != Count)
+				return false;
+			for (int I = 0; I < Count; I++)
+				if (!string.Equals(Get(I), Strings[I], global::System.StringComparison.Ordinal))
+					return false;
+			return true;
+		}
+
+		public virtual void Exchange(int Index1, int Index2)
+		{
+			string S1 = Get(Index1);
+			TObject O1 = GetObject(Index1);
+			string S2 = Get(Index2);
+			TObject O2 = GetObject(Index2);
+			Put(Index1, S2);
+			PutObject(Index1, O2);
+			Put(Index2, S1);
+			PutObject(Index2, O1);
+		}
+
+		public virtual int IndexOf(string S)
+		{
+			for (int I = 0; I < Count; I++)
+				if (string.Equals(Get(I), S, global::System.StringComparison.Ordinal))
+					return I;
+			return -1;
+		}
+
+		public int IndexOfName(string Name)
+		{
+			for (int I = 0; I < Count; I++)
+				if (string.Equals(GetName(I), Name, global::System.StringComparison.OrdinalIgnoreCase))
+					return I;
+			return -1;
+		}
+
+		public int IndexOfObject(TObject AObject)
+		{
+			for (int I = 0; I < Count; I++)
+				if (global::System.Object.ReferenceEquals(GetObject(I), AObject))
+					return I;
+			return -1;
+		}
+
+		abstract public void Insert(int Index, string S);
+
+		public virtual void InsertObject(int Index, string S, TObject AObject)
+		{
+			Insert(Index, S);
+			PutObject(Index, AObject);
+		}
+
+		public virtual void LoadFromFile(string FileName) =>
+			LoadFromFile(FileName, TEncoding.UTF8);
+
+		public virtual void LoadFromFile(string FileName, TEncoding Encoding)
+		{
+			byte[] Bytes = global::System.IO.File.ReadAllBytes(FileName);
+			Text = (Encoding ?? TEncoding.UTF8).GetString(Bytes);
+		}
+
+		public virtual void LoadFromStream(TStream Stream) =>
+			LoadFromStream(Stream, TEncoding.UTF8);
+
+		public virtual void LoadFromStream(TStream Stream, TEncoding Encoding)
+		{
+			if (Stream == null)
+				throw new global::System.ArgumentNullException(nameof(Stream));
+			long Remaining = Stream.Size - Stream.Position;
+			if (Remaining < 0 || Remaining > int.MaxValue)
+				throw new global::System.IO.IOException("Invalid stream size.");
+			byte[] Bytes = new byte[(int)Remaining];
+			if (Bytes.Length != 0)
+				Stream.ReadBuffer(new UntypedPointer(Bytes), Bytes.Length);
+			Text = (Encoding ?? TEncoding.UTF8).GetString(Bytes);
+		}
+
+		public virtual void Move(int CurIndex, int NewIndex)
+		{
+			if (CurIndex == NewIndex)
+				return;
+			string S = Get(CurIndex);
+			TObject O = GetObject(CurIndex);
+			Delete(CurIndex);
+			InsertObject(NewIndex, S, O);
+		}
+
+		public virtual void SaveToFile(string FileName) =>
+			SaveToFile(FileName, TEncoding.UTF8);
+
+		public virtual void SaveToFile(string FileName, TEncoding Encoding)
+		{
+			byte[] Bytes = (Encoding ?? TEncoding.UTF8).GetBytes(Text ?? string.Empty);
+			global::System.IO.File.WriteAllBytes(FileName, Bytes);
+		}
+
+		public virtual void SaveToStream(TStream Stream) =>
+			SaveToStream(Stream, TEncoding.UTF8);
+
+		public virtual void SaveToStream(TStream Stream, TEncoding Encoding)
+		{
+			if (Stream == null)
+				throw new global::System.ArgumentNullException(nameof(Stream));
+			byte[] Bytes = (Encoding ?? TEncoding.UTF8).GetBytes(Text ?? string.Empty);
+			if (Bytes.Length != 0)
+				Stream.WriteBuffer(new UntypedPointer(Bytes), Bytes.Length);
+		}
+
+		public virtual void SetText(PChar Text)
+		{
+			this.Text = Text.IsNull() ? string.Empty : Text.ToString();
+		}
+
+		public int Capacity
+		{
+			get => GetCapacity();
+			set => SetCapacity(value);
+		}
+		public string CommaText
+		{
+			get => GetCommaText();
+			set => SetCommaText(value);
+		}
+		public int Count => GetCount();
+		public char Delimiter { get => FDelimiter; set => FDelimiter = value; }
+		public string DelimitedText
+		{
+			get => GetDelimitedText();
+			set => SetDelimitedText(value);
+		}
+		public string LineBreak { get => FLineBreak; set => FLineBreak = value ?? sLineBreak; }
+		public string ReadPropertyNames(int Index) => GetName(Index);
+		public char NameValueSeparator { get => FNameValueSeparator; set => FNameValueSeparator = value; }
+		public TObject ReadPropertyObjects(int Index) => GetObject(Index);
+		public void WritePropertyObjects(int Index, TObject AObject) => PutObject(Index, AObject);
+		public char QuoteChar { get => FQuoteChar; set => FQuoteChar = value; }
+		public bool StrictDelimiter { get => FStrictDelimiter; set => FStrictDelimiter = value; }
+		public string ReadPropertyStrings(int Index) => Get(Index);
+		public void WritePropertyStrings(int Index, string S) => Put(Index, S);
+		public string this[int Index] { get => Get(Index); set => Put(Index, value); }
+		public string Text { get => GetTextStr(); set => SetTextStr(value); }
+		public string ReadPropertyValueFromIndex(int Index) => GetValueFromIndex(Index);
+		public void WritePropertyValueFromIndex(int Index, string Value) => SetValueFromIndex(Index, Value);
+		public string ReadPropertyValues(string Name) => GetValue(Name);
+		public void WritePropertyValues(string Name, string Value) => SetValue(Name, Value);
 
 		public TStrings() {}
 	}	
 
 	public class TStringList : TStrings
 	{
+		private readonly global::System.Collections.Generic.List<string> FStrings =
+			new global::System.Collections.Generic.List<string>();
+		private readonly global::System.Collections.Generic.List<TObject> FObjects =
+			new global::System.Collections.Generic.List<TObject>();
 		private bool FCaseSensitive;
 		private TDuplicates FDuplicates;
 		private bool FOwnsObjects;
 		private bool FSorted;
 		private TNotifyEvent FOnChange;
 		private TNotifyEvent FOnChanging;
-		protected virtual void Changed()
-		{
-		}
-		protected virtual void Changing()
-		{
-		}
+
+		protected virtual void Changed() => FOnChange?.Invoke(this);
+		protected virtual void Changing() => FOnChanging?.Invoke(this);
+
 		protected virtual int CompareStrings(string S1, string S2)
 		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		protected override string Get(int Index)
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		protected override int GetCapacity()
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		protected override int GetCount()
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		protected override TObject GetObject(int Index)
-		{
-			TObject result = default;
-			result = default;
-			return result;
-		}
-		protected override void Put(int Index, string S)
-		{
-		}
-		protected override void PutObject(int Index, TObject AObject)
-		{
-		}
-		protected override void SetCapacity(int NewCapacity)
-		{
-		}
-		protected override void SetUpdateState(bool Updating)
-		{
+			return string.Compare(
+				S1 ?? string.Empty,
+				S2 ?? string.Empty,
+				FCaseSensitive ? global::System.StringComparison.Ordinal :
+					global::System.StringComparison.OrdinalIgnoreCase);
 		}
 
-/* TStringList */
+		protected override string Get(int Index) => FStrings[Index];
+		protected override int GetCapacity() => FStrings.Capacity;
+		protected override int GetCount() => FStrings.Count;
+		protected override TObject GetObject(int Index) => FObjects[Index];
+
+		protected override void Put(int Index, string S)
+		{
+			Changing();
+			FStrings[Index] = S ?? string.Empty;
+			Changed();
+		}
+
+		protected override void PutObject(int Index, TObject AObject)
+		{
+			if (FOwnsObjects && !global::System.Object.ReferenceEquals(FObjects[Index], AObject))
+				FObjects[Index]?.Destroy();
+			FObjects[Index] = AObject;
+		}
+
+		protected override void SetCapacity(int NewCapacity)
+		{
+			if (NewCapacity < Count)
+				throw new global::System.ArgumentOutOfRangeException(nameof(NewCapacity));
+			FStrings.Capacity = NewCapacity;
+			FObjects.Capacity = NewCapacity;
+		}
+
+		protected override void SetUpdateState(bool Updating)
+		{
+			if (Updating)
+				Changing();
+			else
+				Changed();
+		}
+
 		public TStringList()
 		{
-			;
+			FDuplicates = TDuplicates.dupIgnore;
 		}
+
 		public TStringList(bool OwnsObjects)
 		{
-			;
+			FOwnsObjects = OwnsObjects;
+			FDuplicates = TDuplicates.dupIgnore;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				Clear();
+				base.Destroy();
 			}
 		}
+
 		public override int Add(string S)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			S ??= string.Empty;
+			if (!FSorted)
+			{
+				Changing();
+				FStrings.Add(S);
+				FObjects.Add(null);
+				Changed();
+				return FStrings.Count - 1;
+			}
+
+			int Index = 0;
+			bool Found = Find(S, ref Index);
+			if (Found)
+			{
+				if (FDuplicates == TDuplicates.dupIgnore)
+					return Index;
+				if (FDuplicates == TDuplicates.dupError)
+					throw new global::System.InvalidOperationException("Duplicate string.");
+				while (Index < Count && CompareStrings(FStrings[Index], S) == 0)
+					Index++;
+			}
+			Insert(Index, S);
+			return Index;
 		}
+
 		public override void Clear()
 		{
+			Changing();
+			if (FOwnsObjects)
+				foreach (TObject Obj in FObjects)
+					Obj?.Destroy();
+			FStrings.Clear();
+			FObjects.Clear();
+			Changed();
 		}
+
 		public override void Delete(int Index)
 		{
+			Changing();
+			if (FOwnsObjects)
+				FObjects[Index]?.Destroy();
+			FStrings.RemoveAt(Index);
+			FObjects.RemoveAt(Index);
+			Changed();
 		}
+
 		public override void Exchange(int Index1, int Index2)
 		{
+			Changing();
+			(FStrings[Index1], FStrings[Index2]) = (FStrings[Index2], FStrings[Index1]);
+			(FObjects[Index1], FObjects[Index2]) = (FObjects[Index2], FObjects[Index1]);
+			Changed();
 		}
+
 		public virtual bool Find(string S, ref int Index)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			int Low = 0;
+			int High = FStrings.Count - 1;
+			while (Low <= High)
+			{
+				int Mid = Low + ((High - Low) >> 1);
+				int C = CompareStrings(FStrings[Mid], S);
+				if (C < 0)
+					Low = Mid + 1;
+				else
+				{
+					High = Mid - 1;
+					if (C == 0)
+					{
+						Index = Mid;
+						return true;
+					}
+				}
+			}
+			Index = Low;
+			return false;
 		}
+
 		public override int IndexOf(string S)
 		{
-			int result = 0;
-			result = -1;
-			return result;
+			if (FSorted)
+			{
+				int Index = 0;
+				return Find(S, ref Index) ? Index : -1;
+			}
+			for (int I = 0; I < FStrings.Count; I++)
+				if (CompareStrings(FStrings[I], S) == 0)
+					return I;
+			return -1;
 		}
+
 		public override void Insert(int Index, string S)
 		{
+			if (FSorted)
+				throw new global::System.InvalidOperationException("Cannot insert into a sorted TStringList.");
+			Changing();
+			FStrings.Insert(Index, S ?? string.Empty);
+			FObjects.Insert(Index, null);
+			Changed();
 		}
+
+		public override void InsertObject(int Index, string S, TObject AObject)
+		{
+			Insert(Index, S);
+			FObjects[Index] = AObject;
+		}
+
 		public virtual void Sort()
 		{
+			CustomSort((List, I1, I2) => CompareStrings(List[I1], List[I2]));
 		}
+
 		public virtual void CustomSort(TStringListSortCompare Compare)
 		{
+			if (Compare == null)
+				throw new global::System.ArgumentNullException(nameof(Compare));
+			var Indices = new global::System.Collections.Generic.List<int>(FStrings.Count);
+			for (int I = 0; I < FStrings.Count; I++)
+				Indices.Add(I);
+			Indices.Sort((A, B) => Compare(this, A, B));
+
+			var NewStrings = new global::System.Collections.Generic.List<string>(FStrings.Count);
+			var NewObjects = new global::System.Collections.Generic.List<TObject>(FObjects.Count);
+			foreach (int I in Indices)
+			{
+				NewStrings.Add(FStrings[I]);
+				NewObjects.Add(FObjects[I]);
+			}
+			FStrings.Clear();
+			FStrings.AddRange(NewStrings);
+			FObjects.Clear();
+			FObjects.AddRange(NewObjects);
+			Changed();
 		}
-		/*property CaseSensitive : bool read FCaseSensitive write FCaseSensitive;*/
-		public bool CaseSensitive
-		{
-			get
-			{
-				return FCaseSensitive;
-			}
-			set
-			{
-				FCaseSensitive = value;
-			}
-		}
-		/*property Duplicates : TDuplicates read FDuplicates write FDuplicates;*/
-		public TDuplicates Duplicates
-		{
-			get
-			{
-				return FDuplicates;
-			}
-			set
-			{
-				FDuplicates = value;
-			}
-		}
-		/*property OwnsObjects : bool read FOwnsObjects write FOwnsObjects;*/
-		public bool OwnsObjects
-		{
-			get
-			{
-				return FOwnsObjects;
-			}
-			set
-			{
-				FOwnsObjects = value;
-			}
-		}
-		/*property Sorted : bool read FSorted write FSorted;*/
-		public bool Sorted
-		{
-			get
-			{
-				return FSorted;
-			}
-			set
-			{
-				FSorted = value;
-			}
-		}
-		/*property OnChange : TNotifyEvent read FOnChange write FOnChange;*/
-		public TNotifyEvent OnChange
-		{
-			get
-			{
-				return FOnChange;
-			}
-			set
-			{
-				FOnChange = value;
-			}
-		}
-		/*property OnChanging : TNotifyEvent read FOnChanging write FOnChanging;*/
-		public TNotifyEvent OnChanging
-		{
-			get
-			{
-				return FOnChanging;
-			}
-			set
-			{
-				FOnChanging = value;
-			}
-		}
+
+		public bool CaseSensitive { get => FCaseSensitive; set { if (FCaseSensitive != value) { FCaseSensitive = value; if (FSorted) Sort(); } } }
+		public TDuplicates Duplicates { get => FDuplicates; set => FDuplicates = value; }
+		public bool OwnsObjects { get => FOwnsObjects; set => FOwnsObjects = value; }
+		public bool Sorted { get => FSorted; set { if (FSorted != value) { FSorted = value; if (value) Sort(); } } }
+		public TNotifyEvent OnChange { get => FOnChange; set => FOnChange = value; }
+		public TNotifyEvent OnChanging { get => FOnChanging; set => FOnChanging = value; }
 	}	
 
 	abstract public class TStream : TObject
 	{
-
-
-/* TStream */
-		private long GetPosition()
-		{
-			long result = 0;
-			result = 0;
-			return result;
-		}
-		private void SetPosition(long Pos)
-		{
-		}
+		private long GetPosition() => Seek(0, TSeekOrigin.soCurrent);
+		private void SetPosition(long Pos) => Seek(Pos, TSeekOrigin.soBeginning);
 		private long GetSize()
 		{
-			long result = 0;
-			result = 0;
-			return result;
+			long Old = Position;
+			long Result = Seek(0, TSeekOrigin.soEnd);
+			Position = Old;
+			return Result;
 		}
-		private void SetSize64(long NewSize)
-		{
-		}
-		protected virtual void SetSize(int NewSize)
-		{
-		}
-		protected virtual void SetSize(long NewSize)
-		{
-		}
+		private void SetSize64(long NewSize) => SetSize(NewSize);
+
+		protected virtual void SetSize(int NewSize) => SetSize((long)NewSize);
+		protected virtual void SetSize(long NewSize) =>
+			throw new global::System.NotSupportedException("This stream does not support resizing.");
+
 		abstract public int Read(UntypedPointer Buffer, int Count);
 		abstract public int Write(UntypedPointer Buffer, int Count);
+
 		public virtual int Seek(int Offset, ushort Origin)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			return checked((int)Seek((long)Offset, (TSeekOrigin)Origin));
 		}
+
 		public virtual long Seek(long Offset, TSeekOrigin Origin)
 		{
-			long result = 0;
-			result = 0;
-			return result;
+			throw new global::System.NotSupportedException("This stream does not support seeking.");
 		}
+
 		public void ReadBuffer(UntypedPointer Buffer, int Count)
 		{
+			int Total = 0;
+			while (Total < Count)
+			{
+				byte[] Chunk = new byte[Count - Total];
+				int N = Read(new UntypedPointer(Chunk), Chunk.Length);
+				if (N <= 0)
+					throw new global::System.IO.EndOfStreamException();
+				for (int I = 0; I < N; I++)
+					Buffer.Assign(Chunk[I], Total + I);
+				Total += N;
+			}
 		}
+
 		public void WriteBuffer(UntypedPointer Buffer, int Count)
 		{
+			int Total = 0;
+			while (Total < Count)
+			{
+				int Remaining = Count - Total;
+				byte[] Chunk = new byte[Remaining];
+				for (int I = 0; I < Remaining; I++)
+					Chunk[I] = Buffer.Read<byte>(Total + I);
+				int N = Write(new UntypedPointer(Chunk), Remaining);
+				if (N <= 0)
+					throw new global::System.IO.IOException("Unable to write to stream.");
+				Total += N;
+			}
 		}
+
 		public long CopyFrom(TStream Source, long Count)
 		{
-			long result = 0;
-			result = 0;
-			return result;
+			if (Source == null)
+				throw new global::System.ArgumentNullException(nameof(Source));
+
+			if (Count == 0)
+			{
+				Source.Position = 0;
+				Count = Source.Size;
+			}
+
+			long Remaining = Count;
+			long Result = 0;
+			byte[] Buffer = new byte[8192];
+
+			while (Remaining > 0)
+			{
+				int Wanted = (int)global::System.Math.Min(Buffer.Length, Remaining);
+				int ReadCount = Source.Read(new UntypedPointer(Buffer), Wanted);
+				if (ReadCount <= 0)
+					break;
+				int Written = Write(new UntypedPointer(Buffer), ReadCount);
+				if (Written != ReadCount)
+					throw new global::System.IO.IOException("Short stream write.");
+				Result += Written;
+				Remaining -= Written;
+			}
+			return Result;
 		}
+
 		public byte ReadByte()
 		{
-			byte result = 0;
-			result = 0;
-			return result;
+			byte[] Value = new byte[1];
+			return Read(new UntypedPointer(Value), 1) == 1 ? Value[0] : (byte)0;
 		}
+
 		public void WriteByte(byte Value)
 		{
+			byte[] Data = new[] { Value };
+			WriteBuffer(new UntypedPointer(Data), 1);
 		}
-		/*property Position : long read GetPosition write SetPosition;*/
+
 		public long Position
 		{
-			get
-			{
-				return GetPosition();
-			}
-			set
-			{
-				SetPosition(value);
-			}
+			get => GetPosition();
+			set => SetPosition(value);
 		}
-		/*property Size : long read GetSize write SetSize64;*/
+
 		public long Size
 		{
-			get
-			{
-				return GetSize();
-			}
-			set
-			{
-				SetSize64(value);
-			}
+			get => GetSize();
+			set => SetSize64(value);
 		}
 
 		public TStream() {}
@@ -1580,162 +1807,299 @@ public class ClassesInterface
 	public class THandleStream : TStream
 	{
 		private uint FHandle;
+		protected global::System.IO.Stream FManagedStream;
 
-/* THandleStream */
 		public THandleStream(uint AHandle)
 		{
-			;
+			FHandle = AHandle;
 		}
-		public override int Read(UntypedPointer Buffer, int Count)
+
+		protected THandleStream(global::System.IO.Stream AStream, uint AHandle = 0)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			FManagedStream = AStream ?? throw new global::System.ArgumentNullException(nameof(AStream));
+			FHandle = AHandle;
 		}
-		public override int Write(UntypedPointer Buffer, int Count)
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public override long Seek(long Offset, TSeekOrigin Origin)
-		{
-			long result = 0;
-			result = 0;
-			return result;
-		}
-		/*property Handle : THandle read FHandle;*/
-		public uint Handle
+
+		protected global::System.IO.Stream ManagedStream
 		{
 			get
 			{
-				return FHandle;
+				if (FManagedStream == null)
+					throw new global::System.NotSupportedException(
+						"Native THandleStream handles are not directly supported by the managed D2CSharp RTL.");
+				return FManagedStream;
 			}
 		}
+
+		public override int Read(UntypedPointer Buffer, int Count)
+		{
+			if (Count <= 0)
+				return 0;
+			byte[] Temp = new byte[Count];
+			int N = ManagedStream.Read(Temp, 0, Count);
+			if (N > 0)
+				DelphiMemory.Move(new UntypedPointer(Temp), Buffer, N);
+			return N;
+		}
+
+		public override int Write(UntypedPointer Buffer, int Count)
+		{
+			if (Count <= 0)
+				return 0;
+			byte[] Temp = new byte[Count];
+			DelphiMemory.Move(Buffer, new UntypedPointer(Temp), Count);
+			ManagedStream.Write(Temp, 0, Count);
+			return Count;
+		}
+
+		public override long Seek(long Offset, TSeekOrigin Origin)
+		{
+			global::System.IO.SeekOrigin ManagedOrigin = Origin switch
+			{
+				TSeekOrigin.soBeginning => global::System.IO.SeekOrigin.Begin,
+				TSeekOrigin.soCurrent => global::System.IO.SeekOrigin.Current,
+				TSeekOrigin.soEnd => global::System.IO.SeekOrigin.End,
+				_ => throw new global::System.ArgumentOutOfRangeException(nameof(Origin))
+			};
+			return ManagedStream.Seek(Offset, ManagedOrigin);
+		}
+
+		protected override void SetSize(long NewSize)
+		{
+			ManagedStream.SetLength(NewSize);
+		}
+
+		public override void Destroy()
+		{
+			if (!FDisposed)
+			{
+				FManagedStream?.Dispose();
+				FManagedStream = null;
+				base.Destroy();
+			}
+		}
+
+		public uint Handle => FHandle;
 	}	
 
 	public class TFileStream : THandleStream
 	{
 		private string FFileName = string.Empty;
 
-/* TFileStream */
-		public TFileStream(string FileName, ushort Mode)
-		:		base(0)
+		private static global::System.IO.FileStream OpenFile(string FileName, ushort Mode)
 		{
-			//# base.Create(0);
-		}
-		public TFileStream(string FileName, ushort Mode, uint Rights)
-		:		base(0)
-		{
-			//# base.Create(0);
-		}
-		/*property FileName : string read FFileName;*/
-		public string FileName
-		{
-			get
+			if (FileName == null)
+				throw new global::System.ArgumentNullException(nameof(FileName));
+
+			if (Mode == fmCreate)
+				return new global::System.IO.FileStream(
+					FileName,
+					global::System.IO.FileMode.Create,
+					global::System.IO.FileAccess.ReadWrite,
+					global::System.IO.FileShare.Read);
+
+			int AccessMode = Mode & 3;
+			global::System.IO.FileAccess Access = AccessMode switch
 			{
-				return FFileName;
-			}
+				0 => global::System.IO.FileAccess.Read,
+				1 => global::System.IO.FileAccess.Write,
+				_ => global::System.IO.FileAccess.ReadWrite
+			};
+
+			global::System.IO.FileShare Share = global::System.IO.FileShare.ReadWrite;
+			int ShareMode = Mode & 0xF0;
+			if (ShareMode == 0x10)
+				Share = global::System.IO.FileShare.None;
+			else if (ShareMode == 0x20)
+				Share = global::System.IO.FileShare.Read;
+			else if (ShareMode == 0x30)
+				Share = global::System.IO.FileShare.Write;
+
+			return new global::System.IO.FileStream(
+				FileName,
+				global::System.IO.FileMode.Open,
+				Access,
+				Share);
 		}
+
+		public TFileStream(string FileName, ushort Mode)
+			: base(OpenFile(FileName, Mode))
+		{
+			FFileName = FileName ?? string.Empty;
+		}
+
+		public TFileStream(string FileName, ushort Mode, uint Rights)
+			: this(FileName, Mode)
+		{
+			// Rights is meaningful on POSIX Delphi targets. The managed FileStream
+			// creation above uses the process' normal filesystem permissions.
+		}
+
+		public string FileName => FFileName;
 
 		public TFileStream(uint AHandle) : base(AHandle) {}
 	}	
 
 	public class TCustomMemoryStream : TStream
 	{
-		private Pointer FMemory;
-		private long FSize;
-		private long FPosition;
+		protected byte[] FBuffer = global::System.Array.Empty<byte>();
+		protected long FPosition;
 
-/* TCustomMemoryStream */
 		protected void SetPointer(Pointer Ptr, int Size)
 		{
-		}
-		public override int Read(UntypedPointer Buffer, int Count)
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public override long Seek(long Offset, TSeekOrigin Origin)
-		{
-			long result = 0;
-			result = 0;
-			return result;
-		}
-		public void SaveToStream(TStream Stream)
-		{
-		}
-		public void SaveToFile(string FileName)
-		{
-		}
-		/*property Memory : Pointer read FMemory;*/
-		public Pointer Memory
-		{
-			get
-			{
-				return FMemory;
-			}
+			if (Size < 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Size));
+			FBuffer = new byte[Size];
+			if (!Ptr.IsNull() && Size != 0)
+				DelphiMemory.Move(Ptr, new UntypedPointer(FBuffer), Size);
+			FPosition = 0;
 		}
 
+		public override int Read(UntypedPointer Buffer, int Count)
+		{
+			if (Count <= 0)
+				return 0;
+			int Actual = (int)global::System.Math.Min(Count, FBuffer.Length - FPosition);
+			if (Actual <= 0)
+				return 0;
+			byte[] Temp = new byte[Actual];
+			global::System.Array.Copy(FBuffer, (int)FPosition, Temp, 0, Actual);
+			DelphiMemory.Move(new UntypedPointer(Temp), Buffer, Actual);
+			FPosition += Actual;
+			return Actual;
+		}
+
+		public override long Seek(long Offset, TSeekOrigin Origin)
+		{
+			long Base = Origin switch
+			{
+				TSeekOrigin.soBeginning => 0,
+				TSeekOrigin.soCurrent => FPosition,
+				TSeekOrigin.soEnd => FBuffer.Length,
+				_ => throw new global::System.ArgumentOutOfRangeException(nameof(Origin))
+			};
+			long NewPosition = checked(Base + Offset);
+			if (NewPosition < 0)
+				throw new global::System.IO.IOException("Negative stream position.");
+			FPosition = NewPosition;
+			return FPosition;
+		}
+
+		public void SaveToStream(TStream Stream)
+		{
+			if (Stream == null)
+				throw new global::System.ArgumentNullException(nameof(Stream));
+			if (FBuffer.Length != 0)
+				Stream.WriteBuffer(new UntypedPointer(FBuffer), FBuffer.Length);
+		}
+
+		public void SaveToFile(string FileName)
+		{
+			global::System.IO.File.WriteAllBytes(FileName, FBuffer);
+		}
+
+		public Pointer Memory => FBuffer.Length == 0 ? default : new UntypedPointer(FBuffer);
+
 		public TCustomMemoryStream() {}
+
 		public override int Write(UntypedPointer Buffer, int Count)
 		{
-			throw new NotImplementedException();
-			return 0;
+			throw new global::System.NotSupportedException("TCustomMemoryStream is read-only; use TMemoryStream.");
 		}
 	}	
 
 	public class TMemoryStream : TCustomMemoryStream
 	{
 		private int FCapacity;
+
 		private void SetCapacity(int NewCapacity)
 		{
-		}
-		protected virtual Pointer Realloc(ref int NewCapacity)
-		{
-			Pointer result = default;
-			result = default;
-			return result;
-		}
-		protected override void SetSize(long NewSize)
-		{
+			if (NewCapacity < 0 || NewCapacity < FBuffer.Length)
+				throw new global::System.ArgumentOutOfRangeException(nameof(NewCapacity));
+			FCapacity = NewCapacity;
 		}
 
-/* TMemoryStream */
+		protected virtual Pointer Realloc(ref int NewCapacity)
+		{
+			if (NewCapacity < FBuffer.Length)
+				NewCapacity = FBuffer.Length;
+			FCapacity = NewCapacity;
+			return FBuffer.Length == 0 ? default : new UntypedPointer(FBuffer);
+		}
+
+		protected override void SetSize(long NewSize)
+		{
+			if (NewSize < 0 || NewSize > int.MaxValue)
+				throw new global::System.ArgumentOutOfRangeException(nameof(NewSize));
+			int Size = (int)NewSize;
+			if (Size > FCapacity)
+				FCapacity = Size;
+			global::System.Array.Resize(ref FBuffer, Size);
+			if (FPosition > NewSize)
+				FPosition = NewSize;
+		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				FBuffer = global::System.Array.Empty<byte>();
+				FCapacity = 0;
+				FPosition = 0;
+				base.Destroy();
 			}
 		}
+
 		public void Clear()
 		{
+			FBuffer = global::System.Array.Empty<byte>();
+			FCapacity = 0;
+			FPosition = 0;
 		}
+
 		public void LoadFromStream(TStream Stream)
 		{
+			if (Stream == null)
+				throw new global::System.ArgumentNullException(nameof(Stream));
+			Stream.Position = 0;
+			long Size = Stream.Size;
+			if (Size < 0 || Size > int.MaxValue)
+				throw new global::System.IO.IOException("Stream too large.");
+			FBuffer = new byte[(int)Size];
+			if (FBuffer.Length != 0)
+				Stream.ReadBuffer(new UntypedPointer(FBuffer), FBuffer.Length);
+			FCapacity = FBuffer.Length;
+			FPosition = 0;
 		}
+
 		public void LoadFromFile(string FileName)
 		{
+			FBuffer = global::System.IO.File.ReadAllBytes(FileName);
+			FCapacity = FBuffer.Length;
+			FPosition = 0;
 		}
+
 		public override int Write(UntypedPointer Buffer, int Count)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			if (Count <= 0)
+				return 0;
+			long EndPosition = checked(FPosition + Count);
+			if (EndPosition > int.MaxValue)
+				throw new global::System.IO.IOException("Stream too large.");
+			if (EndPosition > FBuffer.Length)
+				SetSize(EndPosition);
+
+			byte[] Temp = new byte[Count];
+			DelphiMemory.Move(Buffer, new UntypedPointer(Temp), Count);
+			global::System.Array.Copy(Temp, 0, FBuffer, (int)FPosition, Count);
+			FPosition = EndPosition;
+			return Count;
 		}
-		/*property Capacity : int read FCapacity write SetCapacity;*/
+
 		public int Capacity
 		{
-			get
-			{
-				return FCapacity;
-			}
-			set
-			{
-				SetCapacity(value);
-			}
+			get => global::System.Math.Max(FCapacity, FBuffer.Length);
+			set => SetCapacity(value);
 		}
 
 		public TMemoryStream() {}
@@ -1746,93 +2110,146 @@ public class ClassesInterface
 		private string FDataString = string.Empty;
 		private long FPosition;
 		private TEncoding FEncoding;
+
+		private byte[] GetBytes() => (FEncoding ?? TEncoding.UTF8).GetBytes(FDataString ?? string.Empty);
+
 		protected override void SetSize(long NewSize)
 		{
+			if (NewSize < 0 || NewSize > int.MaxValue)
+				throw new global::System.ArgumentOutOfRangeException(nameof(NewSize));
+			byte[] Bytes = GetBytes();
+			global::System.Array.Resize(ref Bytes, (int)NewSize);
+			FDataString = (FEncoding ?? TEncoding.UTF8).GetString(Bytes);
+			if (FPosition > NewSize)
+				FPosition = NewSize;
 		}
 
-/* TStringStream */
 		public TStringStream(string AString)
 		{
-			;
+			FEncoding = TEncoding.UTF8;
+			FDataString = AString ?? string.Empty;
 		}
+
 		public TStringStream(string AString, TEncoding AEncoding)
 		{
-			;
+			FEncoding = AEncoding ?? TEncoding.UTF8;
+			FDataString = AString ?? string.Empty;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
-			}
-		}
-		public override int Read(UntypedPointer Buffer, int Count)
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public override int Write(UntypedPointer Buffer, int Count)
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public override long Seek(long Offset, TSeekOrigin Origin)
-		{
-			long result = 0;
-			result = 0;
-			return result;
-		}
-		public string ReadString(int Count)
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		public void WriteString(string AString)
-		{
-		}
-		/*property DataString : string read FDataString;*/
-		public string DataString
-		{
-			get
-			{
-				return FDataString;
-			}
-		}
-		/*property Encoding : TEncoding read FEncoding;*/
-		public TEncoding Encoding
-		{
-			get
-			{
-				return FEncoding;
+				FDataString = string.Empty;
+				base.Destroy();
 			}
 		}
 
-		public TStringStream() {}
+		public override int Read(UntypedPointer Buffer, int Count)
+		{
+			byte[] Bytes = GetBytes();
+			int Actual = (int)global::System.Math.Min(Count, Bytes.Length - FPosition);
+			if (Actual <= 0)
+				return 0;
+			byte[] Temp = new byte[Actual];
+			global::System.Array.Copy(Bytes, (int)FPosition, Temp, 0, Actual);
+			DelphiMemory.Move(new UntypedPointer(Temp), Buffer, Actual);
+			FPosition += Actual;
+			return Actual;
+		}
+
+		public override int Write(UntypedPointer Buffer, int Count)
+		{
+			if (Count <= 0)
+				return 0;
+			byte[] Bytes = GetBytes();
+			long End = checked(FPosition + Count);
+			if (End > int.MaxValue)
+				throw new global::System.IO.IOException("Stream too large.");
+			if (End > Bytes.Length)
+				global::System.Array.Resize(ref Bytes, (int)End);
+			byte[] Temp = new byte[Count];
+			DelphiMemory.Move(Buffer, new UntypedPointer(Temp), Count);
+			global::System.Array.Copy(Temp, 0, Bytes, (int)FPosition, Count);
+			FPosition = End;
+			FDataString = (FEncoding ?? TEncoding.UTF8).GetString(Bytes);
+			return Count;
+		}
+
+		public override long Seek(long Offset, TSeekOrigin Origin)
+		{
+			long Size = GetBytes().LongLength;
+			long Base = Origin switch
+			{
+				TSeekOrigin.soBeginning => 0,
+				TSeekOrigin.soCurrent => FPosition,
+				TSeekOrigin.soEnd => Size,
+				_ => throw new global::System.ArgumentOutOfRangeException(nameof(Origin))
+			};
+			long P = checked(Base + Offset);
+			if (P < 0)
+				throw new global::System.IO.IOException("Negative stream position.");
+			FPosition = P;
+			return P;
+		}
+
+		public string ReadString(int Count)
+		{
+			if (Count <= 0)
+				return string.Empty;
+			byte[] Bytes = new byte[Count];
+			int Actual = Read(new UntypedPointer(Bytes), Count);
+			return (FEncoding ?? TEncoding.UTF8).GetString(Bytes, 0, Actual);
+		}
+
+		public void WriteString(string AString)
+		{
+			byte[] Bytes = (FEncoding ?? TEncoding.UTF8).GetBytes(AString ?? string.Empty);
+			if (Bytes.Length != 0)
+				WriteBuffer(new UntypedPointer(Bytes), Bytes.Length);
+		}
+
+		public string DataString => FDataString;
+		public TEncoding Encoding => FEncoding;
+
+		public TStringStream() : this(string.Empty) {}
 	}	
 
 	public class TBytesStream : TMemoryStream
 	{
-		private TBytes FBytes;
+		private byte[] FBytes = global::System.Array.Empty<byte>();
+
 		protected override Pointer Realloc(ref int NewCapacity)
 		{
-			Pointer result = default;
-			result = default;
-			return result;
+			Pointer Result = base.Realloc(ref NewCapacity);
+			FBytes = ToArray();
+			return Result;
 		}
 
-/* TBytesStream */
-		public TBytesStream(TBytes ABytes)
+		private byte[] ToArray()
 		{
-			;
+			long Old = Position;
+			Position = 0;
+			byte[] Result = new byte[checked((int)Size)];
+			if (Result.Length != 0)
+				ReadBuffer(new UntypedPointer(Result), Result.Length);
+			Position = Old;
+			return Result;
 		}
-		/*property Bytes : TBytes read FBytes;*/
-		public TBytes Bytes
+
+		public TBytesStream(byte[] ABytes)
+		{
+			FBytes = ABytes == null ? global::System.Array.Empty<byte>() : (byte[])ABytes.Clone();
+			if (FBytes.Length != 0)
+				WriteBuffer(new UntypedPointer(FBytes), FBytes.Length);
+			Position = 0;
+		}
+
+		public byte[] Bytes
 		{
 			get
 			{
+				FBytes = ToArray();
 				return FBytes;
 			}
 		}
@@ -1860,93 +2277,198 @@ public class ClassesInterface
 		}
 		public override int Write(UntypedPointer Buffer, int Count)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			throw new global::System.NotSupportedException("TResourceStream.Write is not implemented by the managed D2CSharp RTL.");
 		}
 
 		public TResourceStream() {}
 	}	
 
+	public abstract class TThread : TObject
+	{
+		private readonly global::System.Threading.Thread FThread;
+		private bool FStarted;
+		private volatile bool FFinished;
+		private volatile bool FTerminated;
+
+		public TThread(bool CreateSuspended)
+		{
+			FThread = new global::System.Threading.Thread(ThreadMain);
+			FStarted = false;
+			FFinished = false;
+			FTerminated = false;
+
+			if (!CreateSuspended)
+				Start();
+		}
+
+		private void ThreadMain()
+		{
+			try
+			{
+				Execute();
+			}
+			finally
+			{
+				FFinished = true;
+			}
+		}
+
+		protected abstract void Execute();
+
+		public void Start()
+		{
+			if (FStarted)
+				return;
+
+			FStarted = true;
+			FThread.Start();
+		}
+
+		public void Resume()
+		{
+			Start();
+		}
+
+		public void Suspend()
+		{
+			// There is no safe modern .NET equivalent for TThread.Suspend.
+			throw new global::System.PlatformNotSupportedException(
+				"TThread.Suspend is not supported by the D2CSharp RTL.");
+		}
+
+		public void Terminate()
+		{
+			FTerminated = true;
+		}
+
+		public uint WaitFor()
+		{
+			if (!FStarted)
+				return 0;
+
+			if (global::System.Threading.Thread.CurrentThread != FThread)
+				FThread.Join();
+
+			return 0;
+		}
+
+		public bool Finished
+		{
+			get { return FFinished; }
+		}
+
+		public bool FreeOnTerminate { get; set; }
+
+		public bool Terminated
+		{
+			get { return FTerminated; }
+		}
+
+		public override void Destroy()
+		{
+			if (!FDisposed)
+			{
+				Terminate();
+
+				if (FStarted &&
+					!FFinished &&
+					global::System.Threading.Thread.CurrentThread != FThread)
+				{
+					FThread.Join();
+				}
+
+				base.Destroy();
+			}
+		}
+	}	
+
 	public class TThreadList : TObject
 	{
+		private readonly object FLock = new object();
 		private TList FList;
 		private TDuplicates FDuplicates;
 
-/* TThreadList */
 		public TThreadList()
 		{
-			;
+			FList = new TList();
+			FDuplicates = TDuplicates.dupIgnore;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				FList?.Destroy();
+				FList = null;
+				base.Destroy();
 			}
 		}
+
 		public void Add(Pointer Item)
 		{
+			lock (FLock)
+			{
+				int Existing = FList.IndexOf(Item);
+				if (Existing >= 0 && FDuplicates == TDuplicates.dupIgnore)
+					return;
+				if (Existing >= 0 && FDuplicates == TDuplicates.dupError)
+					throw new global::System.InvalidOperationException("Duplicate item.");
+				FList.Add(Item);
+			}
 		}
+
 		public void Clear()
 		{
+			lock (FLock)
+				FList.Clear();
 		}
+
 		public TList LockList()
 		{
-			TList result = default;
-			result = FList;
-			return result;
+			global::System.Threading.Monitor.Enter(FLock);
+			return FList;
 		}
+
 		public void Remove(Pointer Item)
 		{
+			lock (FLock)
+				FList.Remove(Item);
 		}
-		public void UnlockList()
-		{
-		}
-		/*property Duplicates : TDuplicates read FDuplicates write FDuplicates;*/
+
+		public void UnlockList() => global::System.Threading.Monitor.Exit(FLock);
+
 		public TDuplicates Duplicates
 		{
-			get
-			{
-				return FDuplicates;
-			}
-			set
-			{
-				FDuplicates = value;
-			}
+			get => FDuplicates;
+			set => FDuplicates = value;
 		}
 	}	
 
 	public class TStringsEnumerator : TObject
 	{
-		private TStrings FStrings;
+		private readonly TStrings FStrings;
 		private int FIndex;
+
 		private string GetCurrent()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			if (FIndex < 0 || FIndex >= FStrings.Count)
+				return string.Empty;
+			return FStrings[FIndex];
 		}
 
-/* TStringsEnumerator */
 		public TStringsEnumerator(TStrings AStrings)
 		{
-			;
+			FStrings = AStrings ?? throw new global::System.ArgumentNullException(nameof(AStrings));
+			FIndex = -1;
 		}
+
 		public bool MoveNext()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			FIndex++;
+			return FIndex < FStrings.Count;
 		}
-		/*property Current : string read GetCurrent;*/
-		public string Current
-		{
-			get
-			{
-				return GetCurrent();
-			}
-		}
+
+		public string Current => GetCurrent();
 	}	
 
 	public class TStringReader : TObject
@@ -1954,82 +2476,80 @@ public class ClassesInterface
 		private string FData = string.Empty;
 		private int FPosition;
 
-/* TStringReader */
 		public TStringReader(string AString)
 		{
-			;
+			FData = AString ?? string.Empty;
 		}
-		public int Peek()
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
-		public int Read()
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
+
+		public int Peek() => FPosition >= FData.Length ? -1 : FData[FPosition];
+
+		public int Read() => FPosition >= FData.Length ? -1 : FData[FPosition++];
+
 		public int Read(ref char[] Buffer, int Index, int Count)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			if (Buffer == null)
+				throw new global::System.ArgumentNullException(nameof(Buffer));
+			if (Index < 0 || Count < 0 || Index + Count > Buffer.Length)
+				throw new global::System.ArgumentOutOfRangeException();
+
+			int Actual = global::System.Math.Min(Count, FData.Length - FPosition);
+			FData.CopyTo(FPosition, Buffer, Index, Actual);
+			FPosition += Actual;
+			return Actual;
 		}
+
 		public string ReadLine()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			if (FPosition >= FData.Length)
+				return null;
+
+			int Start = FPosition;
+			while (FPosition < FData.Length &&
+				   FData[FPosition] != '\r' &&
+				   FData[FPosition] != '\n')
+				FPosition++;
+
+			string Result = FData.Substring(Start, FPosition - Start);
+
+			if (FPosition < FData.Length && FData[FPosition] == '\r')
+				FPosition++;
+			if (FPosition < FData.Length && FData[FPosition] == '\n')
+				FPosition++;
+
+			return Result;
 		}
+
 		public string ReadToEnd()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			if (FPosition >= FData.Length)
+				return string.Empty;
+
+			string Result = FData.Substring(FPosition);
+			FPosition = FData.Length;
+			return Result;
 		}
 	}	
 
 	public class TStringWriter : TObject
 	{
-		private System.Sysutils.SysutilsInterface.StringBuilder FBuilder;
+		private TStringBuilder FBuilder;
 
-/* TStringWriter */
 		public TStringWriter()
 		{
-			;
+			FBuilder = new TStringBuilder();
 		}
-		public TStringWriter(System.Sysutils.SysutilsInterface.StringBuilder ABuilder)
+
+		public TStringWriter(TStringBuilder ABuilder)
 		{
-			;
+			FBuilder = ABuilder ?? throw new global::System.ArgumentNullException(nameof(ABuilder));
 		}
-		public void Write(string Value)
-		{
-		}
-		public void Write(char Value)
-		{
-		}
-		public void WriteLine()
-		{
-		}
-		public void WriteLine(string Value)
-		{
-		}
-		public override string ToString()
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		/*property Builder :  read FBuilder;*/
-		public System.Sysutils.SysutilsInterface.StringBuilder Builder
-		{
-			get
-			{
-				return FBuilder;
-			}
-		}
+
+		public void Write(string Value) => FBuilder.Append(Value ?? string.Empty);
+		public void Write(char Value) => FBuilder.Append(Value);
+		public void WriteLine() => FBuilder.AppendLine();
+		public void WriteLine(string Value) => FBuilder.AppendLine(Value ?? string.Empty);
+		public override string ToString() => FBuilder?.ToString() ?? string.Empty;
+		public TStringBuilder Builder => FBuilder;
 	}	
 
 	public class TStreamReader : TObject
@@ -2037,100 +2557,92 @@ public class ClassesInterface
 		private TStream FStream;
 		private TEncoding FEncoding;
 		private bool FOwnsStream;
-		private bool GetEndOfStream()
+		private TStringReader FReader;
+
+		private bool GetEndOfStream() => FReader == null || FReader.Peek() < 0;
+
+		private void InitializeReader()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			if (FStream == null)
+				return;
+			long Remaining = FStream.Size - FStream.Position;
+			if (Remaining < 0 || Remaining > int.MaxValue)
+				throw new global::System.IO.IOException("Invalid stream size.");
+			byte[] Bytes = new byte[(int)Remaining];
+			if (Bytes.Length != 0)
+				FStream.ReadBuffer(new UntypedPointer(Bytes), Bytes.Length);
+			FReader = new TStringReader((FEncoding ?? TEncoding.UTF8).GetString(Bytes));
 		}
 
-/* TStreamReader */
 		public TStreamReader(TStream Stream)
+			: this(Stream, TEncoding.UTF8, true, 1024)
 		{
-			;
 		}
+
 		public TStreamReader(TStream Stream, TEncoding Encoding, bool DetectBOM = true, int BufferSize = 1024)
 		{
-			;
+			FStream = Stream ?? throw new global::System.ArgumentNullException(nameof(Stream));
+			FEncoding = Encoding ?? TEncoding.UTF8;
+			FOwnsStream = false;
+			InitializeReader();
 		}
+
 		public TStreamReader(string Filename)
+			: this(Filename, TEncoding.UTF8, true, 1024)
 		{
-			;
 		}
+
 		public TStreamReader(string Filename, TEncoding Encoding, bool DetectBOM = true, int BufferSize = 1024)
 		{
-			;
+			FStream = new TFileStream(Filename, fmOpenRead);
+			FEncoding = Encoding ?? TEncoding.UTF8;
+			FOwnsStream = true;
+			InitializeReader();
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				Close();
+				base.Destroy();
 			}
 		}
+
 		public void Close()
 		{
+			if (FOwnsStream)
+				FStream?.Destroy();
+			FStream = null;
+			FReader = null;
 		}
-		public int Peek()
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
-		public int Read()
-		{
-			int result = 0;
-			result = -1;
-			return result;
-		}
+
+		public int Peek() => FReader?.Peek() ?? -1;
+		public int Read() => FReader?.Read() ?? -1;
+
 		public int Read(ref char[] Buffer, int Index, int Count)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			return FReader == null ? 0 : FReader.Read(ref Buffer, Index, Count);
 		}
+
 		public int ReadBlock(ref char[] Buffer, int Index, int Count)
 		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public string ReadLine()
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		public string ReadToEnd()
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		/*property BaseStream : TStream read FStream;*/
-		public TStream BaseStream
-		{
-			get
+			int Total = 0;
+			while (Total < Count)
 			{
-				return FStream;
+				int N = Read(ref Buffer, Index + Total, Count - Total);
+				if (N == 0)
+					break;
+				Total += N;
 			}
+			return Total;
 		}
-		/*property CurrentEncoding : TEncoding read FEncoding;*/
-		public TEncoding CurrentEncoding
-		{
-			get
-			{
-				return FEncoding;
-			}
-		}
-		/*property EndOfStream : bool read GetEndOfStream;*/
-		public bool EndOfStream
-		{
-			get
-			{
-				return GetEndOfStream();
-			}
-		}
+
+		public string ReadLine() => FReader?.ReadLine();
+		public string ReadToEnd() => FReader?.ReadToEnd() ?? string.Empty;
+		public TStream BaseStream => FStream;
+		public TEncoding CurrentEncoding => FEncoding;
+		public bool EndOfStream => GetEndOfStream();
 
 		public TStreamReader() {}
 	}	
@@ -2141,90 +2653,95 @@ public class ClassesInterface
 		private TEncoding FEncoding;
 		private bool FOwnsStream;
 		private bool FAutoFlush;
-		private string FNewLine = string.Empty;
+		private string FNewLine = sLineBreak;
 
-/* TStreamWriter */
 		public TStreamWriter(TStream Stream)
+			: this(Stream, TEncoding.UTF8, 1024)
 		{
-			;
 		}
+
 		public TStreamWriter(TStream Stream, TEncoding Encoding, int BufferSize = 1024)
 		{
-			;
+			FStream = Stream ?? throw new global::System.ArgumentNullException(nameof(Stream));
+			FEncoding = Encoding ?? TEncoding.UTF8;
+			FOwnsStream = false;
 		}
+
 		public TStreamWriter(string Filename, bool Append = false)
+			: this(Filename, Append, TEncoding.UTF8, 1024)
 		{
-			;
 		}
+
 		public TStreamWriter(string Filename, bool Append, TEncoding Encoding, int BufferSize = 1024)
 		{
-			;
+			FEncoding = Encoding ?? TEncoding.UTF8;
+			FStream = new TFileStream(
+				Filename,
+				(ushort)(Append ? fmOpenReadWrite : fmCreate));
+			FOwnsStream = true;
+			if (Append)
+				FStream.Position = FStream.Size;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				Close();
+				base.Destroy();
 			}
 		}
+
 		public void Close()
 		{
+			Flush();
+			if (FOwnsStream)
+				FStream?.Destroy();
+			FStream = null;
 		}
+
 		public void Flush()
 		{
+			// TStream has no generic Flush method. Managed TFileStream writes are
+			// immediately forwarded to FileStream.Write; closing also flushes.
 		}
-		public void Write(string Value)
+
+		private void WriteBytes(byte[] Bytes)
 		{
+			if (Bytes != null && Bytes.Length != 0)
+				FStream.WriteBuffer(new UntypedPointer(Bytes), Bytes.Length);
+			if (FAutoFlush)
+				Flush();
 		}
-		public void Write(char Value)
-		{
-		}
-		public void WriteLine()
-		{
-		}
+
+		public void Write(string Value) =>
+			WriteBytes((FEncoding ?? TEncoding.UTF8).GetBytes(Value ?? string.Empty));
+
+		public void Write(char Value) =>
+			WriteBytes((FEncoding ?? TEncoding.UTF8).GetBytes(new[] { Value }));
+
+		public void WriteLine() => Write(FNewLine ?? sLineBreak);
+
 		public void WriteLine(string Value)
 		{
+			Write(Value ?? string.Empty);
+			WriteLine();
 		}
-		/*property AutoFlush : bool read FAutoFlush write FAutoFlush;*/
+
 		public bool AutoFlush
 		{
-			get
-			{
-				return FAutoFlush;
-			}
+			get => FAutoFlush;
 			set
 			{
 				FAutoFlush = value;
+				if (value)
+					Flush();
 			}
 		}
-		/*property BaseStream : TStream read FStream;*/
-		public TStream BaseStream
-		{
-			get
-			{
-				return FStream;
-			}
-		}
-		/*property Encoding : TEncoding read FEncoding;*/
-		public TEncoding Encoding
-		{
-			get
-			{
-				return FEncoding;
-			}
-		}
-		/*property NewLine : string read FNewLine write FNewLine;*/
-		public string NewLine
-		{
-			get
-			{
-				return FNewLine;
-			}
-			set
-			{
-				FNewLine = value;
-			}
-		}
+
+		public TStream BaseStream => FStream;
+		public TEncoding Encoding => FEncoding;
+		public string NewLine { get => FNewLine; set => FNewLine = value ?? sLineBreak; }
 
 		public TStreamWriter() {}
 	}	
@@ -2234,32 +2751,39 @@ public class ClassesInterface
 		private TPersistent FStorage;
 		private TPersistent FReference;
 
-/* TRecall */
 		public TRecall(TPersistent AStorage, TPersistent AReference)
 		{
-			;
+			FStorage = AStorage ?? throw new global::System.ArgumentNullException(nameof(AStorage));
+			FReference = AReference ?? throw new global::System.ArgumentNullException(nameof(AReference));
+			Store();
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				if (FStorage != null && FReference != null)
+					FReference.Assign(FStorage);
+				FStorage = null;
+				FReference = null;
+				base.Destroy();
 			}
 		}
+
 		public void Forget()
 		{
+			FStorage = null;
+			FReference = null;
 		}
+
 		public void Store()
 		{
+			if (FStorage == null || FReference == null)
+				return;
+			FStorage.Assign(FReference);
 		}
-		/*property Reference : TPersistent read FReference;*/
-		public TPersistent Reference
-		{
-			get
-			{
-				return FReference;
-			}
-		}
+
+		public TPersistent Reference => FReference;
 	}	
 
 	public class TParser : TObject
@@ -2274,63 +2798,51 @@ public class ClassesInterface
 		}
 		public void CheckToken(TToken T)
 		{
+			throw new global::System.NotSupportedException("TParser.CheckToken is not implemented by the managed D2CSharp RTL.");
 		}
 		public void CheckTokenSymbol(string S)
 		{
+			throw new global::System.NotSupportedException("TParser.CheckTokenSymbol is not implemented by the managed D2CSharp RTL.");
 		}
 		public void Error(string Ident)
 		{
+			throw new global::System.NotSupportedException("TParser.Error is not implemented by the managed D2CSharp RTL.");
 		}
 		public void ErrorFmt(string Ident, params TVarRec[] Args)
 		{
+			throw new global::System.NotSupportedException("TParser.ErrorFmt is not implemented by the managed D2CSharp RTL.");
 		}
 		public TToken NextToken()
 		{
-			TToken result = TToken.toEOF;
-			result = TToken.toEOF;
-			return result;
+			throw new global::System.NotSupportedException("TParser.NextToken is not implemented by the managed D2CSharp RTL.");
 		}
 		public int SourceLine()
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			throw new global::System.NotSupportedException("TParser.SourceLine is not implemented by the managed D2CSharp RTL.");
 		}
 		public string TokenComponentIdent()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			throw new global::System.NotSupportedException("TParser.TokenComponentIdent is not implemented by the managed D2CSharp RTL.");
 		}
 		public double TokenFloat()
 		{
-			double result = 0.0D;
-			result = 0.0F;
-			return result;
+			throw new global::System.NotSupportedException("TParser.TokenFloat is not implemented by the managed D2CSharp RTL.");
 		}
 		public long TokenInt()
 		{
-			long result = 0;
-			result = 0;
-			return result;
+			throw new global::System.NotSupportedException("TParser.TokenInt is not implemented by the managed D2CSharp RTL.");
 		}
 		public string TokenString()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			throw new global::System.NotSupportedException("TParser.TokenString is not implemented by the managed D2CSharp RTL.");
 		}
 		public bool TokenSymbolIs(string S)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			throw new global::System.NotSupportedException("TParser.TokenSymbolIs is not implemented by the managed D2CSharp RTL.");
 		}
 		public string TokenWideString()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			throw new global::System.NotSupportedException("TParser.TokenWideString is not implemented by the managed D2CSharp RTL.");
 		}
 		/*property Token : TToken read FToken;*/
 		public TToken Token
@@ -2346,196 +2858,199 @@ public class ClassesInterface
 	{
 		private TBasicAction FAction;
 		private TObject FClient;
-		protected virtual void AssignClient(TObject AClient)
-		{
-		}
-		protected virtual bool IsGroupIndexLinked()
-		{
-			bool result = false;
-			result = false;
-			return result;
-		}
-		protected virtual bool IsOnExecuteLinked()
-		{
-			bool result = false;
-			result = false;
-			return result;
-		}
-		protected virtual void SetGroupIndex(int Value)
-		{
-		}
+
+		protected virtual void AssignClient(TObject AClient) => FClient = AClient;
+		protected virtual bool IsGroupIndexLinked() => false;
+		protected virtual bool IsOnExecuteLinked() => FAction != null;
+		protected virtual void SetGroupIndex(int Value) {}
 		protected virtual void SetOnExecute(TNotifyEvent Value)
 		{
+			if (FAction != null)
+				FAction.OnExecute = Value;
 		}
 
-/* TBasicActionLink */
 		public TBasicActionLink(TObject AClient)
 		{
-			;
+			AssignClient(AClient);
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				FAction = null;
+				FClient = null;
+				base.Destroy();
 			}
 		}
+
 		public virtual void Assign(TObject Source)
 		{
+			if (Source is TBasicActionLink Other)
+			{
+				Action = Other.Action;
+				return;
+			}
+			if (Source is TBasicAction BasicAction)
+			{
+				Action = BasicAction;
+				return;
+			}
+			throw new global::System.ArgumentException("Unsupported action-link source.", nameof(Source));
 		}
+
 		public virtual bool Execute(TObject AClient = default)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return FAction != null && FAction.Execute();
 		}
+
 		public virtual bool Update()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return FAction != null && FAction.Update();
 		}
-		/*property Action : TBasicAction read FAction write FAction;*/
+
 		public TBasicAction Action
 		{
-			get
-			{
-				return FAction;
-			}
-			set
-			{
-				FAction = value;
-			}
+			get => FAction;
+			set => FAction = value;
 		}
-		/*property Client : TObject read FClient;*/
-		public TObject Client
-		{
-			get
-			{
-				return FClient;
-			}
-		}
+
+		public TObject Client => FClient;
 	}	
 
 	abstract public class TTextReader : TObject
 	{
 		abstract public int Peek();
-
-/* TTextReader */
 		abstract public int Read();
+
 		public virtual int Read(ref char[] Buffer, int Index, int Count)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			if (Buffer == null)
+				throw new global::System.ArgumentNullException(nameof(Buffer));
+			if (Index < 0 || Count < 0 || Index + Count > Buffer.Length)
+				throw new global::System.ArgumentOutOfRangeException();
+
+			int N = 0;
+			while (N < Count)
+			{
+				int C = Read();
+				if (C < 0)
+					break;
+				Buffer[Index + N] = (char)C;
+				N++;
+			}
+			return N;
 		}
+
 		public virtual int ReadBlock(ref char[] Buffer, int Index, int Count)
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			int Total = 0;
+			while (Total < Count)
+			{
+				int N = Read(ref Buffer, Index + Total, Count - Total);
+				if (N == 0)
+					break;
+				Total += N;
+			}
+			return Total;
 		}
+
 		public virtual string ReadLine()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			if (Peek() < 0)
+				return null;
+			var B = new global::System.Text.StringBuilder();
+			while (true)
+			{
+				int C = Read();
+				if (C < 0)
+					break;
+				if (C == '\r')
+				{
+					if (Peek() == '\n')
+						Read();
+					break;
+				}
+				if (C == '\n')
+					break;
+				B.Append((char)C);
+			}
+			return B.ToString();
 		}
+
 		public virtual string ReadToEnd()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			var B = new global::System.Text.StringBuilder();
+			int C;
+			while ((C = Read()) >= 0)
+				B.Append((char)C);
+			return B.ToString();
 		}
-		public TTextReaderEnumerator GetEnumerator()
-		{
-			TTextReaderEnumerator result = default;
-			result = default;
-			return result;
-		}
+
+		public TTextReaderEnumerator GetEnumerator() => new TTextReaderEnumerator(this);
 
 		public TTextReader() {}
 	}	
 
 	public class TTextReaderEnumerator : TObject
 	{
-		private TTextReader FReader;
+		private readonly TTextReader FReader;
 		private string FCurrent = string.Empty;
 
-/* TTextReaderEnumerator */
 		public TTextReaderEnumerator(TTextReader AReader)
 		{
-			;
+			FReader = AReader ?? throw new global::System.ArgumentNullException(nameof(AReader));
 		}
+
 		public bool MoveNext()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			string Line = FReader.ReadLine();
+			if (Line == null)
+				return false;
+			FCurrent = Line;
+			return true;
 		}
-		/*property Current : string read FCurrent;*/
-		public string Current
-		{
-			get
-			{
-				return FCurrent;
-			}
-		}
+
+		public string Current => FCurrent;
 	}	
 
 	public class TTextWriter : TObject
 	{
-		private string FNewLine = string.Empty;
+		private string FNewLine = sLineBreak;
 
-/* TTextWriter */
-		public TTextWriter()
-		{
-			;
-		}
-		public virtual void Close()
-		{
-		}
-		public virtual void Flush()
-		{
-		}
-		public virtual void Write(bool Value)
-		{
-		}
-		public virtual void Write(char Value)
-		{
-		}
-		public virtual void Write(int Value)
-		{
-		}
-		public virtual void Write(long Value)
-		{
-		}
-		public virtual void Write(float Value)
-		{
-		}
-		public virtual void Write(double Value)
-		{
-		}
+		public TTextWriter() {}
+
+		public virtual void Close() => Flush();
+		public virtual void Flush() {}
+
+		public virtual void Write(bool Value) => Write(Value.ToString());
+		public virtual void Write(char Value) => Write(Value.ToString());
+		public virtual void Write(int Value) => Write(Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
+		public virtual void Write(long Value) => Write(Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
+		public virtual void Write(float Value) => Write(Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
+		public virtual void Write(double Value) => Write(Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
+
 		public virtual void Write(string Value)
 		{
+			throw new global::System.NotSupportedException(
+				"This TTextWriter descendant must override Write(string).");
 		}
+
 		public virtual void WriteLine()
 		{
+			Write(FNewLine ?? sLineBreak);
 		}
+
 		public virtual void WriteLine(string Value)
 		{
+			Write(Value ?? string.Empty);
+			WriteLine();
 		}
-		/*property NewLine : string read FNewLine write FNewLine;*/
+
 		public string NewLine
 		{
-			get
-			{
-				return FNewLine;
-			}
-			set
-			{
-				FNewLine = value;
-			}
+			get => FNewLine;
+			set => FNewLine = value ?? sLineBreak;
 		}
 	}	
 
@@ -2545,121 +3060,99 @@ public class ClassesInterface
 		private TEncoding FEncoding;
 		private bool FOwnsStream;
 
-/* TBinaryReader */
 		public TBinaryReader(TStream Stream, TEncoding AEncoding = default, bool AOwnsStream = false)
 		{
-			;
+			FStream = Stream ?? throw new global::System.ArgumentNullException(nameof(Stream));
+			FEncoding = AEncoding ?? TEncoding.UTF8;
+			FOwnsStream = AOwnsStream;
 		}
+
 		public TBinaryReader(string Filename, TEncoding Encoding = default)
+			: this(new TFileStream(Filename, fmOpenRead), Encoding, true)
 		{
-			;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				Close();
+				base.Destroy();
 			}
 		}
+
+		private byte[] ReadExact(int Count)
+		{
+			if (Count < 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Count));
+			byte[] Result = new byte[Count];
+			if (Count != 0)
+				FStream.ReadBuffer(new UntypedPointer(Result), Count);
+			return Result;
+		}
+
 		public virtual void Close()
 		{
+			if (FOwnsStream)
+				FStream?.Destroy();
+			FStream = null;
 		}
-		public virtual bool ReadBoolean()
+
+		public virtual bool ReadBoolean() => ReadByte() != 0;
+		public virtual byte ReadByte() => FStream.ReadByte();
+		public virtual byte[] ReadBytes(int Count)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			if (Count < 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Count));
+			byte[] Result = new byte[Count];
+			int ReadCount = FStream.Read(new UntypedPointer(Result), Count);
+			if (ReadCount == Count)
+				return Result;
+			global::System.Array.Resize(ref Result, global::System.Math.Max(0, ReadCount));
+			return Result;
 		}
-		public virtual byte ReadByte()
-		{
-			byte result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual TBytes ReadBytes(int Count)
-		{
-			TBytes result = default;
-			return result;
-		}
+
 		public virtual char ReadChar()
 		{
-			char result = '\0';
-			result = '\x00';
-			return result;
+			byte[] Buffer = ReadBytes(FEncoding.GetMaxByteCount(1));
+			string S = FEncoding.GetString(Buffer);
+			return S.Length == 0 ? '\0' : S[0];
 		}
-		public virtual TCharArray ReadChars(int Count)
+
+		public virtual char[] ReadChars(int Count)
 		{
-			TCharArray result = default;
-			return result;
+			if (Count < 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Count));
+			var Result = new global::System.Collections.Generic.List<char>(Count);
+			for (int I = 0; I < Count; I++)
+			{
+				if (FStream.Position >= FStream.Size)
+					break;
+				Result.Add(ReadChar());
+			}
+			return Result.ToArray();
 		}
-		public virtual double ReadDouble()
-		{
-			double result = 0.0D;
-			result = 0.0F;
-			return result;
-		}
-		public virtual int ReadInteger()
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual long ReadInt64()
-		{
-			long result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual sbyte ReadShortInt()
-		{
-			sbyte result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual float ReadSingle()
-		{
-			float result = 0.0F;
-			result = 0.0F;
-			return result;
-		}
-		public virtual short ReadSmallInt()
-		{
-			short result = 0;
-			result = 0;
-			return result;
-		}
+
+		public virtual double ReadDouble() => global::System.BitConverter.ToDouble(ReadExact(8), 0);
+		public virtual int ReadInteger() => global::System.BitConverter.ToInt32(ReadExact(4), 0);
+		public virtual long ReadInt64() => global::System.BitConverter.ToInt64(ReadExact(8), 0);
+		public virtual sbyte ReadShortInt() => unchecked((sbyte)ReadByte());
+		public virtual float ReadSingle() => global::System.BitConverter.ToSingle(ReadExact(4), 0);
+		public virtual short ReadSmallInt() => global::System.BitConverter.ToInt16(ReadExact(2), 0);
+
 		public virtual string ReadString()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			int Length = ReadInteger();
+			if (Length < 0)
+				throw new global::System.IO.InvalidDataException("Negative string length.");
+			return FEncoding.GetString(ReadExact(Length));
 		}
-		public virtual ulong ReadUInt64()
-		{
-			ulong result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual ushort ReadWord()
-		{
-			ushort result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual uint ReadCardinal()
-		{
-			uint result = 0;
-			result = 0;
-			return result;
-		}
-		/*property BaseStream : TStream read FStream;*/
-		public TStream BaseStream
-		{
-			get
-			{
-				return FStream;
-			}
-		}
+
+		public virtual ulong ReadUInt64() => global::System.BitConverter.ToUInt64(ReadExact(8), 0);
+		public virtual ushort ReadWord() => global::System.BitConverter.ToUInt16(ReadExact(2), 0);
+		public virtual uint ReadCardinal() => global::System.BitConverter.ToUInt32(ReadExact(4), 0);
+
+		public TStream BaseStream => FStream;
 
 		public TBinaryReader() {}
 	}	
@@ -2670,106 +3163,113 @@ public class ClassesInterface
 		private TEncoding FEncoding;
 		private bool FOwnsStream;
 
-/* TBinaryWriter */
 		public TBinaryWriter()
 		{
-			;
 		}
+
 		public TBinaryWriter(TStream Stream)
+			: this(Stream, TEncoding.UTF8, false)
 		{
-			;
 		}
+
 		public TBinaryWriter(TStream Stream, TEncoding Encoding)
+			: this(Stream, Encoding, false)
 		{
-			;
 		}
+
 		public TBinaryWriter(TStream Stream, TEncoding Encoding, bool AOwnsStream)
 		{
-			;
+			FStream = Stream ?? throw new global::System.ArgumentNullException(nameof(Stream));
+			FEncoding = Encoding ?? TEncoding.UTF8;
+			FOwnsStream = AOwnsStream;
 		}
+
 		public TBinaryWriter(string Filename, bool Append = false)
+			: this(Filename, Append, TEncoding.UTF8)
 		{
-			;
 		}
+
 		public TBinaryWriter(string Filename, bool Append, TEncoding Encoding)
 		{
-			;
+			FEncoding = Encoding ?? TEncoding.UTF8;
+			FStream = new TFileStream(
+				Filename,
+				(ushort)(Append ? fmOpenReadWrite : fmCreate));
+			FOwnsStream = true;
+			if (Append)
+				FStream.Position = FStream.Size;
 		}
+
 		public override void Destroy()
 		{
-			if(!FDisposed)
+			if (!FDisposed)
 			{
-				//# inherited;
+				Close();
+				base.Destroy();
 			}
 		}
+
+		private void WriteBytes(byte[] Bytes)
+		{
+			if (Bytes != null && Bytes.Length != 0)
+				FStream.WriteBuffer(new UntypedPointer(Bytes), Bytes.Length);
+		}
+
 		public virtual void Close()
 		{
+			Flush();
+			if (FOwnsStream)
+				FStream?.Destroy();
+			FStream = null;
 		}
+
 		public virtual void Flush()
 		{
 		}
+
 		public virtual void Seek(int Offset, TSeekOrigin Origin)
 		{
+			FStream.Seek(Offset, Origin);
 		}
-		public virtual void Write(byte Value)
-		{
-		}
-		public virtual void Write(bool Value)
-		{
-		}
-		public virtual void Write(char Value)
-		{
-		}
-		public virtual void Write(TCharArray Value)
-		{
-		}
-		public virtual void Write(TBytes Value)
-		{
-		}
-		public virtual void Write(double Value)
-		{
-		}
-		public virtual void Write(int Value)
-		{
-		}
-		public virtual void Write(short Value)
-		{
-		}
-		public virtual void Write(sbyte Value)
-		{
-		}
-		public virtual void Write(ushort Value)
-		{
-		}
-		public virtual void Write(uint Value)
-		{
-		}
-		public virtual void Write(long Value)
-		{
-		}
-		public virtual void Write(float Value)
-		{
-		}
+
+		public virtual void Write(byte Value) => FStream.WriteByte(Value);
+		public virtual void Write(bool Value) => Write((byte)(Value ? 1 : 0));
+		public virtual void Write(char Value) => WriteBytes(FEncoding.GetBytes(new[] { Value }));
+		public virtual void Write(char[] Value) => WriteBytes(FEncoding.GetBytes(Value ?? global::System.Array.Empty<char>()));
+		public virtual void Write(byte[] Value) => WriteBytes(Value);
+		public virtual void Write(double Value) => WriteBytes(global::System.BitConverter.GetBytes(Value));
+		public virtual void Write(int Value) => WriteBytes(global::System.BitConverter.GetBytes(Value));
+		public virtual void Write(short Value) => WriteBytes(global::System.BitConverter.GetBytes(Value));
+		public virtual void Write(sbyte Value) => Write(unchecked((byte)Value));
+		public virtual void Write(ushort Value) => WriteBytes(global::System.BitConverter.GetBytes(Value));
+		public virtual void Write(uint Value) => WriteBytes(global::System.BitConverter.GetBytes(Value));
+		public virtual void Write(long Value) => WriteBytes(global::System.BitConverter.GetBytes(Value));
+		public virtual void Write(float Value) => WriteBytes(global::System.BitConverter.GetBytes(Value));
+
 		public virtual void Write(string Value)
 		{
+			byte[] Bytes = FEncoding.GetBytes(Value ?? string.Empty);
+			Write(Bytes.Length);
+			WriteBytes(Bytes);
 		}
-		public virtual void Write(ulong Value)
+
+		public virtual void Write(ulong Value) => WriteBytes(global::System.BitConverter.GetBytes(Value));
+
+		public virtual void Write(char[] Value, int Index, int Count) =>
+			WriteBytes(FEncoding.GetBytes(Value ?? global::System.Array.Empty<char>(), Index, Count));
+
+		public virtual void Write(byte[] Value, int Index, int Count)
 		{
+			if (Value == null)
+				throw new global::System.ArgumentNullException(nameof(Value));
+			if (Index < 0 || Count < 0 || Index + Count > Value.Length)
+				throw new global::System.ArgumentOutOfRangeException();
+			byte[] Part = new byte[Count];
+			global::System.Array.Copy(Value, Index, Part, 0, Count);
+			WriteBytes(Part);
 		}
-		public virtual void Write(TCharArray Value, int Index, int Count)
-		{
-		}
-		public virtual void Write(TBytes Value, int Index, int Count)
-		{
-		}
-		/*property BaseStream : TStream read FStream;*/
-		public TStream BaseStream
-		{
-			get
-			{
-				return FStream;
-			}
-		}
+
+		public TStream BaseStream => FStream;
 	}	
 
 	public class TFiler : TObject
@@ -2777,9 +3277,11 @@ public class ClassesInterface
 		private TComponent FRoot;
 		protected void DefineProperty(string Name, TReaderProc ReadData, TWriterProc WriteData, bool HasData)
 		{
+			throw new global::System.NotSupportedException("TFiler.DefineProperty is not implemented by the managed D2CSharp RTL.");
 		}
 		protected void DefineBinaryProperty(string Name, TStreamProc ReadData, TStreamProc WriteData, bool HasData)
 		{
+			throw new global::System.NotSupportedException("TFiler.DefineBinaryProperty is not implemented by the managed D2CSharp RTL.");
 		}
 
 /* TFiler */
@@ -2789,9 +3291,11 @@ public class ClassesInterface
 		}
 		public virtual void DefineProperties(TPersistent Instance)
 		{
+			throw new global::System.NotSupportedException("TFiler.DefineProperties is not implemented by the managed D2CSharp RTL.");
 		}
 		public virtual void FlushBuffer()
 		{
+			throw new global::System.NotSupportedException("TFiler.FlushBuffer is not implemented by the managed D2CSharp RTL.");
 		}
 		/*property Root : TComponent read FRoot write FRoot;*/
 		public TComponent Root
@@ -2819,92 +3323,75 @@ public class ClassesInterface
 		}
 		public void BeginReferences()
 		{
+			throw new global::System.NotSupportedException("TReader.BeginReferences is not implemented by the managed D2CSharp RTL.");
 		}
 		public void CheckValue(byte Value)
 		{
+			throw new global::System.NotSupportedException("TReader.CheckValue is not implemented by the managed D2CSharp RTL.");
 		}
 		public override void DefineProperties(TPersistent Instance)
 		{
+			throw new global::System.NotSupportedException("TReader.DefineProperties is not implemented by the managed D2CSharp RTL.");
 		}
 		public void EndReferences()
 		{
+			throw new global::System.NotSupportedException("TReader.EndReferences is not implemented by the managed D2CSharp RTL.");
 		}
 		public void FixupReferences()
 		{
+			throw new global::System.NotSupportedException("TReader.FixupReferences is not implemented by the managed D2CSharp RTL.");
 		}
 		public bool ReadBoolean()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadBoolean is not implemented by the managed D2CSharp RTL.");
 		}
 		public char ReadChar()
 		{
-			char result = '\0';
-			result = '\x00';
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadChar is not implemented by the managed D2CSharp RTL.");
 		}
 		public TCollection ReadCollection(TCollection Collection)
 		{
-			TCollection result = default;
-			result = Collection;
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadCollection is not implemented by the managed D2CSharp RTL.");
 		}
 		public TComponent ReadComponent(TComponent Component)
 		{
-			TComponent result = default;
-			result = Component;
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadComponent is not implemented by the managed D2CSharp RTL.");
 		}
 		public double ReadFloat()
 		{
-			double result = 0.0D;
-			result = 0.0F;
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadFloat is not implemented by the managed D2CSharp RTL.");
 		}
 		public string ReadIdent()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadIdent is not implemented by the managed D2CSharp RTL.");
 		}
 		public int ReadInteger()
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadInteger is not implemented by the managed D2CSharp RTL.");
 		}
 		public long ReadInt64()
 		{
-			long result = 0;
-			result = 0;
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadInt64 is not implemented by the managed D2CSharp RTL.");
 		}
 		public bool ReadListBegin()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadListBegin is not implemented by the managed D2CSharp RTL.");
 		}
 		public void ReadListEnd()
 		{
+			throw new global::System.NotSupportedException("TReader.ReadListEnd is not implemented by the managed D2CSharp RTL.");
 		}
 		public TComponent ReadRootComponent(TComponent Root)
 		{
-			TComponent result = default;
-			result = Root;
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadRootComponent is not implemented by the managed D2CSharp RTL.");
 		}
 		public string ReadString()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadString is not implemented by the managed D2CSharp RTL.");
 		}
 		public object ReadVariant()
 		{
-			object result = default(object);
-			return result;
+			throw new global::System.NotSupportedException("TReader.ReadVariant is not implemented by the managed D2CSharp RTL.");
 		}
 	}	
 
@@ -2920,48 +3407,63 @@ public class ClassesInterface
 		}
 		public override void DefineProperties(TPersistent Instance)
 		{
+			throw new global::System.NotSupportedException("TWriter.DefineProperties is not implemented by the managed D2CSharp RTL.");
 		}
 		public override void FlushBuffer()
 		{
+			throw new global::System.NotSupportedException("TWriter.FlushBuffer is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteBoolean(bool Value)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteBoolean is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteChar(char Value)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteChar is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteCollection(TCollection Value)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteCollection is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteComponent(TComponent Component)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteComponent is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteFloat(double Value)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteFloat is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteIdent(string Ident)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteIdent is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteInteger(int Value)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteInteger is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteInt64(long Value)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteInt64 is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteListBegin()
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteListBegin is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteListEnd()
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteListEnd is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteRootComponent(TComponent Root)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteRootComponent is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteString(string Value)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteString is not implemented by the managed D2CSharp RTL.");
 		}
 		public void WriteVariant(object Value)
 		{
+			throw new global::System.NotSupportedException("TWriter.WriteVariant is not implemented by the managed D2CSharp RTL.");
 		}
 	}	
 
@@ -2973,29 +3475,30 @@ public class ClassesInterface
 		private TSet FComponentState = new TSet();
 		private TSet FComponentStyle = new TSet();
 		private TObservers FObservers;
+		private readonly global::System.Collections.Generic.List<TComponent> FComponents =
+			new global::System.Collections.Generic.List<TComponent>();
 		private TComponent GetComponent(int Index)
 		{
-			TComponent result = default;
-			result = default;
-			return result;
+			return FComponents[Index];
 		}
 		private int GetComponentCount()
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			return FComponents.Count;
 		}
 		private int GetComponentIndex()
 		{
-			int result = 0;
-			result = 0;
-			return result;
+			return FOwner == null ? -1 : FOwner.FComponents.IndexOf(this);
 		}
 		private void SetComponentIndex(int Value)
 		{
 		}
 		private void SetName(string NewName)
 		{
+			NewName ??= string.Empty;
+			if (FName == NewName)
+				return;
+			ChangeName(NewName);
+			FName = NewName;
 		}
 		protected virtual void ChangeName(string NewName)
 		{
@@ -3008,33 +3511,25 @@ public class ClassesInterface
 		}
 		protected virtual TComponent GetChildOwner()
 		{
-			TComponent result = default;
-			result = default;
-			return result;
+			return this;
 		}
 		protected virtual TComponent GetChildParent()
 		{
-			TComponent result = default;
-			result = default;
-			return result;
+			return this;
 		}
-		/*protected  overrides: */public override string GetNamePath()
+		/*protected overrides: */public override string GetNamePath()
 		{
-			string result = string.Empty;
-			result = "";
-			return result;
+			if (FOwner == null || string.IsNullOrEmpty(FName))
+				return string.IsNullOrEmpty(FName) ? base.GetNamePath() : FName;
+			return FOwner.GetNamePath() + "." + FName;
 		}
 		protected virtual TObservers GetObservers()
 		{
-			TObservers result = default;
-			result = FObservers;
-			return result;
+			return FObservers ??= new TObservers();
 		}
 		protected virtual TPersistent GetOwner()
 		{
-			TPersistent result = default;
-			result = FOwner;
-			return result;
+			return FOwner;
 		}
 		protected virtual void Loaded()
 		{
@@ -3044,9 +3539,7 @@ public class ClassesInterface
 		}
 		protected virtual bool CanObserve(int ID)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return GetObservers().CanObserve(ID);
 		}
 		protected virtual void ObserverAdded(int ID, IObserver Observer)
 		{
@@ -3085,7 +3578,9 @@ public class ClassesInterface
 /* TComponent */
 		public TComponent(TComponent AOwner)
 		{
-			;
+			FName = string.Empty;
+			if (AOwner != null)
+				AOwner.InsertComponent(this);
 		}
 		public override void Destroy()
 		{
@@ -3100,21 +3595,30 @@ public class ClassesInterface
 		}
 		public void DestroyComponents()
 		{
+			while (FComponents.Count > 0)
+			{
+				TComponent Child = FComponents[FComponents.Count - 1];
+				FComponents.RemoveAt(FComponents.Count - 1);
+				Child.FOwner = null;
+				Child.Destroy();
+			}
 		}
 		public void Destroying()
 		{
+			DestroyComponents();
 		}
 		public TComponent FindComponent(string AName)
 		{
-			TComponent result = default;
-			result = default;
-			return result;
+			if (AName == null)
+				return null;
+			foreach (TComponent Component in FComponents)
+				if (string.Equals(Component.Name, AName, global::System.StringComparison.OrdinalIgnoreCase))
+					return Component;
+			return null;
 		}
 		public TComponentEnumerator GetEnumerator()
 		{
-			TComponentEnumerator result = default;
-			result = default;
-			return result;
+			return new TComponentEnumerator(this);
 		}
 		public void FreeNotification(TComponent AComponent)
 		{
@@ -3127,21 +3631,28 @@ public class ClassesInterface
 		}
 		public virtual TComponent GetParentComponent()
 		{
-			TComponent result = default;
-			result = default;
-			return result;
+			return FOwner;
 		}
 		public virtual bool HasParent()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return FOwner != null;
 		}
 		public void InsertComponent(TComponent AComponent)
 		{
+			if (AComponent == null)
+				throw new global::System.ArgumentNullException(nameof(AComponent));
+			if (global::System.Object.ReferenceEquals(AComponent.FOwner, this))
+				return;
+			AComponent.FOwner?.RemoveComponent(AComponent);
+			FComponents.Add(AComponent);
+			AComponent.FOwner = this;
 		}
 		public void RemoveComponent(TComponent AComponent)
 		{
+			if (AComponent == null)
+				return;
+			if (FComponents.Remove(AComponent))
+				AComponent.FOwner = null;
 		}
 		/*property ComponentCount : int read GetComponentCount;*/
 		public int ComponentCount
@@ -3225,34 +3736,29 @@ public class ClassesInterface
 
 	public class TComponentEnumerator : TObject
 	{
-		private TComponent FComponent;
+		private readonly TComponent FComponent;
 		private int FIndex;
+
 		private TComponent GetCurrent()
 		{
-			TComponent result = default;
-			result = default;
-			return result;
+			if (FIndex < 0 || FIndex >= FComponent.ComponentCount)
+				return null;
+			return FComponent.ReadPropertyComponents(FIndex);
 		}
 
-/* TComponentEnumerator */
 		public TComponentEnumerator(TComponent AComponent)
 		{
-			;
+			FComponent = AComponent ?? throw new global::System.ArgumentNullException(nameof(AComponent));
+			FIndex = -1;
 		}
+
 		public bool MoveNext()
 		{
-			bool result = false;
-			result = false;
-			return result;
+			FIndex++;
+			return FIndex < FComponent.ComponentCount;
 		}
-		/*property Current : TComponent read GetCurrent;*/
-		public TComponent Current
-		{
-			get
-			{
-				return GetCurrent();
-			}
-		}
+
+		public TComponent Current => GetCurrent();
 	}	
 
 	public class TBasicAction : TComponent
@@ -3265,9 +3771,7 @@ public class ClassesInterface
 		}
 		protected virtual bool HandlesTarget(TObject Target)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return Target != null;
 		}
 		protected virtual void SetAutoCheck(bool Value)
 		{
@@ -3297,27 +3801,25 @@ public class ClassesInterface
 		}
 		public virtual bool Execute()/*# dynamic */
 		{
-			bool result = false;
-			result = false;
-			return result;
+			if (FOnExecute == null)
+				return false;
+			FOnExecute(this);
+			return true;
 		}
 		public virtual bool ExecuteTarget(TObject Target)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return HandlesTarget(Target) && Execute();
 		}
 		public virtual bool Update()/*# dynamic */
 		{
-			bool result = false;
-			result = false;
-			return result;
+			if (FOnUpdate == null)
+				return false;
+			FOnUpdate(this);
+			return true;
 		}
 		public virtual bool UpdateTarget(TObject Target)
 		{
-			bool result = false;
-			result = false;
-			return result;
+			return HandlesTarget(Target) && Update();
 		}
 		/*property ActionComponent : TComponent read FActionComponent write FActionComponent;*/
 		public TComponent ActionComponent
@@ -3439,9 +3941,7 @@ public delegate void TReaderProc(TReader Reader);
 public delegate void TWriterProc(TWriter Writer);
 public delegate void TStreamProc(TStream Stream);
 public delegate void TGetChildProc(TComponent Child);
-//public delegate int TListSortCompare(IntPtr Item1, IntPtr Item2);
 public delegate int TListSortCompare(Pointer Item1, Pointer Item2);
-
 public delegate int TStringListSortCompare(TStringList List, int Index1, int Index2);
 	public enum TComponentStateItem {csLoading,
                           csReading,
@@ -3485,30 +3985,28 @@ public delegate int TStringListSortCompare(TStringList List, int Index1, int Ind
              toWString };
 	public static ushort StreamOriginalFormat()
 	{
-		ushort result = 0;
-		result = 0;
-		return result;
+		// 0 corresponds to the "unknown/original format not determined" value.
+		return 0;
 	}
 	public static bool ObjectBinaryToText(TStream Input, TStream Output)
 	{
-		bool result = false;
-		result = false;
-		return result;
+		throw new global::System.NotSupportedException(
+			"Delphi component binary-to-text streaming is not implemented by the managed D2CSharp RTL.");
 	}
 	public static bool ObjectTextToBinary(TStream Input, TStream Output)
 	{
-		bool result = false;
-		result = false;
-		return result;
+		throw new global::System.NotSupportedException(
+			"Delphi component text-to-binary streaming is not implemented by the managed D2CSharp RTL.");
 	}
 	public static void WriteComponentResFile(string FileName, TComponent Instance)
 	{
+		throw new global::System.NotSupportedException(
+			"Delphi component resource streaming is not implemented by the managed D2CSharp RTL.");
 	}
 	public static TComponent ReadComponentResFile(string FileName, TComponent Instance)
 	{
-		TComponent result = default;
-		result = Instance;
-		return result;
+		throw new global::System.NotSupportedException(
+			"Delphi component resource streaming is not implemented by the managed D2CSharp RTL.");
 	}
 	
 } // class ClassesInterface

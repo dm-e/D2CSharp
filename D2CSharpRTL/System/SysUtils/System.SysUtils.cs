@@ -56,6 +56,375 @@ namespace Sysutils
 public class SysutilsInterface
 {
 
+	public enum TStringSplitOptions { None, ExcludeEmpty, ExcludeLastEmpty };
+
+
+	// Primitive type helpers corresponding to the public System.SysUtils record helpers.
+	public static class TBooleanHelper
+	{
+		public static bool Parse(string s) => SysutilsInterface.StrToBool(s);
+		public static bool TryToParse(string s, out bool value) => SysutilsInterface.TryStrToBool(s, out value);
+		public static int Size() => sizeof(bool);
+		public static int ToInteger(bool value) => value ? 1 : 0;
+		public static string ToString(bool value) => SysutilsInterface.BoolToStr(value, true);
+	}
+	public static class TByteBoolHelper
+	{
+		public static bool Parse(string s) => TBooleanHelper.Parse(s);
+		public static bool TryToParse(string s, out bool value) => TBooleanHelper.TryToParse(s, out value);
+		public static int Size() => 1;
+		public static int ToInteger(bool value) => value ? 1 : 0;
+		public static string ToString(bool value) => TBooleanHelper.ToString(value);
+	}
+	public static class TWordBoolHelper
+	{
+		public static bool Parse(string s) => TBooleanHelper.Parse(s);
+		public static bool TryToParse(string s, out bool value) => TBooleanHelper.TryToParse(s, out value);
+		public static int Size() => 2;
+		public static int ToInteger(bool value) => value ? 1 : 0;
+		public static string ToString(bool value) => TBooleanHelper.ToString(value);
+	}
+	public static class TLongBoolHelper
+	{
+		public static bool Parse(string s) => TBooleanHelper.Parse(s);
+		public static bool TryToParse(string s, out bool value) => TBooleanHelper.TryToParse(s, out value);
+		public static int Size() => 4;
+		public static int ToInteger(bool value) => value ? 1 : 0;
+		public static string ToString(bool value) => TBooleanHelper.ToString(value);
+	}
+
+	public static class TShortIntHelper
+	{
+		public const sbyte MinValue = sbyte.MinValue;
+		public const sbyte MaxValue = sbyte.MaxValue;
+		public static sbyte Parse(string s) => sbyte.Parse(s, NumberStyles.Integer, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out sbyte value) => sbyte.TryParse(s, NumberStyles.Integer, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(sbyte);
+		public static bool ToBoolean(sbyte value) => value != 0;
+		public static float ToSingle(sbyte value) => value;
+		public static double ToDouble(sbyte value) => value;
+		public static double ToExtended(sbyte value) => value;
+		public static string ToHexString(sbyte value) => ToHexString(value, 0);
+		public static string ToHexString(sbyte value, int minDigits) => unchecked((long)value).ToString("X" + global::System.Math.Max(0,minDigits), CultureInfo.InvariantCulture);
+		public static string ToString(sbyte value) => value.ToString(CultureInfo.CurrentCulture);
+	}
+
+	public static class TByteHelper
+	{
+		public const byte MinValue = byte.MinValue;
+		public const byte MaxValue = byte.MaxValue;
+		public static byte Parse(string s) => byte.Parse(s, NumberStyles.Integer, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out byte value) => byte.TryParse(s, NumberStyles.Integer, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(byte);
+		public static bool ToBoolean(byte value) => value != 0;
+		public static float ToSingle(byte value) => value;
+		public static double ToDouble(byte value) => value;
+		public static double ToExtended(byte value) => value;
+		public static string ToHexString(byte value) => ToHexString(value, 0);
+		public static string ToHexString(byte value, int minDigits) => unchecked((long)value).ToString("X" + global::System.Math.Max(0,minDigits), CultureInfo.InvariantCulture);
+		public static string ToString(byte value) => value.ToString(CultureInfo.CurrentCulture);
+	}
+
+	public static class TSmallIntHelper
+	{
+		public const short MinValue = short.MinValue;
+		public const short MaxValue = short.MaxValue;
+		public static short Parse(string s) => short.Parse(s, NumberStyles.Integer, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out short value) => short.TryParse(s, NumberStyles.Integer, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(short);
+		public static bool ToBoolean(short value) => value != 0;
+		public static float ToSingle(short value) => value;
+		public static double ToDouble(short value) => value;
+		public static double ToExtended(short value) => value;
+		public static string ToHexString(short value) => ToHexString(value, 0);
+		public static string ToHexString(short value, int minDigits) => unchecked((long)value).ToString("X" + global::System.Math.Max(0,minDigits), CultureInfo.InvariantCulture);
+		public static string ToString(short value) => value.ToString(CultureInfo.CurrentCulture);
+	}
+
+	public static class TWordHelper
+	{
+		public const ushort MinValue = ushort.MinValue;
+		public const ushort MaxValue = ushort.MaxValue;
+		public static ushort Parse(string s) => ushort.Parse(s, NumberStyles.Integer, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out ushort value) => ushort.TryParse(s, NumberStyles.Integer, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(ushort);
+		public static bool ToBoolean(ushort value) => value != 0;
+		public static float ToSingle(ushort value) => value;
+		public static double ToDouble(ushort value) => value;
+		public static double ToExtended(ushort value) => value;
+		public static string ToHexString(ushort value) => ToHexString(value, 0);
+		public static string ToHexString(ushort value, int minDigits) => unchecked((long)value).ToString("X" + global::System.Math.Max(0,minDigits), CultureInfo.InvariantCulture);
+		public static string ToString(ushort value) => value.ToString(CultureInfo.CurrentCulture);
+	}
+
+	public static class TIntegerHelper
+	{
+		public const int MinValue = int.MinValue;
+		public const int MaxValue = int.MaxValue;
+		public static int Parse(string s) => int.Parse(s, NumberStyles.Integer, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out int value) => int.TryParse(s, NumberStyles.Integer, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(int);
+		public static bool ToBoolean(int value) => value != 0;
+		public static float ToSingle(int value) => value;
+		public static double ToDouble(int value) => value;
+		public static double ToExtended(int value) => value;
+		public static string ToHexString(int value) => ToHexString(value, 0);
+		public static string ToHexString(int value, int minDigits) => unchecked((long)value).ToString("X" + global::System.Math.Max(0,minDigits), CultureInfo.InvariantCulture);
+		public static string ToString(int value) => value.ToString(CultureInfo.CurrentCulture);
+	}
+
+	public static class TCardinalHelper
+	{
+		public const uint MinValue = uint.MinValue;
+		public const uint MaxValue = uint.MaxValue;
+		public static uint Parse(string s) => uint.Parse(s, NumberStyles.Integer, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out uint value) => uint.TryParse(s, NumberStyles.Integer, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(uint);
+		public static bool ToBoolean(uint value) => value != 0;
+		public static float ToSingle(uint value) => value;
+		public static double ToDouble(uint value) => value;
+		public static double ToExtended(uint value) => value;
+		public static string ToHexString(uint value) => ToHexString(value, 0);
+		public static string ToHexString(uint value, int minDigits) => unchecked((long)value).ToString("X" + global::System.Math.Max(0,minDigits), CultureInfo.InvariantCulture);
+		public static string ToString(uint value) => value.ToString(CultureInfo.CurrentCulture);
+	}
+
+	public static class TInt64Helper
+	{
+		public const long MinValue = long.MinValue;
+		public const long MaxValue = long.MaxValue;
+		public static long Parse(string s) => long.Parse(s, NumberStyles.Integer, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out long value) => long.TryParse(s, NumberStyles.Integer, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(long);
+		public static bool ToBoolean(long value) => value != 0;
+		public static float ToSingle(long value) => value;
+		public static double ToDouble(long value) => value;
+		public static double ToExtended(long value) => value;
+		public static string ToHexString(long value) => ToHexString(value, 0);
+		public static string ToHexString(long value, int minDigits) => unchecked((long)value).ToString("X" + global::System.Math.Max(0,minDigits), CultureInfo.InvariantCulture);
+		public static string ToString(long value) => value.ToString(CultureInfo.CurrentCulture);
+	}
+
+	public static class TUInt64Helper
+	{
+		public const ulong MinValue = ulong.MinValue;
+		public const ulong MaxValue = ulong.MaxValue;
+		public static ulong Parse(string s) => ulong.Parse(s, NumberStyles.Integer, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out ulong value) => ulong.TryParse(s, NumberStyles.Integer, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(ulong);
+		public static bool ToBoolean(ulong value) => value != 0;
+		public static float ToSingle(ulong value) => value;
+		public static double ToDouble(ulong value) => value;
+		public static double ToExtended(ulong value) => value;
+		public static string ToHexString(ulong value) => ToHexString(value, 0);
+		public static string ToHexString(ulong value, int minDigits) => unchecked((ulong)value).ToString("X" + global::System.Math.Max(0,minDigits), CultureInfo.InvariantCulture);
+		public static string ToString(ulong value) => value.ToString(CultureInfo.CurrentCulture);
+	}
+
+	private static TFloatSpecial FloatSpecial(double value)
+	{
+		if (double.IsNaN(value)) return TFloatSpecial.fsNaN;
+		if (double.IsPositiveInfinity(value)) return TFloatSpecial.fsInf;
+		if (double.IsNegativeInfinity(value)) return TFloatSpecial.fsNInf;
+		long bits = BitConverter.DoubleToInt64Bits(value);
+		bool neg = bits < 0;
+		if (value == 0.0) return neg ? TFloatSpecial.fsNZero : TFloatSpecial.fsZero;
+		long exp = (bits >> 52) & 0x7FFL;
+		if (exp == 0) return neg ? TFloatSpecial.fsNDenormal : TFloatSpecial.fsDenormal;
+		return neg ? TFloatSpecial.fsNegative : TFloatSpecial.fsPositive;
+	}
+	public static class TSingleHelper
+	{
+		public const float MinValue = float.MinValue, MaxValue = float.MaxValue, Epsilon = float.Epsilon;
+		public static readonly float NaN=float.NaN, NegativeInfinity=float.NegativeInfinity, PositiveInfinity=float.PositiveInfinity;
+		public static float Parse(string s) => float.Parse(s, NumberStyles.Float, CultureInfo.CurrentCulture);
+		public static bool TryParse(string s, out float value) => float.TryParse(s, NumberStyles.Float, CultureInfo.CurrentCulture, out value);
+		public static int Size() => sizeof(float);
+		public static float BuildUp(bool signFlag, ulong mantissa, int exponent) => (float)((signFlag?-1.0:1.0)*mantissa*global::System.Math.Pow(2.0,exponent-23));
+		public static int Exponent(float value) => (BitConverter.SingleToInt32Bits(value)>>23)&0xFF;
+		public static ulong Fraction(float value) => (uint)BitConverter.SingleToInt32Bits(value)&0x7FFFFFu;
+		public static ulong Mantissa(float value) { ulong f=Fraction(value); return Exponent(value)==0?f:f|0x800000u; }
+		public static TFloatSpecial SpecialType(float value) => FloatSpecial(value);
+		public static bool IsNan(float value)=>float.IsNaN(value); public static bool IsInfinity(float value)=>float.IsInfinity(value);
+		public static bool IsNegativeInfinity(float value)=>float.IsNegativeInfinity(value); public static bool IsPositiveInfinity(float value)=>float.IsPositiveInfinity(value);
+		public static string ToString(float value)=>value.ToString(CultureFromSettings(SysutilsInterface.FormatSettings));
+		public static string ToString(float value,TFloatFormat format,int precision,int digits)=>SysutilsInterface.FloatToStrF(value,format,precision,digits);
+		public static string ToString(float value,TFloatFormat format,int precision,int digits,TFormatSettings fs)=>SysutilsInterface.FloatToStrF(value,format,precision,digits,fs);
+	}
+	public static class TDoubleHelper
+	{
+		public const double MinValue = double.MinValue, MaxValue = double.MaxValue, Epsilon = double.Epsilon;
+		public static readonly double NaN=double.NaN, NegativeInfinity=double.NegativeInfinity, PositiveInfinity=double.PositiveInfinity;
+		public static double Parse(string s) => SysutilsInterface.StrToFloat(s);
+		public static bool TryParse(string s, out double value) => SysutilsInterface.TryStrToFloat(s,out value);
+		public static int Size() => sizeof(double);
+		public static double BuildUp(bool signFlag, ulong mantissa, int exponent) => (signFlag?-1.0:1.0)*mantissa*global::System.Math.Pow(2.0,exponent-52);
+		public static int Exponent(double value) => (int)((BitConverter.DoubleToInt64Bits(value)>>52)&0x7FFL);
+		public static ulong Fraction(double value) => (ulong)BitConverter.DoubleToInt64Bits(value)&0xFFFFFFFFFFFFFUL;
+		public static ulong Mantissa(double value) { ulong f=Fraction(value); return Exponent(value)==0?f:f|0x10000000000000UL; }
+		public static TFloatSpecial SpecialType(double value) => FloatSpecial(value);
+		public static bool IsNan(double value)=>double.IsNaN(value); public static bool IsInfinity(double value)=>double.IsInfinity(value);
+		public static bool IsNegativeInfinity(double value)=>double.IsNegativeInfinity(value); public static bool IsPositiveInfinity(double value)=>double.IsPositiveInfinity(value);
+		public static string ToString(double value)=>value.ToString(CultureFromSettings(SysutilsInterface.FormatSettings));
+		public static string ToString(double value,TFloatFormat format,int precision,int digits)=>SysutilsInterface.FloatToStrF(value,format,precision,digits);
+		public static string ToString(double value,TFloatFormat format,int precision,int digits,TFormatSettings fs)=>SysutilsInterface.FloatToStrF(value,format,precision,digits,fs);
+	}
+	public static class TExtendedHelper
+	{
+		public const double MinValue = double.MinValue, MaxValue = double.MaxValue, Epsilon = double.Epsilon;
+		public static readonly double NaN=double.NaN, NegativeInfinity=double.NegativeInfinity, PositiveInfinity=double.PositiveInfinity;
+		public static double Parse(string s)=>TDoubleHelper.Parse(s); public static bool TryParse(string s,out double value)=>TDoubleHelper.TryParse(s,out value);
+		public static int Size()=>sizeof(double); public static double BuildUp(bool signFlag,ulong mantissa,int exponent)=>TDoubleHelper.BuildUp(signFlag,mantissa,exponent);
+		public static int Exponent(double value)=>TDoubleHelper.Exponent(value); public static ulong Fraction(double value)=>TDoubleHelper.Fraction(value); public static ulong Mantissa(double value)=>TDoubleHelper.Mantissa(value);
+		public static TFloatSpecial SpecialType(double value)=>TDoubleHelper.SpecialType(value); public static bool IsNan(double value)=>double.IsNaN(value); public static bool IsInfinity(double value)=>double.IsInfinity(value);
+		public static bool IsNegativeInfinity(double value)=>double.IsNegativeInfinity(value); public static bool IsPositiveInfinity(double value)=>double.IsPositiveInfinity(value);
+		public static string ToString(double value)=>TDoubleHelper.ToString(value); public static string ToString(double value,TFloatFormat format,int precision,int digits)=>TDoubleHelper.ToString(value,format,precision,digits);
+		public static string ToString(double value,TFloatFormat format,int precision,int digits,TFormatSettings fs)=>TDoubleHelper.ToString(value,format,precision,digits,fs);
+	}
+	public static class TCurrencyHelper
+	{
+		public static Currency Parse(string s)=>SysutilsInterface.StrToCurr(s);
+		public static bool TryParse(string s,out Currency value)=>SysutilsInterface.TryStrToCurr(s,out value);
+		public static int Size()=>8;
+		public static string ToString(Currency value)=>SysutilsInterface.CurrToStr(value);
+		public static string ToString(Currency value,TFloatFormat format,int digits)=>SysutilsInterface.CurrToStrF(value,format,digits);
+		public static string ToString(Currency value,TFloatFormat format,int digits,TFormatSettings fs)=>SysutilsInterface.CurrToStrF(value,format,digits,fs);
+	}
+	public static class TGUIDHelper
+	{
+		public static Guid Create(string s)=>new Guid(s);
+		public static Guid Create(byte[] bytes)=>new Guid(bytes ?? Array.Empty<byte>());
+		public static Guid Create(uint a,ushort b,ushort c,byte d,byte e,byte f,byte g,byte h,byte i,byte j,byte k)=>new Guid(unchecked((int)a),unchecked((short)b),unchecked((short)c),d,e,f,g,h,i,j,k);
+		public static Guid NewGuid()=>Guid.NewGuid();
+		public static byte[] ToByteArray(Guid value)=>value.ToByteArray();
+		public static string ToString(Guid value)=>value.ToString("B").ToUpperInvariant();
+	}
+
+	public static class TStringHelper
+	{
+		private static string S(string value) => value ?? string.Empty;
+		private static StringComparison Cmp(bool ignoreCase) => ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+		private static int ClampStart(string s, int start) => global::System.Math.Max(0, global::System.Math.Min(start, s.Length));
+
+		public static string Create(char c, int count) => new string(c, global::System.Math.Max(0, count));
+		public static string Create(char[] value, int startIndex, int length) => new string(value ?? Array.Empty<char>(), startIndex, length);
+		public static string Create(char[] value) => new string(value ?? Array.Empty<char>());
+		public static int Compare(string a, string b) => string.Compare(S(a), S(b), StringComparison.Ordinal);
+		public static int Compare(string a, string b, bool ignoreCase) => string.Compare(S(a), S(b), Cmp(ignoreCase));
+		public static int Compare(string a, int indexA, string b, int indexB, int length) => string.Compare(S(a), indexA, S(b), indexB, length, StringComparison.Ordinal);
+		public static int Compare(string a, int indexA, string b, int indexB, int length, bool ignoreCase) => string.Compare(S(a), indexA, S(b), indexB, length, Cmp(ignoreCase));
+		public static int CompareOrdinal(string a, string b) => string.CompareOrdinal(S(a), S(b));
+		public static int CompareOrdinal(string a, int indexA, string b, int indexB, int length) => string.CompareOrdinal(S(a), indexA, S(b), indexB, length);
+		public static int CompareText(string a, string b) => string.Compare(S(a), S(b), StringComparison.OrdinalIgnoreCase);
+		public static int CompareTo(string self, string b) => string.Compare(S(self), S(b), StringComparison.Ordinal);
+		public static bool Contains(string self, string value) => S(self).Contains(S(value), StringComparison.Ordinal);
+		public static string Copy(string value) => string.Copy(S(value));
+		public static void CopyTo(string self, int sourceIndex, char[] destination, int destinationIndex, int count) => S(self).CopyTo(sourceIndex, destination, destinationIndex, count);
+		public static int CountChar(string self, char c) => S(self).Count(x => x == c);
+		public static string DeQuotedString(string self) => DeQuotedString(self, '\'');
+		public static string DeQuotedString(string self, char quote) { string s=S(self); if(s.Length>=2 && s[0]==quote && s[^1]==quote) return s.Substring(1,s.Length-2).Replace(new string(quote,2), quote.ToString()); return s; }
+		public static bool EndsText(string subText, string text) => S(text).EndsWith(S(subText), StringComparison.OrdinalIgnoreCase);
+		public static bool EndsWith(string self, string value) => S(self).EndsWith(S(value), StringComparison.Ordinal);
+		public static bool EndsWith(string self, string value, bool ignoreCase) => S(self).EndsWith(S(value), Cmp(ignoreCase));
+		public static bool Equals(string a, string b) => string.Equals(S(a), S(b), StringComparison.Ordinal);
+		public static string Format(string format, params TVarRec[] args) => SysutilsInterface.Format(format, args);
+		public static int GetHashCode(string self) => S(self).GetHashCode();
+		public static int IndexOf(string self, char value) => S(self).IndexOf(value);
+		public static int IndexOf(string self, string value) => S(self).IndexOf(S(value), StringComparison.Ordinal);
+		public static int IndexOf(string self, char value, int startIndex) => S(self).IndexOf(value, startIndex);
+		public static int IndexOf(string self, string value, int startIndex) => S(self).IndexOf(S(value), startIndex, StringComparison.Ordinal);
+		public static int IndexOf(string self, char value, int startIndex, int count) => S(self).IndexOf(value, startIndex, count);
+		public static int IndexOf(string self, string value, int startIndex, int count) => S(self).IndexOf(S(value), startIndex, count, StringComparison.Ordinal);
+		public static int IndexOfAny(string self, char[] anyOf) => S(self).IndexOfAny(anyOf ?? Array.Empty<char>());
+		public static int IndexOfAny(string self, char[] anyOf, int startIndex) => S(self).IndexOfAny(anyOf ?? Array.Empty<char>(), startIndex);
+		public static int IndexOfAny(string self, char[] anyOf, int startIndex, int count) => S(self).IndexOfAny(anyOf ?? Array.Empty<char>(), startIndex, count);
+		private static int IndexOfAnyUnquotedCore(string self, string[] needles, char quoteStart, char quoteEnd, int start, int count, out int matched) { string s=S(self); matched=-1; int end=global::System.Math.Min(s.Length, start+global::System.Math.Max(0,count)); bool quoted=false; for(int i=global::System.Math.Max(0,start);i<end;i++){ if(!quoted && s[i]==quoteStart){quoted=true;continue;} if(quoted && s[i]==quoteEnd){quoted=false;continue;} if(quoted) continue; for(int n=0;n<needles.Length;n++){var q=needles[n]??string.Empty;if(q.Length>0 && i+q.Length<=end && string.CompareOrdinal(s,i,q,0,q.Length)==0){matched=n;return i;}} } return -1; }
+		public static int IndexOfAnyUnquoted(string self, char[] anyOf, char startQuote, char endQuote) => IndexOfAnyUnquoted(self, anyOf, startQuote, endQuote, 0, S(self).Length);
+		public static int IndexOfAnyUnquoted(string self, char[] anyOf, char startQuote, char endQuote, int startIndex) => IndexOfAnyUnquoted(self, anyOf, startQuote, endQuote, startIndex, S(self).Length-startIndex);
+		public static int IndexOfAnyUnquoted(string self, char[] anyOf, char startQuote, char endQuote, int startIndex, int count) { int m; return IndexOfAnyUnquotedCore(self,(anyOf??Array.Empty<char>()).Select(c=>c.ToString()).ToArray(),startQuote,endQuote,startIndex,count,out m); }
+		public static int IndexOfAnyUnquoted(string self, string[] anyOf, char startQuote, char endQuote, int startIndex, out int matched) => IndexOfAnyUnquotedCore(self,anyOf??Array.Empty<string>(),startQuote,endQuote,startIndex,S(self).Length-startIndex,out matched);
+		public static string Insert(string self, int startIndex, string value) => S(self).Insert(ClampStart(S(self), startIndex), S(value));
+		public static bool IsDelimiter(string self, string delimiters, int index) => index>=0 && index<S(self).Length && S(delimiters).IndexOf(S(self)[index])>=0;
+		public static bool IsEmpty(string self) => S(self).Length==0;
+		public static bool IsNullOrEmpty(string value) => string.IsNullOrEmpty(value);
+		public static bool IsNullOrWhiteSpace(string value) => string.IsNullOrWhiteSpace(value);
+		public static string Join(string separator, TVarRec[] values) => string.Join(S(separator),(values??Array.Empty<TVarRec>()).Select(v=>v.Value?.ToString()??string.Empty));
+		public static string Join(string separator, string[] values) => string.Join(S(separator),values??Array.Empty<string>());
+		public static string Join(string separator, string[] values, int startIndex, int count) => string.Join(S(separator),values??Array.Empty<string>(),startIndex,count);
+		public static int LastDelimiter(string self, string delims) { string s=S(self); for(int i=s.Length-1;i>=0;i--) if(S(delims).IndexOf(s[i])>=0) return i; return -1; }
+		public static int LastIndexOf(string self, char value) => S(self).LastIndexOf(value);
+		public static int LastIndexOf(string self, string value) => S(self).LastIndexOf(S(value),StringComparison.Ordinal);
+		public static int LastIndexOf(string self, char value, int startIndex) => S(self).LastIndexOf(value,startIndex);
+		public static int LastIndexOf(string self, string value, int startIndex) => S(self).LastIndexOf(S(value),startIndex,StringComparison.Ordinal);
+		public static int LastIndexOf(string self, char value, int startIndex, int count) => S(self).LastIndexOf(value,startIndex,count);
+		public static int LastIndexOf(string self, string value, int startIndex, int count) => S(self).LastIndexOf(S(value),startIndex,count,StringComparison.Ordinal);
+		public static int LastIndexOfAny(string self, char[] anyOf) => S(self).LastIndexOfAny(anyOf??Array.Empty<char>());
+		public static int LastIndexOfAny(string self, char[] anyOf, int startIndex) => S(self).LastIndexOfAny(anyOf??Array.Empty<char>(),startIndex);
+		public static int LastIndexOfAny(string self, char[] anyOf, int startIndex, int count) => S(self).LastIndexOfAny(anyOf??Array.Empty<char>(),startIndex,count);
+		public static string PadLeft(string self, int width) => S(self).PadLeft(width);
+		public static string PadLeft(string self, int width, char paddingChar) => S(self).PadLeft(width,paddingChar);
+		public static string PadRight(string self, int width) => S(self).PadRight(width);
+		public static string PadRight(string self, int width, char paddingChar) => S(self).PadRight(width,paddingChar);
+		public static string Parse(int value) => value.ToString(CultureInfo.CurrentCulture);
+		public static string Parse(long value) => value.ToString(CultureInfo.CurrentCulture);
+		public static string Parse(bool value) => value.ToString();
+		public static string Parse(double value) => SysutilsInterface.FloatToStr(value);
+		public static string QuotedString(string self) => QuotedString(self,'"');
+		public static string QuotedString(string self, char quote) => quote + S(self).Replace(quote.ToString(),new string(quote,2)) + quote;
+		public static string Remove(string self, int startIndex) => S(self).Remove(startIndex);
+		public static string Remove(string self, int startIndex, int count) => S(self).Remove(startIndex,count);
+		public static string Replace(string self, char oldChar, char newChar) => S(self).Replace(oldChar,newChar);
+		public static string Replace(string self, char oldChar, char newChar, TSet replaceFlags) => S(self).Replace(oldChar,newChar);
+		public static string Replace(string self, string oldValue, string newValue) => S(self).Replace(S(oldValue),S(newValue));
+		public static string Replace(string self, string oldValue, string newValue, TSet replaceFlags) => S(self).Replace(S(oldValue),S(newValue));
+		private static string ReplaceStringIgnoreCase(string text,string oldValue,string newValue){ if(string.IsNullOrEmpty(oldValue)) return text; var b=new global::System.Text.StringBuilder(); int p=0; while(true){int i=text.IndexOf(oldValue,p,StringComparison.OrdinalIgnoreCase);if(i<0){b.Append(text,p,text.Length-p);break;}b.Append(text,p,i-p);b.Append(newValue);p=i+oldValue.Length;}return b.ToString(); }
+		private static string[] SplitCore(string self, string[] sep, int count, TStringSplitOptions options, char? qs=null, char? qe=null){ string s=S(self); if(count<=0)return Array.Empty<string>(); if(qs==null) { var opt=options==TStringSplitOptions.ExcludeEmpty?StringSplitOptions.RemoveEmptyEntries:StringSplitOptions.None; var r=s.Split(sep??Array.Empty<string>(),count,opt); if(options==TStringSplitOptions.ExcludeLastEmpty && r.Length>0 && r[^1].Length==0) return r.Take(r.Length-1).ToArray(); return r; } var parts=new List<string>(); int start=0; bool quoted=false; for(int i=0;i<s.Length && parts.Count<count-1;i++){ if(!quoted && s[i]==qs){quoted=true;continue;} if(quoted && s[i]==qe){quoted=false;continue;} if(quoted)continue; string hit=null; foreach(var d in sep??Array.Empty<string>()){if(!string.IsNullOrEmpty(d)&&i+d.Length<=s.Length&&string.CompareOrdinal(s,i,d,0,d.Length)==0){hit=d;break;}} if(hit!=null){var part=s.Substring(start,i-start);if(options!=TStringSplitOptions.ExcludeEmpty||part.Length>0)parts.Add(part);i+=hit.Length-1;start=i+1;}} var last=s.Substring(start); if(options!=TStringSplitOptions.ExcludeEmpty||last.Length>0)parts.Add(last); if(options==TStringSplitOptions.ExcludeLastEmpty&&parts.Count>0&&parts[^1].Length==0)parts.RemoveAt(parts.Count-1); return parts.ToArray(); }
+		public static string[] Split(string self, char[] sep) => Split(self,sep,int.MaxValue,TStringSplitOptions.None);
+		public static string[] Split(string self, char[] sep, int count) => Split(self,sep,count,TStringSplitOptions.None);
+		public static string[] Split(string self, char[] sep, TStringSplitOptions options) => Split(self,sep,int.MaxValue,options);
+		public static string[] Split(string self, char[] sep, int count, TStringSplitOptions options) => SplitCore(self,(sep??Array.Empty<char>()).Select(c=>c.ToString()).ToArray(),count,options);
+		public static string[] Split(string self, string[] sep) => Split(self,sep,int.MaxValue,TStringSplitOptions.None);
+		public static string[] Split(string self, string[] sep, int count) => Split(self,sep,count,TStringSplitOptions.None);
+		public static string[] Split(string self, string[] sep, TStringSplitOptions options) => Split(self,sep,int.MaxValue,options);
+		public static string[] Split(string self, string[] sep, int count, TStringSplitOptions options) => SplitCore(self,sep,count,options);
+		public static string[] Split(string self, char[] sep, char quote) => SplitCore(self,(sep??Array.Empty<char>()).Select(c=>c.ToString()).ToArray(),int.MaxValue,TStringSplitOptions.None,quote,quote);
+		public static string[] Split(string self, char[] sep, char qs, char qe) => SplitCore(self,(sep??Array.Empty<char>()).Select(c=>c.ToString()).ToArray(),int.MaxValue,TStringSplitOptions.None,qs,qe);
+		public static string[] Split(string self, char[] sep, char qs, char qe, TStringSplitOptions options) => SplitCore(self,(sep??Array.Empty<char>()).Select(c=>c.ToString()).ToArray(),int.MaxValue,options,qs,qe);
+		public static string[] Split(string self, char[] sep, char qs, char qe, int count) => SplitCore(self,(sep??Array.Empty<char>()).Select(c=>c.ToString()).ToArray(),count,TStringSplitOptions.None,qs,qe);
+		public static string[] Split(string self, char[] sep, char qs, char qe, int count, TStringSplitOptions options) => SplitCore(self,(sep??Array.Empty<char>()).Select(c=>c.ToString()).ToArray(),count,options,qs,qe);
+		public static string[] Split(string self, string[] sep, char quote) => SplitCore(self,sep,int.MaxValue,TStringSplitOptions.None,quote,quote);
+		public static string[] Split(string self, string[] sep, char qs, char qe) => SplitCore(self,sep,int.MaxValue,TStringSplitOptions.None,qs,qe);
+		public static string[] Split(string self, string[] sep, char qs, char qe, TStringSplitOptions options) => SplitCore(self,sep,int.MaxValue,options,qs,qe);
+		public static string[] Split(string self, string[] sep, char qs, char qe, int count) => SplitCore(self,sep,count,TStringSplitOptions.None,qs,qe);
+		public static string[] Split(string self, string[] sep, char qs, char qe, int count, TStringSplitOptions options) => SplitCore(self,sep,count,options,qs,qe);
+		public static bool StartsText(string subText, string text) => S(text).StartsWith(S(subText),StringComparison.OrdinalIgnoreCase);
+		public static bool StartsWith(string self, string value) => S(self).StartsWith(S(value),StringComparison.Ordinal);
+		public static bool StartsWith(string self, string value, bool ignoreCase) => S(self).StartsWith(S(value),Cmp(ignoreCase));
+		public static string Substring(string self, int startIndex) => S(self).Substring(startIndex);
+		public static string Substring(string self, int startIndex, int length) => S(self).Substring(startIndex,length);
+		public static bool ToBoolean(string self) => SysutilsInterface.StrToBool(S(self));
+		public static char[] ToCharArray(string self) => S(self).ToCharArray();
+		public static char[] ToCharArray(string self, int startIndex, int length) => S(self).ToCharArray(startIndex,length);
+		public static double ToDouble(string self) => SysutilsInterface.StrToFloat(S(self));
+		public static double ToExtended(string self) => SysutilsInterface.StrToFloat(S(self));
+		public static long ToInt64(string self) => SysutilsInterface.StrToInt64(S(self));
+		public static int ToInteger(string self) => SysutilsInterface.StrToInt(S(self));
+		public static float ToSingle(string self) => checked((float)SysutilsInterface.StrToFloat(S(self)));
+		public static string ToLower(string self) => S(self).ToLower(CultureInfo.CurrentCulture);
+		public static string ToLowerInvariant(string self) => S(self).ToLowerInvariant();
+		public static string ToUpper(string self) => S(self).ToUpper(CultureInfo.CurrentCulture);
+		public static string ToUpperInvariant(string self) => S(self).ToUpperInvariant();
+		public static string Trim(string self) => S(self).Trim();
+		public static string Trim(string self, char[] trimChars) => S(self).Trim(trimChars??Array.Empty<char>());
+		public static string TrimEnd(string self, char[] trimChars) => S(self).TrimEnd(trimChars??Array.Empty<char>());
+		public static string TrimLeft(string self) => S(self).TrimStart();
+		public static string TrimLeft(string self, char[] trimChars) => S(self).TrimStart(trimChars??Array.Empty<char>());
+		public static string TrimRight(string self) => S(self).TrimEnd();
+		public static string TrimRight(string self, char[] trimChars) => S(self).TrimEnd(trimChars??Array.Empty<char>());
+		public static string TrimStart(string self, char[] trimChars) => S(self).TrimStart(trimChars??Array.Empty<char>());
+		public static string UpperCase(string s) => S(s).ToUpper(CultureInfo.CurrentCulture);
+	}
+
 	public struct WordRec
 	{
 		public byte Lo;
@@ -362,7 +731,7 @@ public class SysutilsInterface
 
 	public class TUTF8Encoding : TEncoding { public TUTF8Encoding() : base(new global::System.Text.UTF8Encoding(false)) {} }	
 
-	public class StringBuilder : TObject
+	public class TStringBuilder : TObject
 	{
 		private global::System.Text.StringBuilder FBuilder;
 		private int FMaxCapacity;
@@ -375,68 +744,68 @@ public class SysutilsInterface
 		private void SetLength(int Value) => FBuilder.Length = Value;
 		private int GetMaxCapacity() => FMaxCapacity;
 
-		public StringBuilder()
+		public TStringBuilder()
 		{
 			FMaxCapacity = int.MaxValue;
 			FBuilder = new global::System.Text.StringBuilder();
 		}
-		public StringBuilder(int ACapacity)
+		public TStringBuilder(int ACapacity)
 		{
 			FMaxCapacity = int.MaxValue;
 			FBuilder = new global::System.Text.StringBuilder(ACapacity);
 		}
-		public StringBuilder(string Value)
+		public TStringBuilder(string Value)
 		{
 			FMaxCapacity = int.MaxValue;
 			FBuilder = new global::System.Text.StringBuilder(Value ?? string.Empty);
 		}
-		public StringBuilder(int ACapacity, int AMaxCapacity)
+		public TStringBuilder(int ACapacity, int AMaxCapacity)
 		{
 			FMaxCapacity = AMaxCapacity;
 			FBuilder = new global::System.Text.StringBuilder(ACapacity, AMaxCapacity);
 		}
-		public StringBuilder(string Value, int ACapacity)
+		public TStringBuilder(string Value, int ACapacity)
 		{
 			FMaxCapacity = int.MaxValue;
 			FBuilder = new global::System.Text.StringBuilder(Value ?? string.Empty, ACapacity);
 		}
-		public StringBuilder(string Value, int StartIndex, int ALength, int ACapacity)
+		public TStringBuilder(string Value, int StartIndex, int ALength, int ACapacity)
 		{
 			FMaxCapacity = int.MaxValue;
 			FBuilder = new global::System.Text.StringBuilder(Value ?? string.Empty, StartIndex, ALength, ACapacity);
 		}
 
-		private StringBuilder Add(object Value) { FBuilder.Append(Value); return this; }
-		public StringBuilder Append(bool Value) => Add(Value);
-		public StringBuilder Append(byte Value) => Add(Value);
-		public StringBuilder Append(char Value) => Add(Value);
-		public StringBuilder Append(Currency Value) => Add(Value.ToDecimal());
-		public StringBuilder Append(double Value) => Add(Value);
-		public StringBuilder Append(short Value) => Add(Value);
-		public StringBuilder Append(int Value) => Add(Value);
-		public StringBuilder Append(long Value) => Add(Value);
-		public StringBuilder Append(TObject Value) => Add(Value);
-		public StringBuilder Append(sbyte Value) => Add(Value);
-		public StringBuilder Append(float Value) => Add(Value);
-		public StringBuilder Append(string Value) { FBuilder.Append(Value); return this; }
-		public StringBuilder Append(ulong Value) => Add(Value);
-		public StringBuilder Append(char Value, int RepeatCount) { FBuilder.Append(Value, RepeatCount); return this; }
-		public StringBuilder Append(char[] Value, int StartIndex, int CharCount)
+		private TStringBuilder Add(object Value) { FBuilder.Append(Value); return this; }
+		public TStringBuilder Append(bool Value) => Add(Value);
+		public TStringBuilder Append(byte Value) => Add(Value);
+		public TStringBuilder Append(char Value) => Add(Value);
+		public TStringBuilder Append(Currency Value) => Add(Value.ToDecimal());
+		public TStringBuilder Append(double Value) => Add(Value);
+		public TStringBuilder Append(short Value) => Add(Value);
+		public TStringBuilder Append(int Value) => Add(Value);
+		public TStringBuilder Append(long Value) => Add(Value);
+		public TStringBuilder Append(TObject Value) => Add(Value);
+		public TStringBuilder Append(sbyte Value) => Add(Value);
+		public TStringBuilder Append(float Value) => Add(Value);
+		public TStringBuilder Append(string Value) { FBuilder.Append(Value); return this; }
+		public TStringBuilder Append(ulong Value) => Add(Value);
+		public TStringBuilder Append(char Value, int RepeatCount) { FBuilder.Append(Value, RepeatCount); return this; }
+		public TStringBuilder Append(char[] Value, int StartIndex, int CharCount)
 		{
 			FBuilder.Append(Value, StartIndex, CharCount); return this;
 		}
-		public StringBuilder Append(string Value, int StartIndex, int Count = -1)
+		public TStringBuilder Append(string Value, int StartIndex, int Count = -1)
 		{
 			Value ??= string.Empty;
 			if (Count < 0) Count = Value.Length - StartIndex;
 			FBuilder.Append(Value, StartIndex, Count); return this;
 		}
-		public StringBuilder AppendFormat(string AFormat, params TVarRec[] Args)
+		public TStringBuilder AppendFormat(string AFormat, params TVarRec[] Args)
 		{
 			FBuilder.Append(SysutilsInterface.Format(AFormat, Args)); return this;
 		}
-		public StringBuilder AppendLine() { FBuilder.AppendLine(); return this; }
-		public StringBuilder AppendLine(string Value) { FBuilder.AppendLine(Value); return this; }
+		public TStringBuilder AppendLine() { FBuilder.AppendLine(); return this; }
+		public TStringBuilder AppendLine(string Value) { FBuilder.AppendLine(Value); return this; }
 		public void Clear() => FBuilder.Clear();
 		public void CopyTo(int SourceIndex, ref char[] Destination, int DestinationIndex, int Count)
 		{
@@ -446,31 +815,31 @@ public class SysutilsInterface
 			FBuilder.CopyTo(SourceIndex, Destination, DestinationIndex, Count);
 		}
 		public int EnsureCapacity(int Capacity) => FBuilder.EnsureCapacity(Capacity);
-		public bool Equals(StringBuilder Value) => Value != null && FBuilder.ToString() == Value.FBuilder.ToString();
+		public bool Equals(TStringBuilder Value) => Value != null && FBuilder.ToString() == Value.FBuilder.ToString();
 
-		private StringBuilder Ins(int Index, object Value) { FBuilder.Insert(Index, Value); return this; }
-		public StringBuilder Insert(int Index, bool Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, byte Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, char Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, Currency Value) => Ins(Index, Value.ToDecimal());
-		public StringBuilder Insert(int Index, double Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, short Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, int Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, long Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, TObject Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, sbyte Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, float Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, string Value) { FBuilder.Insert(Index, Value); return this; }
-		public StringBuilder Insert(int Index, ulong Value) => Ins(Index, Value);
-		public StringBuilder Insert(int Index, char[] Value) { FBuilder.Insert(Index, Value); return this; }
-		public StringBuilder Remove(int StartIndex, int RemLength) { FBuilder.Remove(StartIndex, RemLength); return this; }
-		public StringBuilder Replace(char OldChar, char NewChar) { FBuilder.Replace(OldChar, NewChar); return this; }
-		public StringBuilder Replace(string OldValue, string NewValue) { FBuilder.Replace(OldValue, NewValue); return this; }
-		public StringBuilder Replace(char OldChar, char NewChar, int StartIndex, int Count)
+		private TStringBuilder Ins(int Index, object Value) { FBuilder.Insert(Index, Value); return this; }
+		public TStringBuilder Insert(int Index, bool Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, byte Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, char Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, Currency Value) => Ins(Index, Value.ToDecimal());
+		public TStringBuilder Insert(int Index, double Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, short Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, int Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, long Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, TObject Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, sbyte Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, float Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, string Value) { FBuilder.Insert(Index, Value); return this; }
+		public TStringBuilder Insert(int Index, ulong Value) => Ins(Index, Value);
+		public TStringBuilder Insert(int Index, char[] Value) { FBuilder.Insert(Index, Value); return this; }
+		public TStringBuilder Remove(int StartIndex, int RemLength) { FBuilder.Remove(StartIndex, RemLength); return this; }
+		public TStringBuilder Replace(char OldChar, char NewChar) { FBuilder.Replace(OldChar, NewChar); return this; }
+		public TStringBuilder Replace(string OldValue, string NewValue) { FBuilder.Replace(OldValue, NewValue); return this; }
+		public TStringBuilder Replace(char OldChar, char NewChar, int StartIndex, int Count)
 		{
 			FBuilder.Replace(OldChar, NewChar, StartIndex, Count); return this;
 		}
-		public StringBuilder Replace(string OldValue, string NewValue, int StartIndex, int Count)
+		public TStringBuilder Replace(string OldValue, string NewValue, int StartIndex, int Count)
 		{
 			FBuilder.Replace(OldValue, NewValue, StartIndex, Count); return this;
 		}
@@ -1813,7 +2182,6 @@ public class SysutilsInterface
 	public const char PathDelim = '\\';
 	public const char DriveDelim = ':';
 	public const char PathSep = ';';
-	public const string SLineBreak = "\x0d\x0a";
 	public const string DefaultTrueBoolStr = "True";
 	public const string DefaultFalseBoolStr = "False";
 	public const int DateDelta = 693594;
@@ -2223,7 +2591,7 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 	{
 		format ??= string.Empty;
 		args ??= Array.Empty<TVarRec>();
-		StringBuilder output = new StringBuilder();
+		TStringBuilder output = new TStringBuilder();
 		int sequential = 0;
 		for (int i=0;i<format.Length;i++)
 		{
@@ -3079,7 +3447,7 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 		bool ignore=Flags!=null && Flags.Contains((int)TReplaceFlag.rfIgnoreCase);
 		StringComparison cmp=ignore?StringComparison.CurrentCultureIgnoreCase:StringComparison.Ordinal;
 		int pos=S.IndexOf(OldPattern,cmp); if(pos<0)return S;
-		StringBuilder b=new StringBuilder(); int start=0;
+		TStringBuilder b=new TStringBuilder(); int start=0;
 		while(pos>=0){b.Append(S.Substring(start,pos-start));b.Append(NewPattern);start=pos+OldPattern.Length;if(!all)break;pos=S.IndexOf(OldPattern,start,cmp);}
 		b.Append(S.Substring(start)); return b.ToString();
 	}
@@ -3577,7 +3945,7 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 	public static string WrapText(string Line, string BreakStr, TSet BreakChars, int MaxCol)
 	{
 		if(string.IsNullOrEmpty(Line)||MaxCol<=0)return Line??string.Empty;
-		BreakStr??=Environment.NewLine; StringBuilder r=new StringBuilder(); int col=0,last=0;
+		BreakStr??=Environment.NewLine; TStringBuilder r=new TStringBuilder(); int col=0,last=0;
 		for(int i=0;i<Line.Length;i++){char c=Line[i];bool br=BreakChars!=null&&c<=255&&BreakChars.Contains((int)c);if(col>=MaxCol&&br){r.Append(Line.Substring(last,i-last));r.Append(BreakStr);last=i+1;col=0;}else col++;}
 		r.Append(Line.Substring(last));return r.ToString();
 	}

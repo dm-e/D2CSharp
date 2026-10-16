@@ -92,6 +92,12 @@ type
     tlbsLF
   );
 
+  TStringSplitOptions = (
+    None,
+    ExcludeEmpty,
+    ExcludeLastEmpty
+  );
+
   TFilenameCaseMatch = (
     mkNone,
     mkExactMatch,
@@ -185,6 +191,151 @@ type
     wMilliseconds: Word;
   end;
 
+  TStringHelper = record helper for string
+  private
+    function GetChars(Index: Integer): Char;
+    function GetLength: Integer;
+  public
+    class function Create(C: Char; Count: Integer): string; overload; static;
+    class function Create(const Value: array of Char; StartIndex, Length: Integer): string; overload; static;
+    class function Create(const Value: array of Char): string; overload; static;
+
+    class function Compare(const StrA, StrB: string): Integer; overload; static;
+    class function Compare(const StrA, StrB: string; IgnoreCase: Boolean): Integer; overload; static;
+    class function Compare(const StrA: string; IndexA: Integer; const StrB: string; IndexB, Length: Integer): Integer; overload; static;
+    class function Compare(const StrA: string; IndexA: Integer; const StrB: string; IndexB, Length: Integer; IgnoreCase: Boolean): Integer; overload; static;
+    class function CompareOrdinal(const StrA, StrB: string): Integer; overload; static;
+    class function CompareOrdinal(const StrA: string; IndexA: Integer; const StrB: string; IndexB, Length: Integer): Integer; overload; static;
+    class function CompareText(const A, B: string): Integer; static;
+    function CompareTo(const StrB: string): Integer;
+
+    function Contains(const Value: string): Boolean;
+    class function Copy(const Str: string): string; static;
+    procedure CopyTo(SourceIndex: Integer; var Destination: array of Char; DestinationIndex, Count: Integer);
+    function CountChar(const C: Char): Integer;
+
+    function DeQuotedString: string; overload;
+    function DeQuotedString(AQuoteChar: Char): string; overload;
+    class function EndsText(const ASubText, AText: string): Boolean; static;
+    function EndsWith(const Value: string): Boolean; overload;
+    function EndsWith(const Value: string; IgnoreCase: Boolean): Boolean; overload;
+    function Equals(const Value: string): Boolean; overload;
+    class function Equals(const A, B: string): Boolean; overload; static;
+    class function Format(const AFormat: string; const Args: array of const): string; static;
+    function GetHashCode: Integer;
+
+    function IndexOf(Value: Char): Integer; overload;
+    function IndexOf(const Value: string): Integer; overload;
+    function IndexOf(Value: Char; StartIndex: Integer): Integer; overload;
+    function IndexOf(const Value: string; StartIndex: Integer): Integer; overload;
+    function IndexOf(Value: Char; StartIndex, Count: Integer): Integer; overload;
+    function IndexOf(const Value: string; StartIndex, Count: Integer): Integer; overload;
+    function IndexOfAny(const AnyOf: array of Char): Integer; overload;
+    function IndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer; overload;
+    function IndexOfAny(const AnyOf: array of Char; StartIndex, Count: Integer): Integer; overload;
+    function IndexOfAnyUnquoted(const AnyOf: array of Char; StartQuote, EndQuote: Char): Integer; overload;
+    function IndexOfAnyUnquoted(const AnyOf: array of Char; StartQuote, EndQuote: Char; StartIndex: Integer): Integer; overload;
+    function IndexOfAnyUnquoted(const AnyOf: array of Char; StartQuote, EndQuote: Char; StartIndex, Count: Integer): Integer; overload;
+    function IndexOfAnyUnquoted(const AnyOf: array of string; StartQuote, EndQuote: Char; StartIndex: Integer; out Matched: Integer): Integer; overload;
+
+    function Insert(StartIndex: Integer; const Value: string): string;
+    function IsDelimiter(const Delimiters: string; Index: Integer): Boolean;
+    function IsEmpty: Boolean;
+    class function IsNullOrEmpty(const Value: string): Boolean; static;
+    class function IsNullOrWhiteSpace(const Value: string): Boolean; static;
+
+    class function Join(const Separator: string; const Values: array of const): string; overload; static;
+    class function Join(const Separator: string; const Values: array of string): string; overload; static;
+    class function Join(const Separator: string; const Values: array of string; StartIndex, Count: Integer): string; overload; static;
+
+    function LastDelimiter(const Delims: string): Integer;
+    function LastIndexOf(Value: Char): Integer; overload;
+    function LastIndexOf(const Value: string): Integer; overload;
+    function LastIndexOf(Value: Char; StartIndex: Integer): Integer; overload;
+    function LastIndexOf(const Value: string; StartIndex: Integer): Integer; overload;
+    function LastIndexOf(Value: Char; StartIndex, Count: Integer): Integer; overload;
+    function LastIndexOf(const Value: string; StartIndex, Count: Integer): Integer; overload;
+    function LastIndexOfAny(const AnyOf: array of Char): Integer; overload;
+    function LastIndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer; overload;
+    function LastIndexOfAny(const AnyOf: array of Char; StartIndex, Count: Integer): Integer; overload;
+
+    function PadLeft(TotalWidth: Integer): string; overload;
+    function PadLeft(TotalWidth: Integer; PaddingChar: Char): string; overload;
+    function PadRight(TotalWidth: Integer): string; overload;
+    function PadRight(TotalWidth: Integer; PaddingChar: Char): string; overload;
+
+    class function Parse(const Value: Integer): string; overload; static;
+    class function Parse(const Value: Int64): string; overload; static;
+    class function Parse(const Value: Boolean): string; overload; static;
+    class function Parse(const Value: Extended): string; overload; static;
+    function QuotedString: string; overload;
+    function QuotedString(AQuoteChar: Char): string; overload;
+
+    function Remove(StartIndex: Integer): string; overload;
+    function Remove(StartIndex, Count: Integer): string; overload;
+    function Replace(OldChar, NewChar: Char): string; overload;
+    function Replace(OldChar, NewChar: Char; ReplaceFlags: TReplaceFlags): string; overload;
+    function Replace(const OldValue, NewValue: string): string; overload;
+    function Replace(const OldValue, NewValue: string; ReplaceFlags: TReplaceFlags): string; overload;
+
+    function Split(const Separator: array of Char): TArray<string>; overload;
+    function Split(const Separator: array of Char; Count: Integer): TArray<string>; overload;
+    function Split(const Separator: array of Char; Options: TStringSplitOptions): TArray<string>; overload;
+    function Split(const Separator: array of Char; Count: Integer; Options: TStringSplitOptions): TArray<string>; overload;
+    function Split(const Separator: array of string): TArray<string>; overload;
+    function Split(const Separator: array of string; Count: Integer): TArray<string>; overload;
+    function Split(const Separator: array of string; Options: TStringSplitOptions): TArray<string>; overload;
+    function Split(const Separator: array of string; Count: Integer; Options: TStringSplitOptions): TArray<string>; overload;
+    function Split(const Separator: array of Char; Quote: Char): TArray<string>; overload;
+    function Split(const Separator: array of Char; QuoteStart, QuoteEnd: Char): TArray<string>; overload;
+    function Split(const Separator: array of Char; QuoteStart, QuoteEnd: Char; Options: TStringSplitOptions): TArray<string>; overload;
+    function Split(const Separator: array of Char; QuoteStart, QuoteEnd: Char; Count: Integer): TArray<string>; overload;
+    function Split(const Separator: array of Char; QuoteStart, QuoteEnd: Char; Count: Integer; Options: TStringSplitOptions): TArray<string>; overload;
+    function Split(const Separator: array of string; Quote: Char): TArray<string>; overload;
+    function Split(const Separator: array of string; QuoteStart, QuoteEnd: Char): TArray<string>; overload;
+    function Split(const Separator: array of string; QuoteStart, QuoteEnd: Char; Options: TStringSplitOptions): TArray<string>; overload;
+    function Split(const Separator: array of string; QuoteStart, QuoteEnd: Char; Count: Integer): TArray<string>; overload;
+    function Split(const Separator: array of string; QuoteStart, QuoteEnd: Char; Count: Integer; Options: TStringSplitOptions): TArray<string>; overload;
+
+    class function StartsText(const ASubText, AText: string): Boolean; static;
+    function StartsWith(const Value: string): Boolean; overload;
+    function StartsWith(const Value: string; IgnoreCase: Boolean): Boolean; overload;
+    function Substring(StartIndex: Integer): string; overload;
+    function Substring(StartIndex, Length: Integer): string; overload;
+
+    function ToBoolean: Boolean; overload;
+    class function ToBoolean(const S: string): Boolean; overload; static;
+    function ToCharArray: TArray<Char>; overload;
+    function ToCharArray(StartIndex, Length: Integer): TArray<Char>; overload;
+    function ToDouble: Double; overload;
+    class function ToDouble(const S: string): Double; overload; static;
+    function ToExtended: Extended; overload;
+    class function ToExtended(const S: string): Extended; overload; static;
+    function ToInt64: Int64; overload;
+    class function ToInt64(const S: string): Int64; overload; static;
+    function ToInteger: Integer; overload;
+    class function ToInteger(const S: string): Integer; overload; static;
+    function ToSingle: Single; overload;
+    class function ToSingle(const S: string): Single; overload; static;
+    function ToLower: string;
+    function ToLowerInvariant: string;
+    function ToUpper: string;
+    function ToUpperInvariant: string;
+
+    function Trim: string; overload;
+    function Trim(const TrimChars: array of Char): string; overload;
+    function TrimEnd(const TrimChars: array of Char): string;
+    function TrimLeft: string; overload;
+    function TrimLeft(const TrimChars: array of Char): string; overload;
+    function TrimRight: string; overload;
+    function TrimRight(const TrimChars: array of Char): string; overload;
+    function TrimStart(const TrimChars: array of Char): string;
+    class function UpperCase(const S: string): string; static;
+
+    property Chars[Index: Integer]: Char read GetChars;
+    property Length: Integer read GetLength;
+  end;
+
   TWin32FindData = record
   public
     dwFileAttributes: Cardinal;
@@ -197,6 +348,108 @@ type
     dwReserved1: Cardinal;
     cFileName: array[0..259] of WideChar;
     cAlternateFileName: array[0..13] of WideChar;
+  end;
+
+  TStringBuilder = class(TObject)
+  private
+    function GetCapacity: Integer;
+    procedure SetCapacity(Value: Integer);
+    function GetChars(Index: Integer): Char;
+    procedure SetChars(Index: Integer; Value: Char);
+    function GetLength: Integer;
+    procedure SetLength(Value: Integer);
+    function GetMaxCapacity: Integer;
+  public
+    constructor Create; overload;
+    constructor Create(ACapacity: Integer); overload;
+    constructor Create(const Value: string); overload;
+    constructor Create(ACapacity, AMaxCapacity: Integer); overload;
+    constructor Create(const Value: string; ACapacity: Integer); overload;
+    constructor Create(
+      const Value: string;
+      StartIndex, ALength, ACapacity: Integer
+    ); overload;
+
+    function Append(Value: Boolean): TStringBuilder; overload;
+    function Append(Value: Byte): TStringBuilder; overload;
+    function Append(Value: Char): TStringBuilder; overload;
+    function Append(Value: Currency): TStringBuilder; overload;
+    function Append(Value: Double): TStringBuilder; overload;
+    function Append(Value: SmallInt): TStringBuilder; overload;
+    function Append(Value: Integer): TStringBuilder; overload;
+    function Append(Value: Int64): TStringBuilder; overload;
+    function Append(Value: TObject): TStringBuilder; overload;
+    function Append(Value: ShortInt): TStringBuilder; overload;
+    function Append(Value: Single): TStringBuilder; overload;
+    function Append(const Value: string): TStringBuilder; overload;
+    function Append(Value: UInt64): TStringBuilder; overload;
+    function Append(Value: Char; RepeatCount: Integer): TStringBuilder; overload;
+    function Append(
+      const Value: TArray<Char>;
+      StartIndex, CharCount: Integer
+    ): TStringBuilder; overload;
+    function Append(
+      const Value: string;
+      StartIndex: Integer;
+      Count: Integer = -1
+    ): TStringBuilder; overload;
+
+    function AppendFormat(
+      const AFormat: string;
+      const Args: array of const
+    ): TStringBuilder;
+    function AppendLine: TStringBuilder; overload;
+    function AppendLine(const Value: string): TStringBuilder; overload;
+
+    procedure Clear;
+    procedure CopyTo(
+      SourceIndex: Integer;
+      var Destination: TArray<Char>;
+      DestinationIndex, Count: Integer
+    );
+    function EnsureCapacity(Capacity: Integer): Integer;
+    function Equals(Value: TStringBuilder): Boolean; reintroduce; overload;
+
+    function Insert(Index: Integer; Value: Boolean): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: Byte): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: Char): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: Currency): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: Double): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: SmallInt): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: Integer): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: Int64): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: TObject): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: ShortInt): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: Single): TStringBuilder; overload;
+    function Insert(Index: Integer; const Value: string): TStringBuilder; overload;
+    function Insert(Index: Integer; Value: UInt64): TStringBuilder; overload;
+    function Insert(
+      Index: Integer;
+      const Value: TArray<Char>
+    ): TStringBuilder; overload;
+
+    function Remove(StartIndex, RemLength: Integer): TStringBuilder;
+    function Replace(OldChar, NewChar: Char): TStringBuilder; overload;
+    function Replace(
+      const OldValue, NewValue: string
+    ): TStringBuilder; overload;
+    function Replace(
+      OldChar, NewChar: Char;
+      StartIndex, Count: Integer
+    ): TStringBuilder; overload;
+    function Replace(
+      const OldValue, NewValue: string;
+      StartIndex, Count: Integer
+    ): TStringBuilder; overload;
+
+    function ToString: string; override;
+    function ToString(UpdateCapacity: Boolean): string; reintroduce; overload;
+    function ToString(StartIndex, StrLength: Integer): string; reintroduce; overload;
+
+    property Capacity: Integer read GetCapacity write SetCapacity;
+    property Chars[Index: Integer]: Char read GetChars write SetChars; default;
+    property Length: Integer read GetLength write SetLength;
+    property MaxCapacity: Integer read GetMaxCapacity;
   end;
 
 
@@ -240,6 +493,233 @@ type
     class function Invariant: TFormatSettings; static;
     function GetEraYearOffset(const Name: string): Integer;
   end;
+
+{ Additional System.SysUtils primitive type helpers. }
+  TBooleanHelper = record helper for Boolean
+  public
+    class function Parse(const S: string): Boolean; static;
+    class function TryToParse(const S: string; out Value: Boolean): Boolean; static;
+    class function Size: Integer; static;
+    function ToInteger: Integer;
+    function ToString: string;
+  end;
+
+  TByteBoolHelper = record helper for ByteBool
+  public
+    class function Parse(const S: string): ByteBool; static;
+    class function TryToParse(const S: string; out Value: ByteBool): Boolean; static;
+    class function Size: Integer; static;
+    function ToInteger: Integer;
+    function ToString: string;
+  end;
+
+  TWordBoolHelper = record helper for WordBool
+  public
+    class function Parse(const S: string): WordBool; static;
+    class function TryToParse(const S: string; out Value: WordBool): Boolean; static;
+    class function Size: Integer; static;
+    function ToInteger: Integer;
+    function ToString: string;
+  end;
+
+  TLongBoolHelper = record helper for LongBool
+  public
+    class function Parse(const S: string): LongBool; static;
+    class function TryToParse(const S: string; out Value: LongBool): Boolean; static;
+    class function Size: Integer; static;
+    function ToInteger: Integer;
+    function ToString: string;
+  end;
+
+  TShortIntHelper = record helper for ShortInt
+  public
+    class function Parse(const S: string): ShortInt; static;
+    class function TryParse(const S: string; out Value: ShortInt): Boolean; static;
+    class function Size: Integer; static;
+    function ToBoolean: Boolean;
+    function ToSingle: Single;
+    function ToDouble: Double;
+    function ToExtended: Extended;
+    function ToHexString: string; overload;
+    function ToHexString(MinDigits: Integer): string; overload;
+    function ToString: string;
+  end;
+
+  TByteHelper = record helper for Byte
+  public
+    class function Parse(const S: string): Byte; static;
+    class function TryParse(const S: string; out Value: Byte): Boolean; static;
+    class function Size: Integer; static;
+    function ToBoolean: Boolean;
+    function ToSingle: Single;
+    function ToDouble: Double;
+    function ToExtended: Extended;
+    function ToHexString: string; overload;
+    function ToHexString(MinDigits: Integer): string; overload;
+    function ToString: string;
+  end;
+
+  TSmallIntHelper = record helper for SmallInt
+  public
+    class function Parse(const S: string): SmallInt; static;
+    class function TryParse(const S: string; out Value: SmallInt): Boolean; static;
+    class function Size: Integer; static;
+    function ToBoolean: Boolean;
+    function ToSingle: Single;
+    function ToDouble: Double;
+    function ToExtended: Extended;
+    function ToHexString: string; overload;
+    function ToHexString(MinDigits: Integer): string; overload;
+    function ToString: string;
+  end;
+
+  TWordHelper = record helper for Word
+  public
+    class function Parse(const S: string): Word; static;
+    class function TryParse(const S: string; out Value: Word): Boolean; static;
+    class function Size: Integer; static;
+    function ToBoolean: Boolean;
+    function ToSingle: Single;
+    function ToDouble: Double;
+    function ToExtended: Extended;
+    function ToHexString: string; overload;
+    function ToHexString(MinDigits: Integer): string; overload;
+    function ToString: string;
+  end;
+
+  TIntegerHelper = record helper for Integer
+  public
+    class function Parse(const S: string): Integer; static;
+    class function TryParse(const S: string; out Value: Integer): Boolean; static;
+    class function Size: Integer; static;
+    function ToBoolean: Boolean;
+    function ToSingle: Single;
+    function ToDouble: Double;
+    function ToExtended: Extended;
+    function ToHexString: string; overload;
+    function ToHexString(MinDigits: Integer): string; overload;
+    function ToString: string;
+  end;
+
+  TCardinalHelper = record helper for Cardinal
+  public
+    class function Parse(const S: string): Cardinal; static;
+    class function TryParse(const S: string; out Value: Cardinal): Boolean; static;
+    class function Size: Integer; static;
+    function ToBoolean: Boolean;
+    function ToSingle: Single;
+    function ToDouble: Double;
+    function ToExtended: Extended;
+    function ToHexString: string; overload;
+    function ToHexString(MinDigits: Integer): string; overload;
+    function ToString: string;
+  end;
+
+  TInt64Helper = record helper for Int64
+  public
+    class function Parse(const S: string): Int64; static;
+    class function TryParse(const S: string; out Value: Int64): Boolean; static;
+    class function Size: Integer; static;
+    function ToBoolean: Boolean;
+    function ToSingle: Single;
+    function ToDouble: Double;
+    function ToExtended: Extended;
+    function ToHexString: string; overload;
+    function ToHexString(MinDigits: Integer): string; overload;
+    function ToString: string;
+  end;
+
+  TUInt64Helper = record helper for UInt64
+  public
+    class function Parse(const S: string): UInt64; static;
+    class function TryParse(const S: string; out Value: UInt64): Boolean; static;
+    class function Size: Integer; static;
+    function ToBoolean: Boolean;
+    function ToSingle: Single;
+    function ToDouble: Double;
+    function ToExtended: Extended;
+    function ToHexString: string; overload;
+    function ToHexString(MinDigits: Integer): string; overload;
+    function ToString: string;
+  end;
+
+  TSingleHelper = record helper for Single
+  public
+    class function Parse(const S: string): Single; static;
+    class function TryParse(const S: string; out Value: Single): Boolean; static;
+    class function Size: Integer; static;
+    procedure BuildUp(const SignFlag: Boolean; const Mantissa: UInt64; const Exponent: Integer);
+    function Exponent: Integer;
+    function Fraction: UInt64;
+    function Mantissa: UInt64;
+    function SpecialType: TFloatSpecial;
+    function IsNan: Boolean;
+    function IsInfinity: Boolean;
+    function IsNegativeInfinity: Boolean;
+    function IsPositiveInfinity: Boolean;
+    function ToString: string; overload;
+    function ToString(Format: TFloatFormat; Precision, Digits: Integer): string; overload;
+    function ToString(Format: TFloatFormat; Precision, Digits: Integer; const AFormatSettings: TFormatSettings): string; overload;
+  end;
+
+  TDoubleHelper = record helper for Double
+  public
+    class function Parse(const S: string): Double; static;
+    class function TryParse(const S: string; out Value: Double): Boolean; static;
+    class function Size: Integer; static;
+    procedure BuildUp(const SignFlag: Boolean; const Mantissa: UInt64; const Exponent: Integer);
+    function Exponent: Integer;
+    function Fraction: UInt64;
+    function Mantissa: UInt64;
+    function SpecialType: TFloatSpecial;
+    function IsNan: Boolean;
+    function IsInfinity: Boolean;
+    function IsNegativeInfinity: Boolean;
+    function IsPositiveInfinity: Boolean;
+    function ToString: string; overload;
+    function ToString(Format: TFloatFormat; Precision, Digits: Integer): string; overload;
+    function ToString(Format: TFloatFormat; Precision, Digits: Integer; const AFormatSettings: TFormatSettings): string; overload;
+  end;
+
+  TExtendedHelper = record helper for Extended
+  public
+    class function Parse(const S: string): Extended; static;
+    class function TryParse(const S: string; out Value: Extended): Boolean; static;
+    class function Size: Integer; static;
+    procedure BuildUp(const SignFlag: Boolean; const Mantissa: UInt64; const Exponent: Integer);
+    function Exponent: Integer;
+    function Fraction: UInt64;
+    function Mantissa: UInt64;
+    function SpecialType: TFloatSpecial;
+    function IsNan: Boolean;
+    function IsInfinity: Boolean;
+    function IsNegativeInfinity: Boolean;
+    function IsPositiveInfinity: Boolean;
+    function ToString: string; overload;
+    function ToString(Format: TFloatFormat; Precision, Digits: Integer): string; overload;
+    function ToString(Format: TFloatFormat; Precision, Digits: Integer; const AFormatSettings: TFormatSettings): string; overload;
+  end;
+
+  TCurrencyHelper = record helper for Currency
+  public
+    class function Parse(const S: string): Currency; static;
+    class function TryParse(const S: string; out Value: Currency): Boolean; static;
+    class function Size: Integer; static;
+    function ToString: string; overload;
+    function ToString(Format: TFloatFormat; Digits: Integer): string; overload;
+    function ToString(Format: TFloatFormat; Digits: Integer; const AFormatSettings: TFormatSettings): string; overload;
+  end;
+
+  TGUIDHelper = record helper for TGUID
+  public
+    class function Create(const S: string): TGUID; overload; static;
+    class function Create(const B: TBytes): TGUID; overload; static;
+    class function Create(A: Cardinal; B, C: Word; D, E, F, G, H, I, J, K: Byte): TGUID; overload; static;
+    class function NewGuid: TGUID; static;
+    function ToByteArray: TBytes;
+    function ToString: string;
+  end;
+
 
   TSearchRec = record
   private
@@ -640,19 +1120,6 @@ function CurrToStr(Value: Currency): string; overload;
 function CurrToStr(
   Value: Currency;
   const FormatSettings: TFormatSettings
-): string; overload;
-
-function CurrToStrF(
-  Value: Currency;
-  Format: TFloatFormat;
-  Digits: Integer
-): string; overload;
-
-function CurrToStrF(
-  Value: Currency;
-  Format: TFloatFormat;
-  Digits: Integer;
-  const AFormatSettings: TFormatSettings
 ): string; overload;
 
 function StrToCurr(const S: string): Currency; overload;
@@ -1696,6 +2163,663 @@ function SysErrorMessage(
 procedure FreeAndNil(var Obj: TObject);
 
 implementation
+
+
+{ TStringBuilder }
+
+function TStringBuilder.GetCapacity: Integer;
+begin
+  Result := 0;
+end;
+
+procedure TStringBuilder.SetCapacity(Value: Integer);
+begin
+end;
+
+function TStringBuilder.GetChars(Index: Integer): Char;
+begin
+  Result := #0;
+end;
+
+procedure TStringBuilder.SetChars(Index: Integer; Value: Char);
+begin
+end;
+
+function TStringBuilder.GetLength: Integer;
+begin
+  Result := 0;
+end;
+
+procedure TStringBuilder.SetLength(Value: Integer);
+begin
+end;
+
+function TStringBuilder.GetMaxCapacity: Integer;
+begin
+  Result := 0;
+end;
+
+constructor TStringBuilder.Create;
+begin
+end;
+
+constructor TStringBuilder.Create(ACapacity: Integer);
+begin
+end;
+
+constructor TStringBuilder.Create(const Value: string);
+begin
+end;
+
+constructor TStringBuilder.Create(ACapacity, AMaxCapacity: Integer);
+begin
+end;
+
+constructor TStringBuilder.Create(const Value: string; ACapacity: Integer);
+begin
+end;
+
+constructor TStringBuilder.Create(
+  const Value: string;
+  StartIndex, ALength, ACapacity: Integer
+);
+begin
+end;
+
+function TStringBuilder.Append(Value: Boolean): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: Byte): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: Char): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: Currency): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: Double): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: SmallInt): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: Integer): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: Int64): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: TObject): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: ShortInt): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: Single): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(const Value: string): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(Value: UInt64): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(
+  Value: Char;
+  RepeatCount: Integer
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(
+  const Value: TArray<Char>;
+  StartIndex, CharCount: Integer
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Append(
+  const Value: string;
+  StartIndex: Integer;
+  Count: Integer
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.AppendFormat(
+  const AFormat: string;
+  const Args: array of const
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.AppendLine: TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.AppendLine(const Value: string): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+procedure TStringBuilder.Clear;
+begin
+end;
+
+procedure TStringBuilder.CopyTo(
+  SourceIndex: Integer;
+  var Destination: TArray<Char>;
+  DestinationIndex, Count: Integer
+);
+begin
+end;
+
+function TStringBuilder.EnsureCapacity(Capacity: Integer): Integer;
+begin
+  Result := 0;
+end;
+
+function TStringBuilder.Equals(Value: TStringBuilder): Boolean;
+begin
+  Result := False;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: Boolean
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: Byte
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: Char
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: Currency
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: Double
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: SmallInt
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: Integer
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: Int64
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: TObject
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: ShortInt
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: Single
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  const Value: string
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  Value: UInt64
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Insert(
+  Index: Integer;
+  const Value: TArray<Char>
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Remove(
+  StartIndex, RemLength: Integer
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Replace(
+  OldChar, NewChar: Char
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Replace(
+  const OldValue, NewValue: string
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Replace(
+  OldChar, NewChar: Char;
+  StartIndex, Count: Integer
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.Replace(
+  const OldValue, NewValue: string;
+  StartIndex, Count: Integer
+): TStringBuilder;
+begin
+  Result := Self;
+end;
+
+function TStringBuilder.ToString: string;
+begin
+  Result := '';
+end;
+
+function TStringBuilder.ToString(UpdateCapacity: Boolean): string;
+begin
+  Result := '';
+end;
+
+function TStringBuilder.ToString(
+  StartIndex, StrLength: Integer
+): string;
+begin
+  Result := '';
+end;
+
+
+class function TBooleanHelper.Parse(const S: string): Boolean; begin end;
+class function TBooleanHelper.TryToParse(const S: string; out Value: Boolean): Boolean; begin end;
+class function TBooleanHelper.Size: Integer; begin end;
+function TBooleanHelper.ToInteger: Integer; begin end;
+function TBooleanHelper.ToString: string; begin end;
+
+class function TByteBoolHelper.Parse(const S: string): ByteBool; begin end;
+class function TByteBoolHelper.TryToParse(const S: string; out Value: ByteBool): Boolean; begin end;
+class function TByteBoolHelper.Size: Integer; begin end;
+function TByteBoolHelper.ToInteger: Integer; begin end;
+function TByteBoolHelper.ToString: string; begin end;
+
+class function TWordBoolHelper.Parse(const S: string): WordBool; begin end;
+class function TWordBoolHelper.TryToParse(const S: string; out Value: WordBool): Boolean; begin end;
+class function TWordBoolHelper.Size: Integer; begin end;
+function TWordBoolHelper.ToInteger: Integer; begin end;
+function TWordBoolHelper.ToString: string; begin end;
+
+class function TLongBoolHelper.Parse(const S: string): LongBool; begin end;
+class function TLongBoolHelper.TryToParse(const S: string; out Value: LongBool): Boolean; begin end;
+class function TLongBoolHelper.Size: Integer; begin end;
+function TLongBoolHelper.ToInteger: Integer; begin end;
+function TLongBoolHelper.ToString: string; begin end;
+
+class function TShortIntHelper.Parse(const S: string): ShortInt; begin end;
+class function TShortIntHelper.TryParse(const S: string; out Value: ShortInt): Boolean; begin end;
+class function TShortIntHelper.Size: Integer; begin end;
+function TShortIntHelper.ToBoolean: Boolean; begin end;
+function TShortIntHelper.ToSingle: Single; begin end;
+function TShortIntHelper.ToDouble: Double; begin end;
+function TShortIntHelper.ToExtended: Extended; begin end;
+function TShortIntHelper.ToHexString: string; begin end;
+function TShortIntHelper.ToHexString(MinDigits: Integer): string; begin end;
+function TShortIntHelper.ToString: string; begin end;
+
+class function TByteHelper.Parse(const S: string): Byte; begin end;
+class function TByteHelper.TryParse(const S: string; out Value: Byte): Boolean; begin end;
+class function TByteHelper.Size: Integer; begin end;
+function TByteHelper.ToBoolean: Boolean; begin end;
+function TByteHelper.ToSingle: Single; begin end;
+function TByteHelper.ToDouble: Double; begin end;
+function TByteHelper.ToExtended: Extended; begin end;
+function TByteHelper.ToHexString: string; begin end;
+function TByteHelper.ToHexString(MinDigits: Integer): string; begin end;
+function TByteHelper.ToString: string; begin end;
+
+class function TSmallIntHelper.Parse(const S: string): SmallInt; begin end;
+class function TSmallIntHelper.TryParse(const S: string; out Value: SmallInt): Boolean; begin end;
+class function TSmallIntHelper.Size: Integer; begin end;
+function TSmallIntHelper.ToBoolean: Boolean; begin end;
+function TSmallIntHelper.ToSingle: Single; begin end;
+function TSmallIntHelper.ToDouble: Double; begin end;
+function TSmallIntHelper.ToExtended: Extended; begin end;
+function TSmallIntHelper.ToHexString: string; begin end;
+function TSmallIntHelper.ToHexString(MinDigits: Integer): string; begin end;
+function TSmallIntHelper.ToString: string; begin end;
+
+class function TWordHelper.Parse(const S: string): Word; begin end;
+class function TWordHelper.TryParse(const S: string; out Value: Word): Boolean; begin end;
+class function TWordHelper.Size: Integer; begin end;
+function TWordHelper.ToBoolean: Boolean; begin end;
+function TWordHelper.ToSingle: Single; begin end;
+function TWordHelper.ToDouble: Double; begin end;
+function TWordHelper.ToExtended: Extended; begin end;
+function TWordHelper.ToHexString: string; begin end;
+function TWordHelper.ToHexString(MinDigits: Integer): string; begin end;
+function TWordHelper.ToString: string; begin end;
+
+class function TIntegerHelper.Parse(const S: string): Integer; begin end;
+class function TIntegerHelper.TryParse(const S: string; out Value: Integer): Boolean; begin end;
+class function TIntegerHelper.Size: Integer; begin end;
+function TIntegerHelper.ToBoolean: Boolean; begin end;
+function TIntegerHelper.ToSingle: Single; begin end;
+function TIntegerHelper.ToDouble: Double; begin end;
+function TIntegerHelper.ToExtended: Extended; begin end;
+function TIntegerHelper.ToHexString: string; begin end;
+function TIntegerHelper.ToHexString(MinDigits: Integer): string; begin end;
+function TIntegerHelper.ToString: string; begin end;
+
+class function TCardinalHelper.Parse(const S: string): Cardinal; begin end;
+class function TCardinalHelper.TryParse(const S: string; out Value: Cardinal): Boolean; begin end;
+class function TCardinalHelper.Size: Integer; begin end;
+function TCardinalHelper.ToBoolean: Boolean; begin end;
+function TCardinalHelper.ToSingle: Single; begin end;
+function TCardinalHelper.ToDouble: Double; begin end;
+function TCardinalHelper.ToExtended: Extended; begin end;
+function TCardinalHelper.ToHexString: string; begin end;
+function TCardinalHelper.ToHexString(MinDigits: Integer): string; begin end;
+function TCardinalHelper.ToString: string; begin end;
+
+class function TInt64Helper.Parse(const S: string): Int64; begin end;
+class function TInt64Helper.TryParse(const S: string; out Value: Int64): Boolean; begin end;
+class function TInt64Helper.Size: Integer; begin end;
+function TInt64Helper.ToBoolean: Boolean; begin end;
+function TInt64Helper.ToSingle: Single; begin end;
+function TInt64Helper.ToDouble: Double; begin end;
+function TInt64Helper.ToExtended: Extended; begin end;
+function TInt64Helper.ToHexString: string; begin end;
+function TInt64Helper.ToHexString(MinDigits: Integer): string; begin end;
+function TInt64Helper.ToString: string; begin end;
+
+class function TUInt64Helper.Parse(const S: string): UInt64; begin end;
+class function TUInt64Helper.TryParse(const S: string; out Value: UInt64): Boolean; begin end;
+class function TUInt64Helper.Size: Integer; begin end;
+function TUInt64Helper.ToBoolean: Boolean; begin end;
+function TUInt64Helper.ToSingle: Single; begin end;
+function TUInt64Helper.ToDouble: Double; begin end;
+function TUInt64Helper.ToExtended: Extended; begin end;
+function TUInt64Helper.ToHexString: string; begin end;
+function TUInt64Helper.ToHexString(MinDigits: Integer): string; begin end;
+function TUInt64Helper.ToString: string; begin end;
+
+class function TSingleHelper.Parse(const S: string): Single; begin end;
+class function TSingleHelper.TryParse(const S: string; out Value: Single): Boolean; begin end;
+class function TSingleHelper.Size: Integer; begin end;
+procedure TSingleHelper.BuildUp(const SignFlag: Boolean; const Mantissa: UInt64; const Exponent: Integer); begin end;
+function TSingleHelper.Exponent: Integer; begin end;
+function TSingleHelper.Fraction: UInt64; begin end;
+function TSingleHelper.Mantissa: UInt64; begin end;
+function TSingleHelper.SpecialType: TFloatSpecial; begin end;
+function TSingleHelper.IsNan: Boolean; begin end;
+function TSingleHelper.IsInfinity: Boolean; begin end;
+function TSingleHelper.IsNegativeInfinity: Boolean; begin end;
+function TSingleHelper.IsPositiveInfinity: Boolean; begin end;
+function TSingleHelper.ToString: string; begin end;
+function TSingleHelper.ToString(Format: TFloatFormat; Precision, Digits: Integer): string; begin end;
+function TSingleHelper.ToString(Format: TFloatFormat; Precision, Digits: Integer; const AFormatSettings: TFormatSettings): string; begin end;
+
+class function TDoubleHelper.Parse(const S: string): Double; begin end;
+class function TDoubleHelper.TryParse(const S: string; out Value: Double): Boolean; begin end;
+class function TDoubleHelper.Size: Integer; begin end;
+procedure TDoubleHelper.BuildUp(const SignFlag: Boolean; const Mantissa: UInt64; const Exponent: Integer); begin end;
+function TDoubleHelper.Exponent: Integer; begin end;
+function TDoubleHelper.Fraction: UInt64; begin end;
+function TDoubleHelper.Mantissa: UInt64; begin end;
+function TDoubleHelper.SpecialType: TFloatSpecial; begin end;
+function TDoubleHelper.IsNan: Boolean; begin end;
+function TDoubleHelper.IsInfinity: Boolean; begin end;
+function TDoubleHelper.IsNegativeInfinity: Boolean; begin end;
+function TDoubleHelper.IsPositiveInfinity: Boolean; begin end;
+function TDoubleHelper.ToString: string; begin end;
+function TDoubleHelper.ToString(Format: TFloatFormat; Precision, Digits: Integer): string; begin end;
+function TDoubleHelper.ToString(Format: TFloatFormat; Precision, Digits: Integer; const AFormatSettings: TFormatSettings): string; begin end;
+
+class function TExtendedHelper.Parse(const S: string): Extended; begin end;
+class function TExtendedHelper.TryParse(const S: string; out Value: Extended): Boolean; begin end;
+class function TExtendedHelper.Size: Integer; begin end;
+procedure TExtendedHelper.BuildUp(const SignFlag: Boolean; const Mantissa: UInt64; const Exponent: Integer); begin end;
+function TExtendedHelper.Exponent: Integer; begin end;
+function TExtendedHelper.Fraction: UInt64; begin end;
+function TExtendedHelper.Mantissa: UInt64; begin end;
+function TExtendedHelper.SpecialType: TFloatSpecial; begin end;
+function TExtendedHelper.IsNan: Boolean; begin end;
+function TExtendedHelper.IsInfinity: Boolean; begin end;
+function TExtendedHelper.IsNegativeInfinity: Boolean; begin end;
+function TExtendedHelper.IsPositiveInfinity: Boolean; begin end;
+function TExtendedHelper.ToString: string; begin end;
+function TExtendedHelper.ToString(Format: TFloatFormat; Precision, Digits: Integer): string; begin end;
+function TExtendedHelper.ToString(Format: TFloatFormat; Precision, Digits: Integer; const AFormatSettings: TFormatSettings): string; begin end;
+
+class function TCurrencyHelper.Parse(const S: string): Currency; begin end;
+class function TCurrencyHelper.TryParse(const S: string; out Value: Currency): Boolean; begin end;
+class function TCurrencyHelper.Size: Integer; begin end;
+function TCurrencyHelper.ToString: string; begin end;
+function TCurrencyHelper.ToString(Format: TFloatFormat; Digits: Integer): string; begin end;
+function TCurrencyHelper.ToString(Format: TFloatFormat; Digits: Integer; const AFormatSettings: TFormatSettings): string; begin end;
+
+class function TGUIDHelper.Create(const S: string): TGUID; begin end;
+class function TGUIDHelper.Create(const B: TBytes): TGUID; begin end;
+class function TGUIDHelper.Create(A: Cardinal; B, C: Word; D, E, F, G, H, I, J, K: Byte): TGUID; begin end;
+class function TGUIDHelper.NewGuid: TGUID; begin end;
+function TGUIDHelper.ToByteArray: TBytes; begin end;
+function TGUIDHelper.ToString: string; begin end;
+
+function TStringHelper.GetChars(Index: Integer): Char; begin end;
+function TStringHelper.GetLength: Integer; begin end;
+class function TStringHelper.Create(C: Char; Count: Integer): string; begin end;
+class function TStringHelper.Create(const Value: array of Char; StartIndex, Length: Integer): string; begin end;
+class function TStringHelper.Create(const Value: array of Char): string; begin end;
+class function TStringHelper.Compare(const StrA, StrB: string): Integer; begin end;
+class function TStringHelper.Compare(const StrA, StrB: string; IgnoreCase: Boolean): Integer; begin end;
+class function TStringHelper.Compare(const StrA: string; IndexA: Integer; const StrB: string; IndexB, Length: Integer): Integer; begin end;
+class function TStringHelper.Compare(const StrA: string; IndexA: Integer; const StrB: string; IndexB, Length: Integer; IgnoreCase: Boolean): Integer; begin end;
+class function TStringHelper.CompareOrdinal(const StrA, StrB: string): Integer; begin end;
+class function TStringHelper.CompareOrdinal(const StrA: string; IndexA: Integer; const StrB: string; IndexB, Length: Integer): Integer; begin end;
+class function TStringHelper.CompareText(const A, B: string): Integer; begin end;
+function TStringHelper.CompareTo(const StrB: string): Integer; begin end;
+function TStringHelper.Contains(const Value: string): Boolean; begin end;
+class function TStringHelper.Copy(const Str: string): string; begin end;
+procedure TStringHelper.CopyTo(SourceIndex: Integer; var Destination: array of Char; DestinationIndex, Count: Integer); begin end;
+function TStringHelper.CountChar(const C: Char): Integer; begin end;
+function TStringHelper.DeQuotedString: string; begin end;
+function TStringHelper.DeQuotedString(AQuoteChar: Char): string; begin end;
+class function TStringHelper.EndsText(const ASubText, AText: string): Boolean; begin end;
+function TStringHelper.EndsWith(const Value: string): Boolean; begin end;
+function TStringHelper.EndsWith(const Value: string; IgnoreCase: Boolean): Boolean; begin end;
+function TStringHelper.Equals(const Value: string): Boolean; begin end;
+class function TStringHelper.Equals(const A, B: string): Boolean; begin end;
+class function TStringHelper.Format(const AFormat: string; const Args: array of const): string; begin end;
+function TStringHelper.GetHashCode: Integer; begin end;
+function TStringHelper.IndexOf(Value: Char): Integer; begin end;
+function TStringHelper.IndexOf(const Value: string): Integer; begin end;
+function TStringHelper.IndexOf(Value: Char; StartIndex: Integer): Integer; begin end;
+function TStringHelper.IndexOf(const Value: string; StartIndex: Integer): Integer; begin end;
+function TStringHelper.IndexOf(Value: Char; StartIndex, Count: Integer): Integer; begin end;
+function TStringHelper.IndexOf(const Value: string; StartIndex, Count: Integer): Integer; begin end;
+function TStringHelper.IndexOfAny(const AnyOf: array of Char): Integer; begin end;
+function TStringHelper.IndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer; begin end;
+function TStringHelper.IndexOfAny(const AnyOf: array of Char; StartIndex, Count: Integer): Integer; begin end;
+function TStringHelper.IndexOfAnyUnquoted(const AnyOf: array of Char; StartQuote, EndQuote: Char): Integer; begin end;
+function TStringHelper.IndexOfAnyUnquoted(const AnyOf: array of Char; StartQuote, EndQuote: Char; StartIndex: Integer): Integer; begin end;
+function TStringHelper.IndexOfAnyUnquoted(const AnyOf: array of Char; StartQuote, EndQuote: Char; StartIndex, Count: Integer): Integer; begin end;
+function TStringHelper.IndexOfAnyUnquoted(const AnyOf: array of string; StartQuote, EndQuote: Char; StartIndex: Integer; out Matched: Integer): Integer; begin end;
+function TStringHelper.Insert(StartIndex: Integer; const Value: string): string; begin end;
+function TStringHelper.IsDelimiter(const Delimiters: string; Index: Integer): Boolean; begin end;
+function TStringHelper.IsEmpty: Boolean; begin end;
+class function TStringHelper.IsNullOrEmpty(const Value: string): Boolean; begin end;
+class function TStringHelper.IsNullOrWhiteSpace(const Value: string): Boolean; begin end;
+class function TStringHelper.Join(const Separator: string; const Values: array of const): string; begin end;
+class function TStringHelper.Join(const Separator: string; const Values: array of string): string; begin end;
+class function TStringHelper.Join(const Separator: string; const Values: array of string; StartIndex, Count: Integer): string; begin end;
+function TStringHelper.LastDelimiter(const Delims: string): Integer; begin end;
+function TStringHelper.LastIndexOf(Value: Char): Integer; begin end;
+function TStringHelper.LastIndexOf(const Value: string): Integer; begin end;
+function TStringHelper.LastIndexOf(Value: Char; StartIndex: Integer): Integer; begin end;
+function TStringHelper.LastIndexOf(const Value: string; StartIndex: Integer): Integer; begin end;
+function TStringHelper.LastIndexOf(Value: Char; StartIndex, Count: Integer): Integer; begin end;
+function TStringHelper.LastIndexOf(const Value: string; StartIndex, Count: Integer): Integer; begin end;
+function TStringHelper.LastIndexOfAny(const AnyOf: array of Char): Integer; begin end;
+function TStringHelper.LastIndexOfAny(const AnyOf: array of Char; StartIndex: Integer): Integer; begin end;
+function TStringHelper.LastIndexOfAny(const AnyOf: array of Char; StartIndex, Count: Integer): Integer; begin end;
+function TStringHelper.PadLeft(TotalWidth: Integer): string; begin end;
+function TStringHelper.PadLeft(TotalWidth: Integer; PaddingChar: Char): string; begin end;
+function TStringHelper.PadRight(TotalWidth: Integer): string; begin end;
+function TStringHelper.PadRight(TotalWidth: Integer; PaddingChar: Char): string; begin end;
+class function TStringHelper.Parse(const Value: Integer): string; begin end;
+class function TStringHelper.Parse(const Value: Int64): string; begin end;
+class function TStringHelper.Parse(const Value: Boolean): string; begin end;
+class function TStringHelper.Parse(const Value: Extended): string; begin end;
+function TStringHelper.QuotedString: string; begin end;
+function TStringHelper.QuotedString(AQuoteChar: Char): string; begin end;
+function TStringHelper.Remove(StartIndex: Integer): string; begin end;
+function TStringHelper.Remove(StartIndex, Count: Integer): string; begin end;
+function TStringHelper.Replace(OldChar, NewChar: Char): string; begin end;
+function TStringHelper.Replace(OldChar, NewChar: Char; ReplaceFlags: TReplaceFlags): string; begin end;
+function TStringHelper.Replace(const OldValue, NewValue: string): string; begin end;
+function TStringHelper.Replace(const OldValue, NewValue: string; ReplaceFlags: TReplaceFlags): string; begin end;
+function TStringHelper.Split(const Separator: array of Char): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of Char; Count: Integer): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of Char; Options: TStringSplitOptions): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of Char; Count: Integer; Options: TStringSplitOptions): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string; Count: Integer): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string; Options: TStringSplitOptions): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string; Count: Integer; Options: TStringSplitOptions): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of Char; Quote: Char): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of Char; QuoteStart, QuoteEnd: Char): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of Char; QuoteStart, QuoteEnd: Char; Options: TStringSplitOptions): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of Char; QuoteStart, QuoteEnd: Char; Count: Integer): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of Char; QuoteStart, QuoteEnd: Char; Count: Integer; Options: TStringSplitOptions): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string; Quote: Char): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string; QuoteStart, QuoteEnd: Char): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string; QuoteStart, QuoteEnd: Char; Options: TStringSplitOptions): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string; QuoteStart, QuoteEnd: Char; Count: Integer): TArray<string>; begin end;
+function TStringHelper.Split(const Separator: array of string; QuoteStart, QuoteEnd: Char; Count: Integer; Options: TStringSplitOptions): TArray<string>; begin end;
+class function TStringHelper.StartsText(const ASubText, AText: string): Boolean; begin end;
+function TStringHelper.StartsWith(const Value: string): Boolean; begin end;
+function TStringHelper.StartsWith(const Value: string; IgnoreCase: Boolean): Boolean; begin end;
+function TStringHelper.Substring(StartIndex: Integer): string; begin end;
+function TStringHelper.Substring(StartIndex, Length: Integer): string; begin end;
+function TStringHelper.ToBoolean: Boolean; begin end;
+class function TStringHelper.ToBoolean(const S: string): Boolean; begin end;
+function TStringHelper.ToCharArray: TArray<Char>; begin end;
+function TStringHelper.ToCharArray(StartIndex, Length: Integer): TArray<Char>; begin end;
+function TStringHelper.ToDouble: Double; begin end;
+class function TStringHelper.ToDouble(const S: string): Double; begin end;
+function TStringHelper.ToExtended: Extended; begin end;
+class function TStringHelper.ToExtended(const S: string): Extended; begin end;
+function TStringHelper.ToInt64: Int64; begin end;
+class function TStringHelper.ToInt64(const S: string): Int64; begin end;
+function TStringHelper.ToInteger: Integer; begin end;
+class function TStringHelper.ToInteger(const S: string): Integer; begin end;
+function TStringHelper.ToSingle: Single; begin end;
+class function TStringHelper.ToSingle(const S: string): Single; begin end;
+function TStringHelper.ToLower: string; begin end;
+function TStringHelper.ToLowerInvariant: string; begin end;
+function TStringHelper.ToUpper: string; begin end;
+function TStringHelper.ToUpperInvariant: string; begin end;
+function TStringHelper.Trim: string; begin end;
+function TStringHelper.Trim(const TrimChars: array of Char): string; begin end;
+function TStringHelper.TrimEnd(const TrimChars: array of Char): string; begin end;
+function TStringHelper.TrimLeft: string; begin end;
+function TStringHelper.TrimLeft(const TrimChars: array of Char): string; begin end;
+function TStringHelper.TrimRight: string; begin end;
+function TStringHelper.TrimRight(const TrimChars: array of Char): string; begin end;
+function TStringHelper.TrimStart(const TrimChars: array of Char): string; begin end;
+class function TStringHelper.UpperCase(const S: string): string; begin end;
 
 class function TFormatSettings.Create: TFormatSettings;
 begin

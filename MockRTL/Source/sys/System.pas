@@ -28,6 +28,8 @@ unit System;
 interface
 
 type
+  TArray<T> = array of T;
+
   { Basic placeholder types needed by the D2CSharp parser. }
   ShortInt = -128..127;
   Byte = 0..255;
@@ -108,6 +110,18 @@ type
   end;
 
   PResStringRec = ^TResStringRec;
+
+  TFloatSpecial = (
+    fsZero,
+    fsNZero,
+    fsDenormal,
+    fsNDenormal,
+    fsPositive,
+    fsNegative,
+    fsInf,
+    fsNInf,
+    fsNaN
+  );
 
   TTypeKind = (
     tkUnknown,
@@ -307,6 +321,8 @@ const
   CP_UTF7 = 65000;              { $FDE8 }
   CP_UTF8 = 65001;              { $FDE9 }
 
+  sLineBreak = #13#10;
+
   fmClosed = 55216;             { $D7B0 }
   fmInput  = 55217;             { $D7B1 }
   fmOutput = 55218;             { $D7B2 }
@@ -370,7 +386,7 @@ function MulDivInt64(AValue, AMul, ADiv: Int64): Int64;
 { Ordinal and type intrinsics }
 
 //function Ord(X): Integer;
-function Chr(X: Integer): Char;
+//function Chr(X: Byte): Char;
 //function Succ(X): Integer;
 //function Pred(X): Integer;
 
@@ -488,7 +504,7 @@ procedure SetString(var S: string; const Buffer: array of Char; Len: Integer); o
 procedure SetString(var S: AnsiString; Buffer: PAnsiChar; Len: Integer); overload;
 procedure SetString(var S: UnicodeString; Buffer: PWideChar; Len: Integer); overload;
 
-function Slice(var A; Count: Integer): Variant;
+function Slice<T>(const A: array of T; Count: Integer): TArray<T>;
 
 { Set intrinsics }
 
@@ -1030,12 +1046,6 @@ begin
 end;
 }
 
-function Chr(X: Integer): Char;
-begin
-  Result := #0;
-end;
-
-
 function Hi(X: Integer): Byte;
 begin
 end;
@@ -1330,8 +1340,9 @@ procedure SetString(var S: UnicodeString; Buffer: PWideChar; Len: Integer);
 begin
 end;
 
-function Slice(var A; Count: Integer): Variant;
+function Slice<T>(const A: array of T; Count: Integer): TArray<T>;
 begin
+  Result := nil;
 end;
 
 { Set intrinsics }

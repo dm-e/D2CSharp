@@ -38,37 +38,37 @@ namespace D7_threadvar
 
     public class D7_threadvarInterface
     {
-        //public static bool RunThreadVarChecks()
-        //{
-        //    bool result = false;
-        //    TMarkerThread FirstThread = default;
-        //    TMarkerThread SecondThread = default;
-        //    bool CheckResult1 = false;
-        //    bool CheckResult2 = false;
-        //    bool CheckResult3 = false;
-        //    ThreadMarker = 901;
-        //    FirstThread = new TMarkerThread(117);
-        //    SecondThread = new TMarkerThread(228);
-        //    try
-        //    {
-        //        FirstThread.Resume();
-        //        SecondThread.Resume();
-        //        FirstThread.WaitFor();
-        //        SecondThread.WaitFor();
-        //        CheckResult1 = (ThreadMarker == 901);
-        //        result = CheckResult1;
-        //        CheckResult2 = (FirstThread.ObservedValue == 117);
-        //        result = result && CheckResult2;
-        //        CheckResult3 = (SecondThread.ObservedValue == 228);
-        //        result = result && CheckResult3;
-        //    }
-        //    finally
-        //    {
-        //        TObject.Free(FirstThread);
-        //        TObject.Free(SecondThread);
-        //    }
-        //    return result;
-        //}
+        public static bool RunThreadVarChecks()
+        {
+            bool result = false;
+            TMarkerThread FirstThread = default;
+            TMarkerThread SecondThread = default;
+            bool CheckResult1 = false;
+            bool CheckResult2 = false;
+            bool CheckResult3 = false;
+            ThreadMarker = 901;
+            FirstThread = new TMarkerThread(117);
+            SecondThread = new TMarkerThread(228);
+            try
+            {
+                FirstThread.Resume();
+                SecondThread.Resume();
+                FirstThread.WaitFor();
+                SecondThread.WaitFor();
+                CheckResult1 = (ThreadMarker == 901);
+                result = CheckResult1;
+                CheckResult2 = (FirstThread.ObservedValue == 117);
+                result = result && CheckResult2;
+                CheckResult3 = (SecondThread.ObservedValue == 228);
+                result = result && CheckResult3;
+            }
+            finally
+            {
+                TObject.Free(FirstThread);
+                TObject.Free(SecondThread);
+            }
+            return result;
+        }
 
     } // class D7_threadvarInterface
 
@@ -79,38 +79,33 @@ namespace D7_threadvar
         [ThreadStatic]
         public static int ThreadMarker = 0;
 
-        //public class TMarkerThread : TThread
-        //{
-        //    private int FRequestedValue;
-        //    private int FObservedValue;
+        public class TMarkerThread : TThread
+        {
+            private int FRequestedValue;
+            private int FObservedValue;
 
-        //    protected override void Execute()
-        //    {
-        //        ThreadMarker = FRequestedValue;
-        //        FObservedValue = ThreadMarker;
-        //    }
-        //    public TMarkerThread(int AValue)
-        //    : base(true)
-        //    {
-        //        //# base.Create(Convert.ToInt32(true));
-        //        FreeOnTerminate = false;
-        //        FRequestedValue = AValue;
-        //        FObservedValue = -1;
-        //    }
-        //    /*property ObservedValue : int read FObservedValue;*/
-        //    public int ObservedValue
-        //    {
-        //        get
-        //        {
-        //            return FObservedValue;
-        //        }
-        //    }
-
-        //    public TMarkerThread()
-        //    {
-        //    }
-        //    public TMarkerThread(bool CreateSuspended) : base(CreateSuspended) { }
-        //}
+            protected override void Execute()
+            {
+                ThreadMarker = FRequestedValue;
+                FObservedValue = ThreadMarker;
+            }
+            public TMarkerThread(int AValue)
+            : base(true)
+            {
+                //# base.Create(Convert.ToInt32(true));
+                FreeOnTerminate = false;
+                FRequestedValue = AValue;
+                FObservedValue = -1;
+            }
+            /*property ObservedValue : int read FObservedValue;*/
+            public int ObservedValue
+            {
+                get
+                {
+                    return FObservedValue;
+                }
+            }
+        }
     } // class D7_threadvarImplementation
 
 }  // namespace D7_threadvar

@@ -391,9 +391,19 @@ public class SystemInterface
 
   Part of the D2CSharp project by t2t-soft. See LICENSE and NOTICE.
 */
+
   /* Basic placeholder types needed by the D2CSharp parser. */
 
   /* Fixed-width signed integer used by System.Types and other RTL units. */
+	public enum TFloatSpecial {fsZero,
+                    fsNZero,
+                    fsDenormal,
+                    fsNDenormal,
+                    fsPositive,
+                    fsNegative,
+                    fsInf,
+                    fsNInf,
+                    fsNaN };
 	public enum TTypeKind {tkUnknown,
                 tkInteger,
                 tkChar,
@@ -445,6 +455,7 @@ public class SystemInterface
 	public const int CP_ACP = 0;
 	public const int CP_UTF7 = 65000;              /* $FDE8 */
 	public const int CP_UTF8 = 65001;              /* $FDE9 */
+	public const string sLineBreak = "\x0d\x0a";
 	public const int fmClosed = 55216;             /* $D7B0 */
 	public const int fmInput = 55217;             /* $D7B1 */
 	public const int fmOutput = 55218;             /* $D7B2 */
@@ -600,12 +611,7 @@ public class SystemInterface
 /* Ordinal and type intrinsics */
 
 //function Ord(X): Integer;
-	public static char Chr(int X)
-	{
-		char result = '\0';
-		result = '\x00';
-		return result;
-	}
+//function Chr(X: Byte): Char;
 //function Succ(X): Integer;
 //function Pred(X): Integer;
 	public static byte Hi(int X)
@@ -884,9 +890,10 @@ public class SystemInterface
 	public static void SetString(ref string S, PChar Buffer, int Len)
 	{
 	}
-	public static object Slice(out object A, int Count)
+	public static T<T> Slice<T> (T[] A, int Count)
 	{
-		object result = default(object);
+		T<T> result = null;
+		result = default;
 		return result;
 	}
 
@@ -1299,16 +1306,16 @@ public class SystemInterface
 	}
 
 /* Variant intrinsics */
-	public static void VarClear(ref object V)
+	public static void VarClear(ref Variant V)
 	{
 	}
-	public static void VarCopy(ref object Dest, object Source)
+	public static void VarCopy(ref Variant Dest, Variant Source)
 	{
 	}
-	public static void VarCast(ref object Dest, object Source, int VarType)
+	public static void VarCast(ref Variant Dest, Variant Source, int VarType)
 	{
 	}
-	public static void VarArrayRedim(ref object A, int HighBound)
+	public static void VarArrayRedim(ref Variant A, int HighBound)
 	{
 	} break; continue;
 	//# missing function body: public static int SizeOf();

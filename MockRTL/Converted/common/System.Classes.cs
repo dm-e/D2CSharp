@@ -1867,6 +1867,72 @@ public class ClassesInterface
 		public TResourceStream() {}
 	}	
 
+	abstract public class TThread : TObject
+	{
+		private bool FFreeOnTerminate;
+		private bool FFinished;
+		private bool FTerminated;
+		abstract protected void Execute();
+
+/* TThread */
+		public TThread(bool CreateSuspended)
+		{
+		}
+		public override void Destroy()
+		{
+			if(!FDisposed)
+			{
+				//# inherited;
+			}
+		}
+		public void Start()
+		{
+		}
+		public void Resume()
+		{
+		}
+		public void Suspend()
+		{
+		}
+		public void Terminate()
+		{
+		}
+		public uint WaitFor()
+		{
+			uint result = 0;
+			result = 0;
+			return result;
+		}
+		/*property Finished : bool read FFinished;*/
+		public bool Finished
+		{
+			get
+			{
+				return FFinished;
+			}
+		}
+		/*property FreeOnTerminate : bool read FFreeOnTerminate write FFreeOnTerminate;*/
+		public bool FreeOnTerminate
+		{
+			get
+			{
+				return FFreeOnTerminate;
+			}
+			set
+			{
+				FFreeOnTerminate = value;
+			}
+		}
+		/*property Terminated : bool read FTerminated;*/
+		public bool Terminated
+		{
+			get
+			{
+				return FTerminated;
+			}
+		}
+	}	
+
 	public class TThreadList : TObject
 	{
 		private TList FList;
@@ -1992,14 +2058,14 @@ public class ClassesInterface
 
 	public class TStringWriter : TObject
 	{
-		private System.Sysutils.SysutilsInterface.StringBuilder FBuilder;
+		private TStringBuilder FBuilder;
 
 /* TStringWriter */
 		public TStringWriter()
 		{
 			;
 		}
-		public TStringWriter(System.Sysutils.SysutilsInterface.StringBuilder ABuilder)
+		public TStringWriter(TStringBuilder ABuilder)
 		{
 			;
 		}
@@ -2022,7 +2088,7 @@ public class ClassesInterface
 			return result;
 		}
 		/*property Builder :  read FBuilder;*/
-		public System.Sysutils.SysutilsInterface.StringBuilder Builder
+		public TStringBuilder Builder
 		{
 			get
 			{
@@ -2900,9 +2966,9 @@ public class ClassesInterface
 			result = "";
 			return result;
 		}
-		public object ReadVariant()
+		public Variant ReadVariant()
 		{
-			object result = default(object);
+			Variant result = default(Variant);
 			return result;
 		}
 	}	
@@ -2959,7 +3025,7 @@ public class ClassesInterface
 		public void WriteString(string Value)
 		{
 		}
-		public void WriteVariant(object Value)
+		public void WriteVariant(Variant Value)
 		{
 		}
 	}	

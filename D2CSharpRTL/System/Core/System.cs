@@ -294,6 +294,20 @@ namespace System
 		public static TVarData CreateRecord() { return new TVarData(); }
 	};
   /* Basic placeholder types needed by the D2CSharp parser. */
+    public enum TFloatSpecial
+    {
+        fsZero,
+        fsNZero,
+        fsDenormal,
+        fsNDenormal,
+        fsPositive,
+        fsNegative,
+        fsInf,
+        fsNInf,
+        fsNaN
+    }
+
+
 	public enum TTypeKind {tkUnknown,
                 tkInteger,
                 tkChar,
@@ -336,6 +350,7 @@ namespace System
 	public const int CP_ACP = 0;
 	public const int CP_UTF7 = 65000;              /* $FDE8 */
 	public const int CP_UTF8 = 65001;              /* $FDE9 */
+    public const string sLineBreak = "\x0d\x0a";
 	public const int fmClosed = 55216;             /* $D7B0 */
 	public const int fmInput = 55217;             /* $D7B1 */
 	public const int fmOutput = 55218;             /* $D7B2 */
@@ -1260,10 +1275,20 @@ public static double BuiltInSin(double X)
 	}
 	//# output of equivalent "SetString" function suppressed
 	// The AnsiString/PAnsiChar SetString adapter is provided by the AnsiString compatibility layer.
-	public static object Slice(out object A, int Count)
+	public static T[] Slice<T>(T[] A, int Count)
 	{
-		A = default;
-		return default(object);
+		if (A == null)
+			throw new global::System.ArgumentNullException(nameof(A));
+
+		if (Count < 0 || Count > A.Length)
+			throw new global::System.ArgumentOutOfRangeException(nameof(Count));
+
+		if (Count == 0)
+			return global::System.Array.Empty<T>();
+
+		T[] Result = new T[Count];
+		global::System.Array.Copy(A, 0, Result, 0, Count);
+		return Result;
 	}
 
 /* Set intrinsics */
