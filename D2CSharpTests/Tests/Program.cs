@@ -151,6 +151,7 @@ namespace Tests
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
+                b = false;               
             }
 
             if (b)
