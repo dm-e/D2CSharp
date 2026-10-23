@@ -153,8 +153,8 @@ namespace D7_datetime
             CenturyFebruaryMatches = DaysInAMonth(2100, 2) == 28;
             AprilMatches = DaysInAMonth(2023, 4) == 30;
             DecemberMatches = DaysInAMonth(2023, 12) == 31;
-            LeapYearMonthDaysMatches = MonthDays[Convert.ToInt32(true)][2 - 1] == 29;
-            NormalYearMonthDaysMatches = MonthDays[Convert.ToInt32(false)][2 - 1] == 28;
+            LeapYearMonthDaysMatches = MonthDays[(true ? 1 : 0)][2 - 1] == 29;
+            NormalYearMonthDaysMatches = MonthDays[(false ? 1 : 0)][2 - 1] == 28;
             result = LeapYearFebruaryMatches;
             result = result && CenturyFebruaryMatches;
             result = result && AprilMatches;

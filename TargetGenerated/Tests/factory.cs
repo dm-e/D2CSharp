@@ -84,6 +84,10 @@ namespace Factory
                 return result;
             }
             private string FName = string.Empty;
+
+            public TFDerived1b()
+            {
+            }
         }
 
         // ClassRef<TFDerived1b> TFDerived1bClass;

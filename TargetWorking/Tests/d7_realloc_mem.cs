@@ -53,7 +53,7 @@ namespace D7_realloc_mem
                 {
                     RawMemory.Write<byte>(Index, (byte)(Index + 10));
                 }
-                ReallocMem(ref RawMemory, 8 * sizeof(byte));
+                ReallocMem(ref RawMemory, DelphiStaticArrayInfo.Create<byte>(new int[] { 0 }, new int[] { 8 }).ByteSize);
                 for (Index = 4; Index <= 7; Index++)
                 {
                     RawMemory.Write<byte>(Index, (byte)(Index + 10));

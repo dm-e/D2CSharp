@@ -339,7 +339,7 @@ namespace System
             FValue = delta == 0
                 ? other.FValue
                 : other.FValue + checked(
-                    delta * DelphiTypeLayout.SizeOf<T>());
+                    delta * other.ValueSize);
         }
 
         public Pointer(Pointer rawPointer)
@@ -347,10 +347,10 @@ namespace System
             FValue = rawPointer.ToUntypedPointer();
         }
 
-        //public Pointer(UntypedPointer pointer)
-        //{
-        //    FValue = pointer;
-        //}
+        internal Pointer(UntypedPointer pointer)
+        {
+            FValue = pointer;
+        }
 
         public Pointer(int size, bool rawMemory)
         {
@@ -364,6 +364,174 @@ namespace System
                     : new UntypedPointer(new T[size], 0);
         }
 
+        /// <summary>
+        /// Address a static array variable. Reuse the same Ref instance for the
+        /// same variable; repeated calls preserve pointer identity and layout.
+        /// </summary>
+        public static Pointer<T> FromLocation(Ref<T> location,
+            DelphiStaticArrayInfo info)
+        {
+            if (location == null)
+                throw new ArgumentNullException(nameof(location));
+            StaticArrayBacking<T> backing = StaticArrayLocationRegistry.ForField(
+                location, nameof(Ref<T>.Value), info,
+                () => new StaticArrayBacking<T>(location, info, false));
+            return new Pointer<T>(new UntypedPointer(PointerView.FromBacking(backing)));
+        }
+
+        /// <summary>Address a typed variable using its declared Delphi size.</summary>
+        public static Pointer<T> FromReference(Ref<T> location, int size) =>
+            new(new UntypedPointer(PointerView.FromBacking(ReferenceBacking<T>.ForLocation(location, size))));
+
+        /// <summary>Address an array field through a typed record variable pointer.</summary>
+        public static Pointer<T> FromRecordField<TRecord>(Pointer<TRecord> record,
+            string fieldKey, Func<TRecord, T> getter, Action<TRecord, T> setter,
+            DelphiStaticArrayInfo info)
+        {
+            if (record.IsNull()) throw new NullReferenceException("Pointer is null.");
+            if (getter == null) throw new ArgumentNullException(nameof(getter));
+            if (setter == null) throw new ArgumentNullException(nameof(setter));
+            var view = record.FValue.View;
+            if (view.ByteOffset != 0 || view.Backing is not ReferenceBacking<TRecord> backing)
+                throw new NotSupportedException("A typed record variable location is required.");
+            return FromField(backing.Location, fieldKey,
+                location => getter(location.Value), (location, value) => setter(location.Value, value), info);
+        }
+
+        /// <summary>
+        /// Address a field of a FIXED receiver. Two calls with the same receiver
+        /// (reference identity) and fieldKey yield pointers to the same Delphi
+        /// location and therefore compare equal. A different fieldKey or receiver
+        /// is a different address, even when the fields contain the same array.
+        /// Use the declaring Type as receiver for static fields.
+        /// The caller must use a unique, stable fieldKey (e.g. nameof(Cells)).
+        /// Do not use this API for changing receiver expressions: evaluate the
+        /// receiver once, then pass it here.
+        /// </summary>
+        public static Pointer<T> FromField<TOwner>(
+            TOwner owner, string fieldKey,
+            Func<TOwner, T> getter, Action<TOwner, T> setter,
+            DelphiStaticArrayInfo info) where TOwner : class
+        {
+            if (owner == null)
+                throw new ArgumentNullException(nameof(owner));
+            if (getter == null)
+                throw new ArgumentNullException(nameof(getter));
+            if (setter == null)
+                throw new ArgumentNullException(nameof(setter));
+            StaticArrayBacking<T> backing = StaticArrayLocationRegistry.ForField(
+                owner, fieldKey, info,
+                () => new StaticArrayBacking<T>(
+                    new Ref<T>(() => getter(owner), value => setter(owner, value)),
+                    info, false));
+            return new Pointer<T>(new UntypedPointer(PointerView.FromBacking(backing)));
+        }
+
+        /// <summary>
+        /// Address a static field qualified by a receiver expression. The caller
+        /// evaluates that expression once at this argument position; the field
+        /// identity still belongs to its declaring type, including a null receiver.
+        /// </summary>
+        public static Pointer<T> FromStaticField<TOwner>(
+            TOwner evaluatedReceiver, Type declaringType, string fieldKey,
+            Func<Type, T> getter, Action<Type, T> setter, DelphiStaticArrayInfo info)
+        {
+            return FromField(declaringType, fieldKey, getter, setter, info);
+        }
+
+        /// <summary>
+        /// Interpret this pointer's addressed ARRAY VARIABLE as a complete
+        /// Delphi static-array location with a known source-level layout.
+        /// Useful when an outer static array contains another static array:
+        /// outer.ElementPointer&lt;int[]&gt;(0).AsStaticArrayPointer(innerInfo).
+        /// The returned borrowed view delegates reads/writes to this pointer;
+        /// it shares the underlying owner's lifetime and does not own memory.
+        /// </summary>
+        public Pointer<T> AsStaticArrayPointer(DelphiStaticArrayInfo info)
+        {
+            if (IsNull())
+                throw new NullReferenceException("Pointer is null.");
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+            // If this is already a pointer to the complete static array,
+            // preserve its address identity instead of wrapping it again.
+            DelphiStaticArrayInfo? current = StaticArrayInfo;
+            if (current != null)
+            {
+                if (!current.IsCompatibleLocationLayout(info))
+                    throw new InvalidOperationException(
+                        "The pointer already has a different static array layout.");
+                return this;
+            }
+
+            PointerView view = FValue.View;
+            if (!view.Backing!.IsAlive)
+                throw new ObjectDisposedException("Pointer backing");
+            Pointer<T> location = this;
+            StaticArrayBacking<T> backing = StaticArrayLocationRegistry.ForNested(
+                view.Backing, view.ByteOffset, info,
+                () => new StaticArrayBacking<T>(new Ref<T>(
+                    () => location.Deref(),
+                    value => location.Assign(value)), info, false));
+            return new Pointer<T>(new UntypedPointer(PointerView.FromBacking(backing)));
+        }
+
+        /// <summary>Allocate exactly one full Delphi static array value.</summary>
+        public static Pointer<T> AllocateStaticArray(DelphiStaticArrayInfo info)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+            if (!typeof(T).IsArray ||
+                typeof(T).GetArrayRank() != info.Rank ||
+                typeof(T).GetElementType() != info.ElementType)
+                throw new ArgumentException(
+                    "The pointer's array type does not match its layout.", nameof(info));
+            T[] cell = new[] { (T)(object)info.Allocate() };
+            return FromOwnedStaticArray(cell, info);
+        }
+
+        private static Pointer<T> FromOwnedStaticArray(T[] cell,
+            DelphiStaticArrayInfo info)
+        {
+            return new Pointer<T>(new UntypedPointer(
+                PointerView.FromBacking(new StaticArrayBacking<T>(
+                    new Ref<T>(() => cell[0], value => cell[0] = value),
+                    info, true))));
+        }
+
+        /// <summary>
+        /// Address an element within a complete static array. Indices are
+        /// ZERO-BASED CLR indices, not Delphi indices; the converter applies
+        /// the bounds shift before calling this method. The returned pointer
+        /// shares its backing and lifetime with the complete array pointer.
+        /// This also supports record and reference elements (without casting
+        /// their values into bytes).
+        /// </summary>
+        public Pointer<TElement> ElementPointer<TElement>(params int[] zeroBasedIndices)
+        {
+            if (IsNull())
+                throw new NullReferenceException("Pointer is null.");
+            if (FValue.View.ByteOffset != 0)
+                throw new InvalidOperationException(
+                    "An element address requires a pointer to the complete static array.");
+            DelphiStaticArrayInfo? info = StaticArrayInfo;
+            if (info == null)
+                throw new InvalidOperationException(
+                    "The pointer does not have a static array layout.");
+            if (info.ElementType != typeof(TElement))
+                throw new ArgumentException(
+                    "The requested element pointer type does not match the array element type.");
+
+            // Keep the SAME backing (including when it points at a mutable field).
+            return new Pointer<TElement>(FValue +
+                info.GetElementByteOffset(zeroBasedIndices));
+        }
+
+        internal DelphiStaticArrayInfo? StaticArrayInfo =>
+            (FValue.View.Backing as StaticArrayBacking<T>)?.Info;
+
+        private int ValueSize => FValue.ValueSize<T>();
+
         public int Length
         {
             get
@@ -376,7 +544,7 @@ namespace System
                 if (bytes < 0)
                     return int.MaxValue;
 
-                return checked((int)(bytes / DelphiTypeLayout.SizeOf<T>()));
+                return checked((int)(bytes / ValueSize));
             }
         }
 
@@ -390,7 +558,7 @@ namespace System
                 int bytes = FValue.Capacity;
                 return bytes == int.MaxValue
                     ? int.MaxValue
-                    : bytes / DelphiTypeLayout.SizeOf<T>();
+                    : bytes / ValueSize;
             }
         }
 
@@ -398,7 +566,7 @@ namespace System
             ? 0
             : checked((int)(
                 FValue.AbsoluteByteOffset /
-                DelphiTypeLayout.SizeOf<T>()));
+                ValueSize));
 
         public bool IsNull() => FValue.IsNull();
         public void SetNull() => FValue.SetNull();
@@ -407,24 +575,24 @@ namespace System
         public T this[int index]
         {
             get => FValue.Read<T>(checked(
-                index * DelphiTypeLayout.SizeOf<T>()));
+                index * ValueSize));
             set => Assign(value, index);
         }
 
         public void Assign(T value, int index = 0)
         {
             FValue.Write(value, checked(
-                index * DelphiTypeLayout.SizeOf<T>()));
+                index * ValueSize));
         }
 
         public void Inc(int count)
         {
-            FValue.Inc(checked(count * DelphiTypeLayout.SizeOf<T>()));
+            FValue.Inc(checked(count * ValueSize));
         }
 
         public void Dec(int count)
         {
-            FValue.Dec(checked(count * DelphiTypeLayout.SizeOf<T>()));
+            FValue.Dec(checked(count * ValueSize));
         }
 
         public Pointer<T> Add(int elementDelta)
@@ -432,7 +600,7 @@ namespace System
             return IsNull()
                 ? default
                 : new Pointer<T>(FValue + checked(
-                    elementDelta * DelphiTypeLayout.SizeOf<T>()));
+                    elementDelta * ValueSize));
         }
 
         public bool CanFreeMemory()
@@ -483,14 +651,20 @@ namespace System
             FStorage = new[] { value };
         }
 
-        public T Value
-        {
-            get => FStorage[0];
-            set => FStorage[0] = value;
-        }
+        // Preserve assignable fields when the stored Delphi value is a record.
+        public ref T Value => ref FStorage[0];
 
         public Pointer<T> AsPointer() => new Pointer<T>(FStorage);
         public UntypedPointer AsUntypedPointer() => new UntypedPointer(FStorage);
+
+        /// <summary>
+        /// Address the static array held in this variable cell. Unlike
+        /// AsPointer(), writes to the complete array copy its contents.
+        /// </summary>
+        public Pointer<T> AsStaticArrayPointer(DelphiStaticArrayInfo info) =>
+            Pointer<T>.FromField(this, nameof(Value),
+                static cell => cell.Value,
+                static (cell, value) => cell.Value = value, info);
     }
 
     public sealed class DelphiReferenceCell<T>

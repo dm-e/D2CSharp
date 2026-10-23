@@ -39,7 +39,7 @@ namespace D7_get_mem
         public static bool RunGetMemChecks()
         {
             bool result = false;
-            Pointer<int> Block = default;
+            Pointer<int[]> Block = default;
             int Index = 0;
             int Sum = 0;
             bool CheckResult1 = false;
@@ -47,20 +47,20 @@ namespace D7_get_mem
             bool CheckResult3 = false;
             bool CheckResult4 = false;
             Block = default;
-            GetMem(ref Block, 8 * sizeof(int));
+            GetMem(ref Block, DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 8 }).ByteSize, DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 8 }));
             try
             {
                 Sum = 0;
                 for (Index = 0 /*# Low(Block^) */; Index <= 7 /*# High(Block^) */; Index++)
                 {
-                    Block[Index] = Index + 1;
-                    Sum = Sum + Block[Index];
+                    Block.Deref()[Index] = Index + 1;
+                    Sum = Sum + Block.Deref()[Index];
                 }
                 CheckResult1 = (!Block.IsNull());
                 result = CheckResult1;
-                CheckResult2 = (Block[0] == 1);
+                CheckResult2 = (Block.Deref()[0] == 1);
                 result = result && CheckResult2;
-                CheckResult3 = (Block[7] == 8);
+                CheckResult3 = (Block.Deref()[7] == 8);
                 result = result && CheckResult3;
                 CheckResult4 = (Sum == 36);
                 result = result && CheckResult4;

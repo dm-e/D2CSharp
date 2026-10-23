@@ -109,6 +109,7 @@ namespace D7_math
         {
             bool result = false;
             double[] Values = new double[4/*# range 0..3*/];
+            Ref<double[]> __d2cArrayLocation_Values = new Ref<double[]>(() => Values, __d2cArrayValue => Values = __d2cArrayValue);
             Values[0] = 1.25D;
             Values[1] = 2.5D;
             Values[2] = -0.75D;

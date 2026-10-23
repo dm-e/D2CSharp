@@ -47,13 +47,13 @@ namespace D7_ansi_case
             bool CheckResult2 = false;
             bool CheckResult3 = false;
             bool CheckResult4 = false;
-            LabelText = "RELEASE Candidate 17".ToString().ToLower();
-            CommandText = "compile target-x".ToString().ToUpper();
+            LabelText = "RELEASE Candidate 17".ToLower();
+            CommandText = "compile target-x".ToUpper();
             CheckResult1 = (LabelText == "release candidate 17");
             result = CheckResult1;
             CheckResult2 = (CommandText == "COMPILE TARGET-X");
             result = result && CheckResult2;
-            CheckResult3 = ("already lower".ToString().ToLower() == "already lower");
+            CheckResult3 = ("already lower".ToLower() == "already lower");
             result = result && CheckResult3;
             CheckResult4 = ("".ToUpper() == "");
             result = result && CheckResult4;

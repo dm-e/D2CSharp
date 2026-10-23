@@ -204,6 +204,10 @@ namespace D7_string_processor
                     return GetTokenCount();
                 }
             }
+
+            public TTextScanner()
+            {
+            }
         }
     } // class D7_string_processorImplementation
 

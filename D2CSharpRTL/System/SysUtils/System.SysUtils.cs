@@ -1148,6 +1148,7 @@ public class SysutilsInterface
 	{
 		public int HelpContext { get; protected set; }
 
+		//static DException() : base() { }
 		public DException(string Msg) : base(Msg ?? string.Empty) {}
 		public DException(string Msg, params TVarRec[] Args) : base(SysutilsInterface.Format(Msg ?? string.Empty, Args)) {}
 		public DException(uint Ident) : base(SysutilsInterface.LoadStr(Ident)) {}

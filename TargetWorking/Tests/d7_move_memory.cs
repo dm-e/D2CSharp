@@ -40,7 +40,9 @@ namespace D7_move_memory
         {
             bool result = false;
             byte[] Source = new byte[8/*# range 0..7*/];
+            Ref<byte[]> __d2cArrayLocation_Source = new Ref<byte[]>(() => Source, __d2cArrayValue => Source = __d2cArrayValue);
             byte[] Target = new byte[8/*# range 0..7*/];
+            Ref<byte[]> __d2cArrayLocation_Target = new Ref<byte[]>(() => Target, __d2cArrayValue => Target = __d2cArrayValue);
             AnsiString SourceText = AnsiString.Empty;
             AnsiString TargetText = AnsiString.Empty;
             int Index = 0;

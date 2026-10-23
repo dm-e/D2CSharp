@@ -122,7 +122,7 @@ namespace D7_currency
                 FormatSettings.CurrencyFormat = 3;
                 FormatSettings.CurrencyDecimals = 2;
                 Amount = 7654.321M;
-                FormattedAmount = Format("%m", new TVarRec[] { Amount });
+                FormattedAmount = Format("%m", new TVarRec[] { TVarRec.FromCurrency(Amount) });
                 CurrencyAsString = CurrToStr(42.375M);
                 CurrencyWithThreeDecimals = CurrToStrF(Amount, TFloatFormat.ffCurrency, 3);
                 CurrencyWithoutDecimals = CurrToStrF(Amount, TFloatFormat.ffCurrency, 0);

@@ -122,6 +122,10 @@ namespace D7_tlist
                     return FPriority;
                 }
             }
+
+            public TQueueItem()
+            {
+            }
         }
 
         public static int CompareQueueItems(Pointer Item1, Pointer Item2)

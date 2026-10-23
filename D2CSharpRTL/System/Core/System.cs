@@ -716,103 +716,344 @@ public static double BuiltInSin(double X)
 	public static void Dispose(UntypedPointer P)
 	{
 	}
-	public static Pointer GetMem(ref Pointer P, int Size)
-	{
-		P = DelphiMemory.GetMem(Size);
-		return P;
-	}
+  public static void GetMem(ref object StoragePointer, int StorageSize)
+  {
+   StoragePointer = new byte[StorageSize];
+  }
 
-	public static Pointer<T> GetMem<T>(ref Pointer<T> P, int Size)
-	{
-		Pointer RawPointer = DelphiMemory.GetMem(Size);
-		P = (Pointer<T>)RawPointer;
-		return P;
-	}
-	public static Pointer GetMem(int Size)
-	{
-		if (Size < 0)
-			throw new global::System.ArgumentOutOfRangeException(nameof(Size));
-		return DelphiMemory.GetMem(Size);
-	}
-	public static int FreeMem(Pointer P)
-	{
-		if (!P.IsNull())
-			DelphiMemory.FreeMem(ref P);
+  public static void GetMem(ref Pointer StoragePointer, int StorageSize)
+  {
+     StoragePointer = new Pointer(StorageSize, true);
+  }
 
-		return 0;
-	}
+  public static void GetMem<T>(ref Pointer<T> StoragePointer, int StorageSize) where T : new()
+  {
+     StoragePointer = new Pointer<T>(StorageSize, false);
+  }
 
-	public static int FreeMem(ref Pointer P)
-	{
-		if (!P.IsNull())
-			DelphiMemory.FreeMem(ref P);
+        public static void GetMem<TArray>(
+            ref Pointer<TArray> StoragePointer,
+            int StorageSize,
+            DelphiStaticArrayInfo arrayInfo)
+        {
+            if (arrayInfo == null)
+                throw new ArgumentNullException(nameof(arrayInfo));
+            if (StorageSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(StorageSize));
+            if (StorageSize != arrayInfo.ByteSize)
+                throw new NotSupportedException(
+                    "GetMem for a static array requires exactly one complete array value.");
 
-		return 0;
-	}
+            StoragePointer = Pointer<TArray>.AllocateStaticArray(arrayInfo);
+        }
 
-	public static int FreeMem(ref UntypedPointer P)
-	{
-		if (!P.IsNull())
-			DelphiMemory.FreeMem(ref P);
+        public static void GetMem(ref PChar StoragePointer, int StorageSize)
+        {
+            if (StorageSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(StorageSize));
 
-		return 0;
-	}
+            if (StorageSize % sizeof(char) != 0)
+            {
+                throw new ArgumentException(
+                    "The storage size for PChar must be divisible by sizeof(char).",
+                    nameof(StorageSize));
+            }
 
-	public static int FreeMem(ref PChar P)
-	{
-		if (!P.IsNull())
-			DelphiMemory.FreeMem(ref P);
+            StoragePointer = new PChar(StorageSize / sizeof(char), alloc: true);
+        }
 
-		return 0;
-	}
+        public static void GetMem(
+            ref UntypedPointer StoragePointer,
+            int StorageSize)
+        {
+            StoragePointer =
+                UntypedPointer.AllocNative(StorageSize);
+        }
 
-	public static int FreeMem<T>(ref Pointer<T> P)
-	{
-		if (!P.IsNull())
-			DelphiMemory.FreeMem(ref P);
+        public static void GetMem(ref IntPtr StoragePointer, int StorageSize)
+  {
+   StoragePointer = Marshal.AllocCoTaskMem(StorageSize);
+  }
 
-		return 0;
-	}
-	public static int FreeMem(Pointer P, int Size)
-	{
-		if (!P.IsNull())
-			DelphiMemory.FreeMem(ref P);
-		return 0;
-	}
-	public static void ReallocMem(ref Pointer P, int Size)
-	{
-		if (Size < 0)
-			throw new global::System.ArgumentOutOfRangeException(nameof(Size));
+        //public static Pointer AllocMem(int StorageSize)
+        //{
+        // return new Pointer(Marshal.AllocCoTaskMem(StorageSize), StorageSize, false);
+        //}
 
-		if (Size == 0)
-		{
-			if (!P.IsNull())
-				DelphiMemory.FreeMem(ref P);
-			return;
-		}
+        public static Pointer AllocMem(int StorageSize)
+        {
+            if (StorageSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(StorageSize));
 
-		Pointer NewPointer = DelphiMemory.GetMem(Size);
-		if (!P.IsNull())
-		{
-			int CopyCount = global::System.Math.Min(P.Length, Size);
-			if (CopyCount > 0)
-				DelphiMemory.Move(P, NewPointer.ToUntypedPointer(), CopyCount);
+            if (StorageSize == 0)
+                return default;
 
-			DelphiMemory.FreeMem(ref P);
-		}
+            Pointer Result = new Pointer(StorageSize);
 
-		P = NewPointer;
-	}
+            //Delphi's AllocMem initializes memory to zero.
+            for (int I = 0; I < StorageSize; I++)
+                Result[I] = 0;
 
-	public static void ReallocMem<T>(ref Pointer<T> P, int Size)
-	{
-		Pointer RawPointer = P.ToPointer();
-		ReallocMem(ref RawPointer, Size);
-		P = (Pointer<T>)RawPointer;
-	}
-	public static void MemoryBarrier()
-	{
-	}
+            return Result;
+        }
+
+        public static void FreeMem(Pointer MemoryPointer)
+        {
+            if (MemoryPointer.IsNull())
+                return;
+
+            try
+            {
+                MemoryPointer.FreeMemory();
+            }
+            catch (InvalidOperationException)
+            {
+                /*
+                 * The pointer does not own native memory.
+                 * This can happen for managed array backing,
+                 * borrowed memory, DelphiCell<T>, or similar views.
+                 */
+                MemoryPointer.Dispose();
+            }
+        }
+
+        public static void FreeMem(ref Pointer MemoryPointer)
+        {
+            FreeMem(MemoryPointer);
+            MemoryPointer = default;
+        }
+
+        public static void FreeMem(PChar MemoryPointer)
+        {
+            if (MemoryPointer.IsNull())
+                return;
+
+            try
+            {
+                MemoryPointer.FreeMemory();
+            }
+            catch (InvalidOperationException)
+            {
+                /*
+                 * The PChar does not own native memory.
+                 * Nothing has to be released explicitly.
+                 */
+                MemoryPointer.Dispose();
+            }
+        }
+
+        public static void FreeMem(ref PChar MemoryPointer)
+        {
+            FreeMem(MemoryPointer);
+            MemoryPointer = default;
+        }
+
+        public static void FreeMem(PChar MemoryPointer, int StorageSize)
+        {
+            /*
+             * Delphi allows FreeMem(P, Size).
+             * The size is not needed by this runtime because the backing
+             * object already knows whether and how it can be released.
+             */
+            FreeMem(MemoryPointer);
+        }
+
+        public static void FreeMem(ref PChar MemoryPointer, int StorageSize)
+        {
+            FreeMem(MemoryPointer, StorageSize);
+            MemoryPointer = default;
+        }
+
+        public static void FreeMem(object MemoryPointer)
+        {
+            /*
+             * Managed object-backed memory is released by the garbage collector.
+             * This overload exists for translated code where an untyped memory
+             * variable was mapped to object.
+             */
+        }
+
+        public static void FreeMem(ref object MemoryPointer)
+        {
+            FreeMem(MemoryPointer);
+            MemoryPointer = null;
+        }
+        public static void FreeMem<T>(ref Pointer<T> MemoryPointer)
+        {
+            if (!MemoryPointer.IsNull())
+                MemoryPointer.TryFreeMemory();
+
+            MemoryPointer = default;
+        }
+
+        public static void FreeMem<T>(Pointer<T> MemoryPointer)
+        {
+            if (!MemoryPointer.IsNull())
+                MemoryPointer.TryFreeMemory();
+        }
+
+        public static void FreeMem(UntypedPointer MemoryPointer)
+        {
+            if (MemoryPointer.IsNull())
+                return;
+
+            try
+            {
+                MemoryPointer.FreeMemory();
+            }
+            catch (InvalidOperationException)
+            {
+                MemoryPointer.Dispose();
+            }
+        }
+
+        public static void FreeMem(ref UntypedPointer MemoryPointer)
+        {
+            FreeMem(MemoryPointer);
+            MemoryPointer = default;
+        }
+
+
+        public static void ReallocMem<TArray>(
+            ref Pointer<TArray> StoragePointer,
+            int StorageSize,
+            DelphiStaticArrayInfo arrayInfo)
+        {
+            if (arrayInfo == null)
+                throw new ArgumentNullException(nameof(arrayInfo));
+            if (StorageSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(StorageSize));
+
+            if (StoragePointer.IsNull())
+            {
+                if (StorageSize != 0)
+                    GetMem(ref StoragePointer, StorageSize, arrayInfo);
+                return;
+            }
+
+            DelphiStaticArrayInfo? existingInfo = StoragePointer.StaticArrayInfo;
+            if (existingInfo == null ||
+                !existingInfo.IsCompatibleLocationLayout(arrayInfo))
+                throw new ArgumentException("Static array layouts do not match.", nameof(arrayInfo));
+
+            ReallocMem(ref StoragePointer, StorageSize);
+        }
+
+        public static void ReallocMem<T>(
+            ref Pointer<T> StoragePointer,
+            int StorageSize)
+        {
+            if (StorageSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(StorageSize));
+
+            Pointer<T> oldPointer = StoragePointer;
+
+            DelphiStaticArrayInfo? arrayInfo = oldPointer.StaticArrayInfo;
+            if (arrayInfo != null)
+            {
+                if (!oldPointer.CanFreeMemory())
+                    throw new InvalidOperationException(
+                        "Only an owned complete static array can be reallocated.");
+                if (StorageSize == 0)
+                {
+                    oldPointer.FreeMemory();
+                    StoragePointer = default;
+                    return;
+                }
+                if (StorageSize == arrayInfo.ByteSize)
+                    return;
+
+                throw new NotSupportedException(
+                    "Resizing a static array allocation is not supported.");
+            }
+
+            Pointer<T> newPointer = default;
+
+            bool isByteAddressable =
+                DelphiTypeLayout.IsByteAddressable<T>();
+
+            if (StorageSize != 0)
+            {
+                if (isByteAddressable)
+                {
+                    newPointer =
+                        UntypedPointer
+                            .AllocNative(StorageSize)
+                            .As<T>();
+                }
+                else
+                {
+                    int elementSize =
+                        DelphiTypeLayout.SizeOf<T>();
+
+                    int count =
+                        StorageSize / elementSize;
+
+                    if (StorageSize % elementSize != 0)
+                        count++;
+
+                    newPointer =
+                        new Pointer<T>(
+                            new T[count]);
+                }
+
+                if (!oldPointer.IsNull())
+                {
+                    int count =
+                        Math.Min(
+                            oldPointer.Length,
+                            newPointer.Length);
+
+                    for (int i = 0; i < count; i++)
+                        newPointer[i] = oldPointer[i];
+                }
+            }
+
+            /*
+             * Important:
+             * If T is not byte-addressable, GetMem<T> used managed T[] storage.
+             * That storage must not be freed manually.
+             */
+            if (!oldPointer.IsNull() && isByteAddressable)
+                oldPointer.FreeMemory();
+
+            StoragePointer = newPointer;
+        }
+
+        public static void ReallocMem(ref Pointer StoragePointer, int StorageSize)
+        {
+            if (StorageSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(StorageSize));
+
+            Pointer<byte> pointer = StoragePointer.As<byte>();
+            ReallocMem(ref pointer, StorageSize);
+            StoragePointer = pointer.ToPointer();
+        }
+
+        public static void ReallocMem(
+            ref PChar StoragePointer,
+            int StorageSize)
+        {
+            if (StorageSize < 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(StorageSize));
+            }
+
+            if (StorageSize % sizeof(char) != 0)
+            {
+                throw new ArgumentException(
+                    "The storage size for PChar must be divisible by sizeof(char).",
+                    nameof(StorageSize));
+            }
+
+            Pointer<char> pointer =
+                StoragePointer.AsPointer();
+
+            ReallocMem(ref pointer, StorageSize);
+
+            StoragePointer = new PChar(pointer);
+        }
 
 	private static bool TryGetVariablePointer<T>(T Value, out UntypedPointer Result)
 	{

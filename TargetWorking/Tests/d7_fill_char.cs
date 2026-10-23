@@ -41,6 +41,7 @@ namespace D7_fill_char
             bool result = false;
             TProbeRecord Probe = TProbeRecord.CreateRecord();
             byte[] Buffer = new byte[8/*# range 0..7*/];
+            Ref<byte[]> __d2cArrayLocation_Buffer = new Ref<byte[]>(() => Buffer, __d2cArrayValue => Buffer = __d2cArrayValue);
             int Index = 0;
             bool CheckResult1 = false;
             bool CheckResult2 = false;

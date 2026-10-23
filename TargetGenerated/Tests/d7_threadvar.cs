@@ -105,6 +105,10 @@ namespace D7_threadvar
                     return FObservedValue;
                 }
             }
+
+            public TMarkerThread()
+            {
+            }
         }
     } // class D7_threadvarImplementation
 

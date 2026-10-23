@@ -41,9 +41,9 @@ namespace D7_pointers
             bool result = false;
             DelphiCell<int> Number = new DelphiCell<int>();
             Pointer<int> NumberPointer = default;
-            DelphiCell<TCoordinate> Coordinate = new DelphiCell<TCoordinate>();
+            DelphiCell<TCoordinate> Coordinate = new DelphiCell<TCoordinate>(TCoordinate.CreateRecord());
             Pointer<TCoordinate> CoordinatePointer = default;
-            Pointer<int> Buffer = default;
+            Pointer<int[]> Buffer = default;
             int Index = 0;
             int Total = 0;
             bool CheckResult1 = false;
@@ -68,14 +68,14 @@ namespace D7_pointers
             D7_pointers__2.Y = 13;
             CoordinatePointer.Assign(D7_pointers__2);
             Buffer = default;
-            GetMem(ref Buffer, 6 * sizeof(int));
+            GetMem(ref Buffer, DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 6 }).ByteSize, DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 6 }));
             try
             {
                 Total = 0;
                 for (Index = 0 /*# Low(Buffer^) */; Index <= 5 /*# High(Buffer^) */; Index++)
                 {
-                    Buffer[Index] = (Index + 1) * 4;
-                    Total += Buffer[Index];
+                    Buffer.Deref()[Index] = (Index + 1) * 4;
+                    Total += Buffer.Deref()[Index];
                 }
                 CheckResult1 = (Number.Value == 42);
                 result = CheckResult1;
@@ -85,7 +85,7 @@ namespace D7_pointers
                 result = result && CheckResult3;
                 CheckResult4 = (Coordinate.Value.Y == 13);
                 result = result && CheckResult4;
-                CheckResult5 = (Buffer[5] == 24);
+                CheckResult5 = (Buffer.Deref()[5] == 24);
                 result = result && CheckResult5;
                 CheckResult6 = (Total == 84);
                 result = result && CheckResult6;

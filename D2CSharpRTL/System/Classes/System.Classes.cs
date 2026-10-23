@@ -1,4 +1,4 @@
-using System.Sysutils;
+﻿using System.Sysutils;
 using System;
 using static System.Classes.ClassesImplementation;
 using static System.Classes.ClassesInterface;
@@ -328,6 +328,8 @@ public class ClassesInterface
 				return default;
 			return FList[FIndex];
 		}
+		public TListEnumerator() : this(new TList()) { }
+
 
 		public TListEnumerator(TList AList)
 		{
@@ -488,6 +490,8 @@ public class ClassesInterface
 				return default;
 			return FList[FIndex];
 		}
+		public TInterfaceListEnumerator() : this(new TInterfaceList()) { }
+
 
 		public TInterfaceListEnumerator(TInterfaceList AList)
 		{
@@ -725,6 +729,8 @@ public class ClassesInterface
 		internal void InvokeSetItemName() => SetItemName();
 		internal void SetCollectionDirect(TCollection Value) => FCollection = Value;
 		internal void SetIDDirect(int Value) => FID = Value;
+		public TCollectionItem() : this(null) { }
+
 
 		public TCollectionItem(TCollection Collection)
 		{
@@ -874,6 +880,8 @@ public class ClassesInterface
 		protected virtual void PropertyNameChanged() {}
 		protected virtual void SetItemName(TCollectionItem Item) => Item?.InvokeSetItemName();
 		protected virtual void Update(TCollectionItem Item) {}
+		public TCollection() : this(null) { }
+
 
 		public TCollection(TClass ItemClass)
 		{
@@ -987,6 +995,8 @@ public class ClassesInterface
 				return null;
 			return FCollection.ReadPropertyItems(FIndex);
 		}
+		public TCollectionEnumerator() : this(new TCollection(null)) { }
+
 
 		public TCollectionEnumerator(TCollection ACollection)
 		{
@@ -1008,6 +1018,8 @@ public class ClassesInterface
 		private TPersistent FOwner;
 
 		protected override TPersistent GetOwner() => FOwner;
+		public TOwnedCollection() : this(null, null) { }
+
 
 		public TOwnedCollection(TPersistent AOwner, TClass ItemClass)
 			: base(ItemClass)
@@ -1808,6 +1820,8 @@ public class ClassesInterface
 	{
 		private uint FHandle;
 		protected global::System.IO.Stream FManagedStream;
+		public THandleStream() : this((uint)0) { }
+
 
 		public THandleStream(uint AHandle)
 		{
@@ -1921,6 +1935,8 @@ public class ClassesInterface
 				Access,
 				Share);
 		}
+		public TFileStream() : this((uint)0) { }
+
 
 		public TFileStream(string FileName, ushort Mode)
 			: base(OpenFile(FileName, Mode))
@@ -2236,6 +2252,8 @@ public class ClassesInterface
 			Position = Old;
 			return Result;
 		}
+		public TBytesStream() : this(global::System.Array.Empty<byte>()) { }
+
 
 		public TBytesStream(byte[] ABytes)
 		{
@@ -2289,6 +2307,11 @@ public class ClassesInterface
 		private bool FStarted;
 		private volatile bool FFinished;
 		private volatile bool FTerminated;
+
+		// Keep default construction suspended until the caller explicitly starts the thread.
+		public TThread() : this(true)
+		{
+		}
 
 		public TThread(bool CreateSuspended)
 		{
@@ -2455,6 +2478,8 @@ public class ClassesInterface
 				return string.Empty;
 			return FStrings[FIndex];
 		}
+		public TStringsEnumerator() : this(new TStringList()) { }
+
 
 		public TStringsEnumerator(TStrings AStrings)
 		{
@@ -2475,6 +2500,8 @@ public class ClassesInterface
 	{
 		private string FData = string.Empty;
 		private int FPosition;
+		public TStringReader() : this(string.Empty) { }
+
 
 		public TStringReader(string AString)
 		{
@@ -2750,6 +2777,8 @@ public class ClassesInterface
 	{
 		private TPersistent FStorage;
 		private TPersistent FReference;
+		public TRecall() { }
+
 
 		public TRecall(TPersistent AStorage, TPersistent AReference)
 		{
@@ -2792,6 +2821,8 @@ public class ClassesInterface
 		private TToken FToken;
 
 /* TParser */
+		public TParser() : this(null) { }
+
 		public TParser(TStream Stream)
 		{
 			;
@@ -2868,6 +2899,8 @@ public class ClassesInterface
 			if (FAction != null)
 				FAction.OnExecute = Value;
 		}
+		public TBasicActionLink() : this(null) { }
+
 
 		public TBasicActionLink(TObject AClient)
 		{
@@ -2996,6 +3029,8 @@ public class ClassesInterface
 	{
 		private readonly TTextReader FReader;
 		private string FCurrent = string.Empty;
+		public TTextReaderEnumerator() { }
+
 
 		public TTextReaderEnumerator(TTextReader AReader)
 		{
@@ -3285,6 +3320,8 @@ public class ClassesInterface
 		}
 
 /* TFiler */
+		public TFiler() : this(null, 0) { }
+
 		public TFiler(TStream Stream, int BufSize)
 		{
 			;
@@ -3316,6 +3353,8 @@ public class ClassesInterface
 
 
 /* TReader */
+		public TReader() : this(null, 0) { }
+
 		public TReader(TStream Stream, int BufSize)
 		:		base(Stream, BufSize)
 		{
@@ -3400,6 +3439,8 @@ public class ClassesInterface
 
 
 /* TWriter */
+		public TWriter() : this(null, 0) { }
+
 		public TWriter(TStream Stream, int BufSize)
 		:		base(Stream, BufSize)
 		{
@@ -3576,6 +3617,8 @@ public class ClassesInterface
 		}
 
 /* TComponent */
+		public TComponent() : this(null) { }
+
 		public TComponent(TComponent AOwner)
 		{
 			FName = string.Empty;
@@ -3745,6 +3788,8 @@ public class ClassesInterface
 				return null;
 			return FComponent.ReadPropertyComponents(FIndex);
 		}
+		public TComponentEnumerator() : this(new TComponent(null)) { }
+
 
 		public TComponentEnumerator(TComponent AComponent)
 		{
@@ -3787,6 +3832,8 @@ public class ClassesInterface
 		}
 
 /* TBasicAction */
+		public TBasicAction() : this(null) { }
+
 		public TBasicAction(TComponent AOwner)
 		:		base(AOwner)
 		{
@@ -3866,6 +3913,8 @@ public class ClassesInterface
 		private TNotifyEvent FOnDestroy;
 
 /* TDataModule */
+		public TDataModule() : this(null) { }
+
 		public TDataModule(TComponent AOwner)
 		:		base(AOwner)
 		{

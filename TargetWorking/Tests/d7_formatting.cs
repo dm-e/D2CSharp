@@ -62,7 +62,7 @@ namespace D7_formatting
         {
             bool result = false;
             string MessageText = string.Empty;
-            MessageText = Format("Build %s produced %d artifacts", new TVarRec[] { "linux-x64", 18 });
+            MessageText = Format("Build %s produced %d artifacts", new TVarRec[] { TVarRec.From("linux-x64"), TVarRec.From(18) });
             result = MessageText == "Build linux-x64 produced 18 artifacts";
             return result;
         }
@@ -71,11 +71,11 @@ namespace D7_formatting
         {
             bool result = false;
             result = true;
-            if (Format("ID-%6.4d", new TVarRec[] { 73 }) != "ID-  0073")
+            if (Format("ID-%6.4d", new TVarRec[] { TVarRec.From(73) }) != "ID-  0073")
                 result = false;
-            if (Format("HEX-%4.4x", new TVarRec[] { 0x2A }) != "HEX-002A")
+            if (Format("HEX-%4.4x", new TVarRec[] { TVarRec.From(0x2A) }) != "HEX-002A")
                 result = false;
-            if (Format("%1:s/%0:s/%1:s", new TVarRec[] { "source", "target" }) != "target/source/target")
+            if (Format("%1:s/%0:s/%1:s", new TVarRec[] { TVarRec.From("source"), TVarRec.From("target") }) != "target/source/target")
                 result = false;
             return result;
         }

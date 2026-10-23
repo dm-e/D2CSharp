@@ -75,6 +75,10 @@ namespace D7_abstract_classes
                     return FProfile;
                 }
             }
+
+            public TImportTask()
+            {
+            }
         }
 
         public class TDelimitedImportTask : TImportTask
@@ -85,6 +89,9 @@ namespace D7_abstract_classes
             }
 
             public TDelimitedImportTask(string ASourceName) : base(ASourceName) { }
+            public TDelimitedImportTask()
+            {
+            }
         }
 
         public class TStructuredImportTask : TImportTask
@@ -95,6 +102,9 @@ namespace D7_abstract_classes
             }
 
             public TStructuredImportTask(string ASourceName) : base(ASourceName) { }
+            public TStructuredImportTask()
+            {
+            }
         }
         public static bool RunAbstractClassChecks()
         {

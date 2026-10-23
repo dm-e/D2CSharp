@@ -39,24 +39,24 @@ namespace D7_free_mem
         public static bool RunFreeMemChecks()
         {
             bool result = false;
-            Pointer<byte> Buffer = default;
+            Pointer<byte[]> Buffer = default;
             int Index = 0;
             bool CheckResult1 = false;
             bool CheckResult2 = false;
             bool CheckResult3 = false;
             Buffer = default;
-            GetMem(ref Buffer, 16 * sizeof(byte));
+            GetMem(ref Buffer, DelphiStaticArrayInfo.Create<byte>(new int[] { 0 }, new int[] { 16 }).ByteSize, DelphiStaticArrayInfo.Create<byte>(new int[] { 0 }, new int[] { 16 }));
             try
             {
                 for (Index = 0 /*# Low(Buffer^) */; Index <= 15 /*# High(Buffer^) */; Index++)
                 {
-                    Buffer[Index] = (byte)(Index * 3);
+                    Buffer.Deref()[Index] = (byte)(Index * 3);
                 }
-                CheckResult1 = (Buffer[0] == 0);
+                CheckResult1 = (Buffer.Deref()[0] == 0);
                 result = CheckResult1;
-                CheckResult2 = (Buffer[5] == 15);
+                CheckResult2 = (Buffer.Deref()[5] == 15);
                 result = result && CheckResult2;
-                CheckResult3 = (Buffer[15] == 45);
+                CheckResult3 = (Buffer.Deref()[15] == 45);
                 result = result && CheckResult3;
             }
             finally

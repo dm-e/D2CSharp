@@ -676,7 +676,9 @@ namespace System
 
         public char ToCharValue()
         {
-            return ToWideCharValue();
+            return VType == TVarRecType.vtChar
+                ? (char)ToAnsiCharValue()
+                : ToWideCharValue();
         }
 
         public char ToWideCharValue()

@@ -330,6 +330,7 @@ namespace System
     internal abstract class PointerBacking
     {
         internal abstract nint ByteLength { get; }
+        internal virtual int ValueSize<T>() => DelphiTypeLayout.SizeOf<T>();
         internal virtual bool IsReadOnly => false;
         internal virtual bool IsAlive => true;
         internal object Identity => this;
@@ -394,6 +395,53 @@ namespace System
                     "Pointer access outside the backing storage.");
             }
         }
+    }
+
+    // A typed Delphi variable whose managed representation has no raw byte view.
+    internal sealed class ReferenceBacking<TValue> : PointerBacking
+    {
+        private static readonly ConditionalWeakTable<Ref<TValue>, ReferenceBacking<TValue>> FLocations = new();
+        internal Ref<TValue> Location { get; }
+        private readonly int FSize;
+
+        private ReferenceBacking(Ref<TValue> location, int size)
+        {
+            Location = location;
+            FSize = size;
+        }
+
+        internal static ReferenceBacking<TValue> ForLocation(Ref<TValue> location, int size)
+        {
+            if (location == null) throw new ArgumentNullException(nameof(location));
+            if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
+            var backing = FLocations.GetValue(location, key => new ReferenceBacking<TValue>(key, size));
+            if (backing.FSize != size) throw new ArgumentException("The location already has a different size.", nameof(size));
+            return backing;
+        }
+
+        internal override nint ByteLength => FSize;
+        internal override int ValueSize<T>() => typeof(T) == typeof(TValue) ? FSize : base.ValueSize<T>();
+        internal override bool TryReadValue<T>(nint offset, out T value)
+        {
+            if (offset == 0 && typeof(T) == typeof(TValue))
+            {
+                value = (T)(object)Location.Value!;
+                return true;
+            }
+            value = default!;
+            return false;
+        }
+        internal override bool TryWriteValue<T>(nint offset, T value)
+        {
+            if (offset != 0 || typeof(T) != typeof(TValue)) return false;
+            Location.Value = (TValue)(object)value!;
+            return true;
+        }
+        internal override byte ReadByte(nint offset) => throw NoByteView();
+        internal override void WriteByte(nint offset, byte value) => throw NoByteView();
+        internal override PointerPin Pin(nint offset) => throw NoByteView();
+        internal override IntPtr GetPersistentAddress(nint offset) => throw NoByteView();
+        private static NotSupportedException NoByteView() => new("This typed variable has no raw byte representation.");
     }
 
     internal abstract class PinnableBacking : PointerBacking
@@ -912,7 +960,8 @@ namespace System
 
         internal T Read<T>(nint relativeOffset)
         {
-            int size = DelphiTypeLayout.SizeOf<T>();
+            int size = Backing == null
+                ? DelphiTypeLayout.SizeOf<T>() : Backing.ValueSize<T>();
             ValidateRelativeRange(relativeOffset, size);
             nint absoluteOffset = checked(ByteOffset + relativeOffset);
 
@@ -935,7 +984,8 @@ namespace System
 
         internal void Write<T>(nint relativeOffset, T value)
         {
-            int size = DelphiTypeLayout.SizeOf<T>();
+            int size = Backing == null
+                ? DelphiTypeLayout.SizeOf<T>() : Backing.ValueSize<T>();
             ValidateRelativeRange(relativeOffset, size);
 
             if (Backing!.IsReadOnly)
@@ -992,8 +1042,17 @@ namespace System
         }
         internal void FreeBacking()
         {
-            if (!IsNull)
-                Backing!.Free();
+            if (IsNull)
+                return;
+
+            // FreeMem must receive the allocation base, not an interior address.
+            // This is consistent with CanFreeBacking/TryFreeBacking and prevents
+            // an element pointer from invalidating an entire owned array.
+            if (ByteOffset != 0)
+                throw new InvalidOperationException(
+                    "Cannot free memory through an interior pointer.");
+
+            Backing!.Free();
         }
 
         public bool Equals(PointerView other)

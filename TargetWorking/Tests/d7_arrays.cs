@@ -83,7 +83,7 @@ namespace D7_arrays
         public static bool CheckArrayLiterals()
         {
             bool result = false;
-            result = AcceptMixedValues(new TVarRec[] { 'Q', 17, true }) && AcceptMarkers(new TSet() << '!' << '?');
+            result = AcceptMixedValues(new TVarRec[] { TVarRec.From('Q'), TVarRec.From(17), TVarRec.From(true) }) && AcceptMarkers(new TSet() << '!' << '?');
             return result;
         }
 
@@ -92,7 +92,9 @@ namespace D7_arrays
             bool result = false;
             byte[] OpcodeTable = new byte[65536/*# word*/];
             int[] Samples = new int[5/*# range 2..6*/];
+            Ref<int[]> __d2cArrayLocation_Samples = new Ref<int[]>(() => Samples, __d2cArrayValue => Samples = __d2cArrayValue);
             char[,] Grid = new char[2/*# range 0..1*/, 3/*# range 3..5*/];
+            Ref<char[,]> __d2cArrayLocation_Grid = new Ref<char[,]>(() => Grid, __d2cArrayValue => Grid = __d2cArrayValue);
             int Index = 0;
             bool OpcodeLengthOk = false;
             bool OpcodeLowOk = false;
@@ -197,12 +199,13 @@ namespace D7_arrays
             bool result = false;
             char[] Buffer = new char[] { };
             char[] FixedText = new char[4/*# range 0..3*/];
+            Ref<char[]> __d2cArrayLocation_FixedText = new Ref<char[]>(() => FixedText, __d2cArrayValue => FixedText = __d2cArrayValue);
             FillLetterBuffer(ref Buffer);
             FixedText[0] = 'T';
             FixedText[1] = 'E';
             FixedText[2] = 'S';
             FixedText[3] = 'T';
-            result = (JoinCharacters(Buffer) == "KLMN") && (JoinCharacters(FixedText) == "TEST") && (JoinCharacters(new char[] { }) == "") && (JoinConstCharacters(new TVarRec[] { 'O', 'K' }) == "OK");
+            result = (JoinCharacters(Buffer) == "KLMN") && (JoinCharacters(FixedText) == "TEST") && (JoinCharacters(new char[] { }) == "") && (JoinConstCharacters(new TVarRec[] { TVarRec.From('O'), TVarRec.From('K') }) == "OK");
             return result;
         }
 
@@ -217,6 +220,7 @@ namespace D7_arrays
         {
             bool result = false;
             int[] Source = new int[6/*# range 0..5*/];
+            Ref<int[]> __d2cArrayLocation_Source = new Ref<int[]>(() => Source, __d2cArrayValue => Source = __d2cArrayValue);
             int Index = 0;
             for (Index = 0 /*# Low(Source) */; Index <= 5 /*# High(Source) */; Index++)
             {

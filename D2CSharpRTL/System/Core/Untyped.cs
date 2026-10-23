@@ -167,6 +167,8 @@ namespace System
         internal object? BackingIdentity => FView.Backing?.Identity;
         internal nint AbsoluteByteOffset => FView.ByteOffset;
         internal nint RemainingByteLength => FView.ByteLength;
+        internal int ValueSize<T>() => FView.Backing == null
+            ? DelphiTypeLayout.SizeOf<T>() : FView.Backing.ValueSize<T>();
 
         public int Length => ToPublicLength(FView.ByteLength);
 

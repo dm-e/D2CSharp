@@ -75,6 +75,10 @@ namespace D7_interfaces_basic
                 result = FValue;
                 return result;
             }
+
+            public TValueProvider()
+            {
+            }
         }
     } // class D7_interfaces_basicImplementation
 
