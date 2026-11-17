@@ -81,7 +81,7 @@ namespace D7_math
     {
 
         public const double Tolerance = 1E-10D;
-        public enum TCompassPoint
+        public enum TCompassPoint : byte
         {
             cpNorth,
             cpEast,

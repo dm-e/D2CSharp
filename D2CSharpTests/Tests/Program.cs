@@ -1,69 +1,3 @@
-using D7_abstract_classes;
-//using D7_ansi_case;
-//using D7_ansi_compare;
-//using D7_ansi_lookup;
-//using D7_arrays;
-using D7_bit_operations;
-using D7_case_statements;
-//using D7_character_types;
-using D7_classes;
-using D7_concat;
-//using D7_currency;
-using D7_data_types;
-//using D7_datetime;
-//using D7_datetime_formatting;
-//using D7_exceptions;
-//using D7_extract_file_path;
-//using D7_file_age;
-//using D7_file_rename;
-//using D7_file_search;
-using D7_fill_char;
-//using D7_float_to_strf;
-//using D7_for_loops;
-//using D7_formatting;
-//using D7_free_and_nil;
-using D7_free_mem;
-using D7_functions;
-using D7_get_mem;
-using D7_goto;
-using D7_inherited;
-//using D7_int_to_str;
-using D7_interfaces_basic;
-using D7_is_operator;
-using D7_math;
-using D7_max;
-using D7_min;
-using D7_move_memory;
-//using D7_overloads_basic;
-using D7_overrides;
-//using D7_pointers;
-//using D7_position_search;
-//using D7_procedures;
-using D7_properties_basic;
-using D7_realloc_mem;
-using D7_records;
-using D7_set_exclude;
-using D7_set_include;
-using D7_set_length;
-using D7_set_string;
-using D7_sets;
-//using D7_str_procedure;
-//using D7_string_boundaries;
-//using D7_string_conversions;
-//using D7_string_list;
-using D7_string_processor;
-//using D7_string_utilities;
-//using D7_tdatetime;
-//using D7_text_append;
-//using D7_text_read;
-//using D7_text_write;
-//using D7_threadvar;
-using D7_tlist;
-//using D7_try_blocks;
-using D7_with_statement;
-using Factory;
-using Objfree;
-using Vstatic;
 
 // insert this comment into manually modified code
 // -----------------------------------------------
@@ -144,14 +78,21 @@ namespace Tests
                 b = b && D7_tlist.D7_tlistInterface.RunTListChecks();
                 b = b && D7_try_blocks.D7_try_blocksInterface.RunTryBlockChecks();
                 b = b && D7_with_statement.D7_with_statementInterface.RunWithStatementChecks();
-                b = b && ObjfreeInterface.TestObjFreeAll();
-                b = b && FactoryInterface.testfactory();
-                b = b && VstaticInterface.TestVStatic();
+
+                b = b && Objfree.ObjfreeInterface.TestObjFreeAll();
+                b = b && Factory.FactoryInterface.testfactory();
+                b = b && Vstatic.VstaticInterface.TestVStatic();
+
+                // compiling, but yet not implemented units
+                // b = b && System_inifilesInterface.SIF_RunAllTests();
+                // b = b && System_ioutilsInterface.SIU_RunAllTests();
+                // b = b && System_timespanInterface.STS_RunAllTests();
+                // b = b && System_uitypesInterface.SUT_RunAllTests();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                b = false;               
+                b = false;
             }
 
             if (b)

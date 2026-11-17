@@ -101,7 +101,7 @@ namespace D7_string_processor
                 bool InsideToken = false;
                 result = 0;
                 InsideToken = false;
-                for (Index = 1; Index <= FText.Length; Index++)
+                for (Index = 1; Index <= global::System.SystemInterface.DelphiLength(FText); Index++)
                 {
                     if ((new TSet() << '\x09' << '\x0a' << '\x0d' << ' ').Contains(FText[Index - 1]))
                     {
@@ -147,14 +147,14 @@ namespace D7_string_processor
                     result = 0;
                     return result;
                 }
-                RelativeIndex = FText.Substring(FNextIndex - 1, MaxSubstringLength(FText, FNextIndex - 1, MaxInt)).IndexOf(FNeedle) + 1;
+                RelativeIndex = global::System.SystemInterface.DelphiPos((FNeedle).ToString(), (FText.Substring(FNextIndex - 1, MaxSubstringLength(FText, FNextIndex - 1, MaxInt))).ToString());
                 if (RelativeIndex == 0)
                 {
                     result = 0;
                     return result;
                 }
                 result = FNextIndex + RelativeIndex - 1;
-                FNextIndex = result + FNeedle.Length;
+                FNextIndex = result + global::System.SystemInterface.DelphiLength(FNeedle);
                 return result;
             }
 
@@ -167,14 +167,14 @@ namespace D7_string_processor
                 result = 0;
                 if (AOldText == "")
                     return result;
-                MatchIndex = FText.IndexOf(AOldText) + 1;
+                MatchIndex = global::System.SystemInterface.DelphiPos((AOldText).ToString(), (FText).ToString());
                 while (MatchIndex > 0)
                 {
-                    Delete(ref FText, MatchIndex - 1, AOldText.Length);
+                    Delete(ref FText, MatchIndex - 1, global::System.SystemInterface.DelphiLength(AOldText));
                     Insert(ANewText, ref FText, MatchIndex - 1);
                     ++result;
-                    SearchStart = MatchIndex + ANewText.Length;
-                    RelativeIndex = FText.Substring(SearchStart - 1, MaxSubstringLength(FText, SearchStart - 1, MaxInt)).IndexOf(AOldText) + 1;
+                    SearchStart = MatchIndex + global::System.SystemInterface.DelphiLength(ANewText);
+                    RelativeIndex = global::System.SystemInterface.DelphiPos((AOldText).ToString(), (FText.Substring(SearchStart - 1, MaxSubstringLength(FText, SearchStart - 1, MaxInt))).ToString());
                     if (RelativeIndex == 0)
                         MatchIndex = 0;
                     else

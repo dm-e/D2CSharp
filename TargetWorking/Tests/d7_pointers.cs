@@ -68,7 +68,7 @@ namespace D7_pointers
             D7_pointers__2.Y = 13;
             CoordinatePointer.Assign(D7_pointers__2);
             Buffer = default;
-            GetMem(ref Buffer, DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 6 }).ByteSize, DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 6 }));
+            GetMem(ref Buffer, (6 * (int)DelphiTypeSize.Integer), DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 6 }));
             try
             {
                 Total = 0;

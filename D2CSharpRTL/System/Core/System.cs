@@ -1,4 +1,6 @@
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using System.Text;
 using System;
 using static System.SystemImplementation;
 using static System.SystemInterface;
@@ -10,8 +12,8 @@ namespace System
     /*
       D2CSharp Runtime Library (RTL)
 
-  This Delphi source file provides the basis for generating C# mock
-  implementations with D2CSharp. The generated files serve as a
+  This C# source file provides independent runtime helpers and mock
+  implementations for D2CSharp. These helpers serve as a
   starting point for manual completion of the C# runtime library.
 
       Copyright (c) 2026 Dr. Detlef Meyer-Eltz, t2t-soft
@@ -83,6 +85,9 @@ namespace System
 
     public static partial class SystemInterface
     {
+        // Delphi FastMM setting; managed .NET memory is GC-controlled.
+        public static bool ReportMemoryLeaksOnShutdown = false;
+
 
 		public struct TTypeInfo
 		{
@@ -716,344 +721,119 @@ public static double BuiltInSin(double X)
 	public static void Dispose(UntypedPointer P)
 	{
 	}
-  public static void GetMem(ref object StoragePointer, int StorageSize)
-  {
-   StoragePointer = new byte[StorageSize];
-  }
+	public static Pointer GetMem(ref Pointer P, int Size)
+	{
+		P = DelphiMemory.GetMem(Size);
+		return P;
+	}
 
-  public static void GetMem(ref Pointer StoragePointer, int StorageSize)
-  {
-     StoragePointer = new Pointer(StorageSize, true);
-  }
-
-  public static void GetMem<T>(ref Pointer<T> StoragePointer, int StorageSize) where T : new()
-  {
-     StoragePointer = new Pointer<T>(StorageSize, false);
-  }
+	public static Pointer<T> GetMem<T>(ref Pointer<T> P, int Size)
+	{
+		Pointer RawPointer = DelphiMemory.GetMem(Size);
+		P = (Pointer<T>)RawPointer;
+		return P;
+	}
+	public static Pointer GetMem(int Size)
+	{
+		if (Size < 0)
+			throw new global::System.ArgumentOutOfRangeException(nameof(Size));
+		return DelphiMemory.GetMem(Size);
+	}
 
         public static void GetMem<TArray>(
-            ref Pointer<TArray> StoragePointer,
-            int StorageSize,
-            DelphiStaticArrayInfo arrayInfo)
+    ref Pointer<TArray> StoragePointer,
+    int StorageSize,
+    DelphiStaticArrayInfo arrayInfo)
         {
             if (arrayInfo == null)
                 throw new ArgumentNullException(nameof(arrayInfo));
             if (StorageSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(StorageSize));
-            if (StorageSize != arrayInfo.ByteSize)
-                throw new NotSupportedException(
-                    "GetMem for a static array requires exactly one complete array value.");
-
-            StoragePointer = Pointer<TArray>.AllocateStaticArray(arrayInfo);
+            // Partial allocations are supported only for whole elements of a
+            // one-dimensional static array. The metadata validates the size.
+            StoragePointer = Pointer<TArray>.AllocateStaticArray(
+                arrayInfo.ForAllocationBytes(StorageSize));
         }
 
-        public static void GetMem(ref PChar StoragePointer, int StorageSize)
-        {
-            if (StorageSize < 0)
-                throw new ArgumentOutOfRangeException(nameof(StorageSize));
+        public static int FreeMem(Pointer P)
+	{
+		if (!P.IsNull())
+			DelphiMemory.FreeMem(ref P);
 
-            if (StorageSize % sizeof(char) != 0)
-            {
-                throw new ArgumentException(
-                    "The storage size for PChar must be divisible by sizeof(char).",
-                    nameof(StorageSize));
-            }
+		return 0;
+	}
 
-            StoragePointer = new PChar(StorageSize / sizeof(char), alloc: true);
-        }
+	public static int FreeMem(ref Pointer P)
+	{
+		if (!P.IsNull())
+			DelphiMemory.FreeMem(ref P);
 
-        public static void GetMem(
-            ref UntypedPointer StoragePointer,
-            int StorageSize)
-        {
-            StoragePointer =
-                UntypedPointer.AllocNative(StorageSize);
-        }
+		return 0;
+	}
 
-        public static void GetMem(ref IntPtr StoragePointer, int StorageSize)
-  {
-   StoragePointer = Marshal.AllocCoTaskMem(StorageSize);
-  }
+	public static int FreeMem(ref UntypedPointer P)
+	{
+		if (!P.IsNull())
+			DelphiMemory.FreeMem(ref P);
 
-        //public static Pointer AllocMem(int StorageSize)
-        //{
-        // return new Pointer(Marshal.AllocCoTaskMem(StorageSize), StorageSize, false);
-        //}
+		return 0;
+	}
 
-        public static Pointer AllocMem(int StorageSize)
-        {
-            if (StorageSize < 0)
-                throw new ArgumentOutOfRangeException(nameof(StorageSize));
+	public static int FreeMem(ref PChar P)
+	{
+		if (!P.IsNull())
+			DelphiMemory.FreeMem(ref P);
 
-            if (StorageSize == 0)
-                return default;
+		return 0;
+	}
 
-            Pointer Result = new Pointer(StorageSize);
+	public static int FreeMem<T>(ref Pointer<T> P)
+	{
+		if (!P.IsNull())
+			DelphiMemory.FreeMem(ref P);
 
-            //Delphi's AllocMem initializes memory to zero.
-            for (int I = 0; I < StorageSize; I++)
-                Result[I] = 0;
+		return 0;
+	}
+	public static int FreeMem(Pointer P, int Size)
+	{
+		if (!P.IsNull())
+			DelphiMemory.FreeMem(ref P);
+		return 0;
+	}
+	public static void ReallocMem(ref Pointer P, int Size)
+	{
+		if (Size < 0)
+			throw new global::System.ArgumentOutOfRangeException(nameof(Size));
 
-            return Result;
-        }
+		if (Size == 0)
+		{
+			if (!P.IsNull())
+				DelphiMemory.FreeMem(ref P);
+			return;
+		}
 
-        public static void FreeMem(Pointer MemoryPointer)
-        {
-            if (MemoryPointer.IsNull())
-                return;
+		Pointer NewPointer = DelphiMemory.GetMem(Size);
+		if (!P.IsNull())
+		{
+			int CopyCount = global::System.Math.Min(P.Length, Size);
+			if (CopyCount > 0)
+				DelphiMemory.Move(P, NewPointer.ToUntypedPointer(), CopyCount);
 
-            try
-            {
-                MemoryPointer.FreeMemory();
-            }
-            catch (InvalidOperationException)
-            {
-                /*
-                 * The pointer does not own native memory.
-                 * This can happen for managed array backing,
-                 * borrowed memory, DelphiCell<T>, or similar views.
-                 */
-                MemoryPointer.Dispose();
-            }
-        }
+			DelphiMemory.FreeMem(ref P);
+		}
 
-        public static void FreeMem(ref Pointer MemoryPointer)
-        {
-            FreeMem(MemoryPointer);
-            MemoryPointer = default;
-        }
+		P = NewPointer;
+	}
 
-        public static void FreeMem(PChar MemoryPointer)
-        {
-            if (MemoryPointer.IsNull())
-                return;
-
-            try
-            {
-                MemoryPointer.FreeMemory();
-            }
-            catch (InvalidOperationException)
-            {
-                /*
-                 * The PChar does not own native memory.
-                 * Nothing has to be released explicitly.
-                 */
-                MemoryPointer.Dispose();
-            }
-        }
-
-        public static void FreeMem(ref PChar MemoryPointer)
-        {
-            FreeMem(MemoryPointer);
-            MemoryPointer = default;
-        }
-
-        public static void FreeMem(PChar MemoryPointer, int StorageSize)
-        {
-            /*
-             * Delphi allows FreeMem(P, Size).
-             * The size is not needed by this runtime because the backing
-             * object already knows whether and how it can be released.
-             */
-            FreeMem(MemoryPointer);
-        }
-
-        public static void FreeMem(ref PChar MemoryPointer, int StorageSize)
-        {
-            FreeMem(MemoryPointer, StorageSize);
-            MemoryPointer = default;
-        }
-
-        public static void FreeMem(object MemoryPointer)
-        {
-            /*
-             * Managed object-backed memory is released by the garbage collector.
-             * This overload exists for translated code where an untyped memory
-             * variable was mapped to object.
-             */
-        }
-
-        public static void FreeMem(ref object MemoryPointer)
-        {
-            FreeMem(MemoryPointer);
-            MemoryPointer = null;
-        }
-        public static void FreeMem<T>(ref Pointer<T> MemoryPointer)
-        {
-            if (!MemoryPointer.IsNull())
-                MemoryPointer.TryFreeMemory();
-
-            MemoryPointer = default;
-        }
-
-        public static void FreeMem<T>(Pointer<T> MemoryPointer)
-        {
-            if (!MemoryPointer.IsNull())
-                MemoryPointer.TryFreeMemory();
-        }
-
-        public static void FreeMem(UntypedPointer MemoryPointer)
-        {
-            if (MemoryPointer.IsNull())
-                return;
-
-            try
-            {
-                MemoryPointer.FreeMemory();
-            }
-            catch (InvalidOperationException)
-            {
-                MemoryPointer.Dispose();
-            }
-        }
-
-        public static void FreeMem(ref UntypedPointer MemoryPointer)
-        {
-            FreeMem(MemoryPointer);
-            MemoryPointer = default;
-        }
-
-
-        public static void ReallocMem<TArray>(
-            ref Pointer<TArray> StoragePointer,
-            int StorageSize,
-            DelphiStaticArrayInfo arrayInfo)
-        {
-            if (arrayInfo == null)
-                throw new ArgumentNullException(nameof(arrayInfo));
-            if (StorageSize < 0)
-                throw new ArgumentOutOfRangeException(nameof(StorageSize));
-
-            if (StoragePointer.IsNull())
-            {
-                if (StorageSize != 0)
-                    GetMem(ref StoragePointer, StorageSize, arrayInfo);
-                return;
-            }
-
-            DelphiStaticArrayInfo? existingInfo = StoragePointer.StaticArrayInfo;
-            if (existingInfo == null ||
-                !existingInfo.IsCompatibleLocationLayout(arrayInfo))
-                throw new ArgumentException("Static array layouts do not match.", nameof(arrayInfo));
-
-            ReallocMem(ref StoragePointer, StorageSize);
-        }
-
-        public static void ReallocMem<T>(
-            ref Pointer<T> StoragePointer,
-            int StorageSize)
-        {
-            if (StorageSize < 0)
-                throw new ArgumentOutOfRangeException(nameof(StorageSize));
-
-            Pointer<T> oldPointer = StoragePointer;
-
-            DelphiStaticArrayInfo? arrayInfo = oldPointer.StaticArrayInfo;
-            if (arrayInfo != null)
-            {
-                if (!oldPointer.CanFreeMemory())
-                    throw new InvalidOperationException(
-                        "Only an owned complete static array can be reallocated.");
-                if (StorageSize == 0)
-                {
-                    oldPointer.FreeMemory();
-                    StoragePointer = default;
-                    return;
-                }
-                if (StorageSize == arrayInfo.ByteSize)
-                    return;
-
-                throw new NotSupportedException(
-                    "Resizing a static array allocation is not supported.");
-            }
-
-            Pointer<T> newPointer = default;
-
-            bool isByteAddressable =
-                DelphiTypeLayout.IsByteAddressable<T>();
-
-            if (StorageSize != 0)
-            {
-                if (isByteAddressable)
-                {
-                    newPointer =
-                        UntypedPointer
-                            .AllocNative(StorageSize)
-                            .As<T>();
-                }
-                else
-                {
-                    int elementSize =
-                        DelphiTypeLayout.SizeOf<T>();
-
-                    int count =
-                        StorageSize / elementSize;
-
-                    if (StorageSize % elementSize != 0)
-                        count++;
-
-                    newPointer =
-                        new Pointer<T>(
-                            new T[count]);
-                }
-
-                if (!oldPointer.IsNull())
-                {
-                    int count =
-                        Math.Min(
-                            oldPointer.Length,
-                            newPointer.Length);
-
-                    for (int i = 0; i < count; i++)
-                        newPointer[i] = oldPointer[i];
-                }
-            }
-
-            /*
-             * Important:
-             * If T is not byte-addressable, GetMem<T> used managed T[] storage.
-             * That storage must not be freed manually.
-             */
-            if (!oldPointer.IsNull() && isByteAddressable)
-                oldPointer.FreeMemory();
-
-            StoragePointer = newPointer;
-        }
-
-        public static void ReallocMem(ref Pointer StoragePointer, int StorageSize)
-        {
-            if (StorageSize < 0)
-                throw new ArgumentOutOfRangeException(nameof(StorageSize));
-
-            Pointer<byte> pointer = StoragePointer.As<byte>();
-            ReallocMem(ref pointer, StorageSize);
-            StoragePointer = pointer.ToPointer();
-        }
-
-        public static void ReallocMem(
-            ref PChar StoragePointer,
-            int StorageSize)
-        {
-            if (StorageSize < 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(StorageSize));
-            }
-
-            if (StorageSize % sizeof(char) != 0)
-            {
-                throw new ArgumentException(
-                    "The storage size for PChar must be divisible by sizeof(char).",
-                    nameof(StorageSize));
-            }
-
-            Pointer<char> pointer =
-                StoragePointer.AsPointer();
-
-            ReallocMem(ref pointer, StorageSize);
-
-            StoragePointer = new PChar(pointer);
-        }
+	public static void ReallocMem<T>(ref Pointer<T> P, int Size)
+	{
+		Pointer RawPointer = P.ToPointer();
+		ReallocMem(ref RawPointer, Size);
+		P = (Pointer<T>)RawPointer;
+	}
+	public static void MemoryBarrier()
+	{
+	}
 
 	private static bool TryGetVariablePointer<T>(T Value, out UntypedPointer Result)
 	{
@@ -1493,7 +1273,7 @@ public static double BuiltInSin(double X)
 		if (Len < 0)
 			throw new global::System.ArgumentOutOfRangeException(nameof(Len));
 
-		S = Buffer.IsNull() ? string.Empty : Buffer.Substring(0, Len);
+		S = Buffer.IsNull() ? new string('\0', Len) : Buffer.Substring(0, Len);
 	}
 
 	public static void SetString(ref string S, char[] Buffer, int Len)
@@ -1508,7 +1288,10 @@ public static double BuiltInSin(double X)
 		}
 
 		if (Buffer == null)
-			throw new global::System.ArgumentNullException(nameof(Buffer));
+		{
+			S = new string('\0', Len);
+			return;
+		}
 		if (Len > Buffer.Length)
 			throw new global::System.ArgumentOutOfRangeException(nameof(Len));
 
@@ -2327,6 +2110,204 @@ public static double BuiltInSin(double X)
         public static void Dec(ref ulong src) { --src; }
         public static void Dec(ref float src) { --src; }
         public static void Dec(ref double src) { --src; }
+
+
+        // Managed D2CSharp helpers for Delphi array, list, and string intrinsics.
+        // These implementations are independent of the native Delphi RTL.
+
+        public static void SetLength<T>(ref T[] array, int length)
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            if (array == null)
+                array = new T[length];
+            else if (array.Length != length)
+                Array.Resize(ref array, length);
+        }
+
+        public static void SetLength<T>(ref T[] array, uint length)
+            => SetLength(ref array, CheckedArrayLength(length));
+
+        public static void SetLength<T>(ref T[] array, long length)
+            => SetLength(ref array, CheckedArrayLength(length));
+
+        public static void SetLength<T>(ref T[][] array, int rows, int columns)
+        {
+            if (rows < 0)
+                throw new ArgumentOutOfRangeException(nameof(rows));
+            if (columns < 0)
+                throw new ArgumentOutOfRangeException(nameof(columns));
+
+            SetLength(ref array, rows);
+            for (int index = 0; index < array.Length; index++)
+                SetLength(ref array[index], columns);
+        }
+
+        public static void SetLength<T>(ref T[][] array, uint rows, uint columns)
+            => SetLength(ref array, CheckedArrayLength(rows), CheckedArrayLength(columns));
+
+        public static void SetLength<T>(ref T[][] array, long rows, long columns)
+            => SetLength(ref array, CheckedArrayLength(rows), CheckedArrayLength(columns));
+
+        public static void SetLength(ref string value, uint length)
+            => SetLength(ref value, CheckedArrayLength(length));
+
+        public static void SetLength(ref string value, long length)
+            => SetLength(ref value, CheckedArrayLength(length));
+
+        // Lists remain supported for older converter output using dynamic-array substitutes.
+        public static void SetLength<T>(ref List<T> list, int length)
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            list ??= new List<T>(length);
+            if (list.Count > length)
+                list.RemoveRange(length, list.Count - length);
+            else
+            {
+                if (list.Capacity < length)
+                    list.Capacity = length;
+                while (list.Count < length)
+                    list.Add(default(T));
+            }
+        }
+
+        public static void SetLength<T>(ref List<T> list, uint length)
+            => SetLength(ref list, CheckedArrayLength(length));
+
+        public static void SetLength<T>(ref List<T> list, long length)
+            => SetLength(ref list, CheckedArrayLength(length));
+
+        public static void SetLength<T>(ref List<List<T>> list, int rows)
+        {
+            if (rows < 0)
+                throw new ArgumentOutOfRangeException(nameof(rows));
+            list ??= new List<List<T>>(rows);
+            if (list.Count > rows)
+                list.RemoveRange(rows, list.Count - rows);
+            while (list.Count < rows)
+                list.Add(new List<T>());
+        }
+
+        public static void SetLength<T>(ref List<List<T>> list, int rows, int columns)
+        {
+            if (rows < 0)
+                throw new ArgumentOutOfRangeException(nameof(rows));
+            if (columns < 0)
+                throw new ArgumentOutOfRangeException(nameof(columns));
+
+            list ??= new List<List<T>>(rows);
+            if (list.Count > rows)
+                list.RemoveRange(rows, list.Count - rows);
+            while (list.Count < rows)
+                list.Add(new List<T>());
+            for (int index = 0; index < list.Count; index++)
+            {
+                List<T> row = list[index];
+                SetLength(ref row, columns);
+                list[index] = row;
+            }
+        }
+
+        public static void SetLength<T>(ref List<List<T>> list, uint rows, uint columns)
+            => SetLength(ref list, CheckedArrayLength(rows), CheckedArrayLength(columns));
+
+        public static void SetLength<T>(ref List<List<T>> list, long rows, long columns)
+            => SetLength(ref list, CheckedArrayLength(rows), CheckedArrayLength(columns));
+
+        // Explicit outer-dimension overload; regular SetLength<List<T>> also works.
+        public static int Length<T>(IList<T> list) => list?.Count ?? 0;
+
+        private static int CheckedArrayLength(uint length)
+        {
+            if (length > int.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            return (int)length;
+        }
+
+        private static int CheckedArrayLength(long length)
+        {
+            if (length < 0 || length > int.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            return (int)length;
+        }
+
+        public static void SetString(ref string value, char[] buffer, uint length)
+            => SetString(ref value, buffer, CheckedArrayLength(length));
+
+        public static void SetString(ref string value, PChar buffer, uint length)
+            => SetString(ref value, buffer, CheckedArrayLength(length));
+
+        public static void SetString(ref string value, StringBuilder buffer, int length)
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            if (buffer == null)
+            {
+                value = new string('\0', length);
+                return;
+            }
+            string prefix = buffer.ToString();
+            value = prefix.Length >= length
+                ? prefix.Substring(0, length)
+                : prefix.PadRight(length, '\0');
+        }
+
+        public static void SetString(ref string value, StringBuilder buffer, uint length)
+            => SetString(ref value, buffer, CheckedArrayLength(length));
+
+        public static T[] InitializeArray<T>(int length) where T : new()
+        {
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            T[] result = new T[length];
+            for (int index = 0; index < result.Length; index++)
+                result[index] = new T();
+            return result;
+        }
+
+        public static T[] Element2OpenArray<T>(T value) => new T[] { value };
+
+        public static List<T> Concat<T>(params List<T>[] lists)
+        {
+            var result = new List<T>();
+            if (lists != null)
+                foreach (List<T> list in lists)
+                    if (list != null)
+                        result.AddRange(list);
+            return result;
+        }
+
+        //public static string StringOfChar(char character, int count)
+        //    => count <= 0 ? string.Empty : new string(character, count);
+
+        public static void Insert(char source, ref string destination, int index)
+            => Insert(source.ToString(), ref destination, index);
+
+        // The converter already supplies zero-based array indexes.
+        public static void Insert<T>(T source, ref T[] destination, int index)
+            => Insert(new T[] { source }, ref destination, index);
+
+        public static void Insert<T>(T[] source, ref T[] destination, int index)
+        {
+            int count = source?.Length ?? 0;
+            if (count == 0)
+                return;
+            int existing = destination?.Length ?? 0;
+            int at = Math.Max(0, Math.Min(index, existing));
+            T[] result = new T[checked(existing + count)];
+            if (at > 0)
+                Array.Copy(destination, 0, result, 0, at);
+            Array.Copy(source, 0, result, at, count);
+            if (at < existing)
+                Array.Copy(destination, at, result, at + count, existing - at);
+            destination = result;
+        }
+
+        public static bool IsNull<T>(IPointer<T> pointer)
+            => pointer == null || pointer.IsNull();
+
+        public static bool Assigned(object value) => value != null;
 
         // Generic Succ<T>/Pred<T>, plus int/char overloads, already exist above.
         public static byte Succ(byte src) { return ++src; }

@@ -45,7 +45,7 @@ namespace D7_concat
             bool CheckResult2 = false;
             bool CheckResult3 = false;
             bool CheckResult4 = false;
-            PathText = Concat("build", "/", "linux", "/", "debug");
+            PathText = Concat("build", ("/").ToString(), "linux", ("/").ToString(), "debug");
             OperatorText = "build" + "/" + "linux" + "/" + "debug";
             CheckResult1 = (PathText == "build/linux/debug");
             result = CheckResult1;

@@ -21,6 +21,18 @@ namespace System
     {
         private readonly global::System.Type _type;
 
+        [global::System.ThreadStatic]
+        private static TClass FClassMethodSelf;
+
+        // Delphi class methods receive the calling runtime class as Self.
+        // Reflection-based dispatch installs it for the duration of the call.
+        public static TClass ClassMethodSelf<T>()
+        {
+            return FClassMethodSelf != null && typeof(T).IsAssignableFrom(FClassMethodSelf.Type)
+                ? FClassMethodSelf : Of<T>();
+        }
+
+
         private TClass(global::System.Type type)
         {
             _type = type ?? throw new ArgumentNullException(nameof(type));
@@ -60,6 +72,52 @@ namespace System
         public object Create(params object[] args)
         {
             return global::System.Activator.CreateInstance(_type, args);
+        }
+
+        private static readonly global::System.Collections.Concurrent.ConcurrentDictionary<
+            global::System.Reflection.ConstructorInfo, Action<TObject, object[]>> FConstructors = new();
+
+        // Delphi allocates the runtime class but calls the statically selected
+        // constructor, unless that constructor is virtual. C# constructors do
+        // not inherit, so Activator.CreateInstance alone cannot express this.
+        public T Create<T>(Type[] signature, object[] args, bool virtualConstructor = false) where T : TObject
+        {
+            if (!typeof(T).IsAssignableFrom(_type))
+                throw new InvalidCastException("The runtime class does not inherit from the constructor's class.");
+            Type owner = virtualConstructor ? _type : typeof(T);
+            global::System.Reflection.ConstructorInfo constructor = null;
+            while (owner != null && typeof(T).IsAssignableFrom(owner))
+            {
+                constructor = owner.GetConstructor(global::System.Reflection.BindingFlags.Instance |
+                    global::System.Reflection.BindingFlags.Public | global::System.Reflection.BindingFlags.NonPublic |
+                    global::System.Reflection.BindingFlags.DeclaredOnly, null, signature, null);
+                if (constructor != null || !virtualConstructor) break;
+                owner = owner.BaseType;
+            }
+            if (constructor == null) throw new MissingMethodException(typeof(T).FullName, ".ctor");
+            var initialize = FConstructors.GetOrAdd(constructor, static ctor =>
+            {
+                var method = new global::System.Reflection.Emit.DynamicMethod("DelphiConstructor", typeof(void),
+                    new[] { typeof(TObject), typeof(object[]) }, ctor.DeclaringType, true);
+                var il = method.GetILGenerator();
+                il.Emit(global::System.Reflection.Emit.OpCodes.Ldarg_0);
+                il.Emit(global::System.Reflection.Emit.OpCodes.Castclass, ctor.DeclaringType);
+                var parameters = ctor.GetParameters();
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    il.Emit(global::System.Reflection.Emit.OpCodes.Ldarg_1);
+                    il.Emit(global::System.Reflection.Emit.OpCodes.Ldc_I4, i);
+                    il.Emit(global::System.Reflection.Emit.OpCodes.Ldelem_Ref);
+                    il.Emit(global::System.Reflection.Emit.OpCodes.Unbox_Any, parameters[i].ParameterType);
+                }
+                il.Emit(global::System.Reflection.Emit.OpCodes.Call, ctor);
+                il.Emit(global::System.Reflection.Emit.OpCodes.Ret);
+                return (Action<TObject, object[]>)method.CreateDelegate(typeof(Action<TObject, object[]>));
+            });
+            T instance = (T)global::System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(_type);
+            try { initialize(instance, args); }
+            catch { instance.Free(); throw; }
+            return instance;
         }
 
         public global::System.Exception CreateException(params object[] args)
@@ -170,7 +228,21 @@ namespace System
                 throw new global::System.MissingMethodException(Type.FullName, methodName);
             }
 
-            return method.Invoke(null, args);
+            TClass previous = FClassMethodSelf;
+            FClassMethodSelf = this;
+            try
+            {
+                return method.Invoke(null, args);
+            }
+            catch (global::System.Reflection.TargetInvocationException error) when (error.InnerException != null)
+            {
+                global::System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(error.InnerException).Throw();
+                throw;
+            }
+            finally
+            {
+                FClassMethodSelf = previous;
+            }
         }
 
         public TResult InvokeClassMethod<TResult>(string methodName, params object[] args)

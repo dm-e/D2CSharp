@@ -57,13 +57,13 @@ public class DmathInterface
 		public EInvalidArgument(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EInvalidArgument(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EInvalidArgument(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EInvalidArgument(uint Ident) : base(Ident) {}
+		public EInvalidArgument(ulong Ident) : base(Ident) {}
 		public EInvalidArgument(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EInvalidArgument(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EInvalidArgument(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EInvalidArgument(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EInvalidArgument(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EInvalidArgument(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EInvalidArgument(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EInvalidArgument(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EInvalidArgument(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EInvalidArgument(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 	public const int ZeroValue = 0;
@@ -84,23 +84,23 @@ public class DmathInterface
 	public const int sePOPCNT = 0x40;
 	public const int seAESNI = 0x80;
 	public const int sePCLMULQDQ = 0x100;
-	public enum TRoundingMode {rmNearest,
+	public enum TRoundingMode : byte {rmNearest,
                     rmDown,
                     rmUp,
                     rmTruncate };
 
-	public enum TFPUPrecisionMode {pmSingle,
+	public enum TFPUPrecisionMode : byte {pmSingle,
                         pmReserved,
                         pmDouble,
                         pmExtended };
-	public enum TArithmeticException {exInvalidOp,
+	public enum TArithmeticException : byte {exInvalidOp,
                            exDenormalized,
                            exZeroDivide,
                            exOverflow,
                            exUnderflow,
                            exPrecision };
 
-	public enum TPaymentTime {ptEndOfPeriod,
+	public enum TPaymentTime : byte {ptEndOfPeriod,
                    ptStartOfPeriod };
 	public static double Infinity = 0.0D;
 	public static double NegInfinity = 0.0D;

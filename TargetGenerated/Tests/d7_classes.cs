@@ -39,7 +39,7 @@ namespace D7_classes
 
         public struct TTranslationOptions
         {
-            public enum TMode
+            public enum TMode : byte
             {
                 tmConservative,
                 tmBalanced,
@@ -64,7 +64,7 @@ namespace D7_classes
 
         public struct TStatusMapper
         {
-            public enum TStatus
+            public enum TStatus : byte
             {
                 tsUnknown,
                 tsAccepted,

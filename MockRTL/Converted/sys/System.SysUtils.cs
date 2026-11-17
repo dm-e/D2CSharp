@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System;
 using static System.SystemInterface;
 using static System.Sysutils.SysutilsImplementation;
@@ -404,94 +405,94 @@ public static class TStringHelper
 		string result = string.Empty;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator)
+	public static string[] Split(this string helped, char[] Separator)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator, int Count)
+	public static string[] Split(this string helped, char[] Separator, int Count)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator, TStringSplitOptions Options)
+	public static string[] Split(this string helped, char[] Separator, TStringSplitOptions Options)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator, int Count, TStringSplitOptions Options)
+	public static string[] Split(this string helped, char[] Separator, int Count, TStringSplitOptions Options)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator)
+	public static string[] Split(this string helped, string[] Separator)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator, int Count)
+	public static string[] Split(this string helped, string[] Separator, int Count)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator, TStringSplitOptions Options)
+	public static string[] Split(this string helped, string[] Separator, TStringSplitOptions Options)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator, int Count, TStringSplitOptions Options)
+	public static string[] Split(this string helped, string[] Separator, int Count, TStringSplitOptions Options)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator, char Quote)
+	public static string[] Split(this string helped, char[] Separator, char Quote)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd)
+	public static string[] Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, TStringSplitOptions Options)
+	public static string[] Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, TStringSplitOptions Options)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, int Count)
+	public static string[] Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, int Count)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, int Count, TStringSplitOptions Options)
+	public static string[] Split(this string helped, char[] Separator, char QuoteStart, char QuoteEnd, int Count, TStringSplitOptions Options)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator, char Quote)
+	public static string[] Split(this string helped, string[] Separator, char Quote)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd)
+	public static string[] Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, TStringSplitOptions Options)
+	public static string[] Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, TStringSplitOptions Options)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, int Count)
+	public static string[] Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, int Count)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
-	public static T<string> Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, int Count, TStringSplitOptions Options)
+	public static string[] Split(this string helped, string[] Separator, char QuoteStart, char QuoteEnd, int Count, TStringSplitOptions Options)
 	{
-		T<string> result = null;
+		string[] result = null;
 		return result;
 	}
 	public static bool StartsText(string ASubText, string AText)
@@ -525,14 +526,14 @@ public static class TStringHelper
 		return result;
 	}
 	//# output of conflicting "ToBoolean" class function suppressed
-	public static T<char> ToCharArray(this string helped)
+	public static char[] ToCharArray(this string helped)
 	{
-		T<char> result = null;
+		char[] result = null;
 		return result;
 	}
-	public static T<char> ToCharArray(this string helped, int StartIndex, int Length)
+	public static char[] ToCharArray(this string helped, int StartIndex, int Length)
 	{
-		T<char> result = null;
+		char[] result = null;
 		return result;
 	}
 	public static double ToDouble(this string helped)
@@ -1489,7 +1490,7 @@ public static class TGUIDHelper
 	}
 	public static byte[] ToByteArray(this ref Guid helped)
 	{
-		byte[] result = new byte[]{};
+		byte[] result = null;
 		return result;
 	}
 	public static string ToString(this ref Guid helped)
@@ -1502,11 +1503,18 @@ public static class TGUIDHelper
 public class SysutilsInterface
 {
 
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct TFloatRec
 	{
 		public short Exponent;
+		[MarshalAs(UnmanagedType.U1)]
 		public bool Negative;
 		public byte[] Digits;
+		public static TFloatRec D2CCloneValue(TFloatRec value)
+		{
+			value.Digits = DelphiStaticArrayInfo.Create<byte>(new int[] { 0 }, new int[] { 21 }).Clone(value.Digits);
+			return value;
+		}
 		public void CreateRecordMembers()
 		{
 			Digits = new byte[21/*# range 0..20*/];
@@ -1555,6 +1563,12 @@ public class SysutilsInterface
 		public uint dwReserved1;
 		public char[] cFileName;
 		public char[] cAlternateFileName;
+		public static TWin32FindData D2CCloneValue(TWin32FindData value)
+		{
+			value.cAlternateFileName = DelphiStaticArrayInfo.Create<char>(new int[] { 0 }, new int[] { 14 }).Clone(value.cAlternateFileName);
+			value.cFileName = DelphiStaticArrayInfo.Create<char>(new int[] { 0 }, new int[] { 260 }).Clone(value.cFileName);
+			return value;
+		}
 		public void CreateRecordMembers()
 		{
 			ftCreationTime = TFileTime.CreateRecord();
@@ -1712,7 +1726,7 @@ public class SysutilsInterface
 			result = this;
 			return result;
 		}
-		public TStringBuilder Append(T<char> Value, int StartIndex, int CharCount)
+		public TStringBuilder Append(char[] Value, int StartIndex, int CharCount)
 		{
 			TStringBuilder result = default;
 			result = this;
@@ -1745,7 +1759,7 @@ public class SysutilsInterface
 		public void Clear()
 		{
 		}
-		public void CopyTo(int SourceIndex, ref T<char> Destination, int DestinationIndex, int Count)
+		public void CopyTo(int SourceIndex, ref char[] Destination, int DestinationIndex, int Count)
 		{
 		}
 		public int EnsureCapacity(int Capacity)
@@ -1838,7 +1852,7 @@ public class SysutilsInterface
 			result = this;
 			return result;
 		}
-		public TStringBuilder Insert(int Index, T<char> Value)
+		public TStringBuilder Insert(int Index, char[] Value)
 		{
 			TStringBuilder result = default;
 			result = this;
@@ -2055,7 +2069,7 @@ public class SysutilsInterface
 		public int Attr;
 		public string Name;
 		public int ExcludeAttr;
-		public uint FindHandle;
+		public ulong FindHandle;
 		public TWin32FindData FindData;
 		/*property CreationTime : TDateTime read GetCreationTime;*/
 		public TDateTime CreationTime
@@ -2080,6 +2094,11 @@ public class SysutilsInterface
 			{
 				return GetTimeStamp();
 			}
+		}
+		public static TSearchRec D2CCloneValue(TSearchRec value)
+		{
+			value.FindData = TWin32FindData.D2CCloneValue(value.FindData);
+			return value;
 		}
 		public void CreateRecordMembers()
 		{
@@ -2112,6 +2131,11 @@ public class SysutilsInterface
 			{
 				return GetTimeStamp();
 			}
+		}
+		public static TSymLinkRec D2CCloneValue(TSymLinkRec value)
+		{
+			value.FindData = TWin32FindData.D2CCloneValue(value.FindData);
+			return value;
 		}
 		public void CreateRecordMembers()
 		{
@@ -2168,6 +2192,11 @@ public class SysutilsInterface
 				return GetTimeStamp();
 			}
 		}
+		public static TDateTimeInfoRec D2CCloneValue(TDateTimeInfoRec value)
+		{
+			value.Data = TWin32FindData.D2CCloneValue(value.Data);
+			return value;
+		}
 		public void CreateRecordMembers()
 		{
 			Data = TWin32FindData.CreateRecord();
@@ -2187,12 +2216,15 @@ public class SysutilsInterface
 		public static TTimeStamp CreateRecord(){return new TTimeStamp();}
 	}	
 
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct TSysLocale
 	{
 		public uint DefaultLCID;
 		public int PriLangID;
 		public int SubLangID;
+		[MarshalAs(UnmanagedType.U1)]
 		public bool FarEast;
+		[MarshalAs(UnmanagedType.U1)]
 		public bool MiddleEast;
 		public static TSysLocale CreateRecord(){return new TSysLocale();}
 	}	
@@ -2213,13 +2245,13 @@ public class SysutilsInterface
 		public DException(string Msg, params TVarRec[] Args)
 		{
 		}
-		public DException(uint Ident)
+		public DException(ulong Ident)
 		{
 		}
 		public DException(Pointer<TResStringRec> ResStringRec)
 		{
 		}
-		public DException(uint Ident, params TVarRec[] Args)
+		public DException(ulong Ident, params TVarRec[] Args)
 		{
 		}
 		public DException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args)
@@ -2231,7 +2263,7 @@ public class SysutilsInterface
 		public DException(string Msg, TVarRec[] Args, int AHelpContext)
 		{
 		}
-		public DException(uint Ident, int AHelpContext)
+		public DException(ulong Ident, int AHelpContext)
 		{
 		}
 		public DException(Pointer<TResStringRec> ResStringRec, int AHelpContext)
@@ -2240,7 +2272,7 @@ public class SysutilsInterface
 		public DException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext)
 		{
 		}
-		public DException(uint Ident, TVarRec[] Args, int AHelpContext)
+		public DException(ulong Ident, TVarRec[] Args, int AHelpContext)
 		{
 		}
 	}	
@@ -2253,13 +2285,13 @@ public class SysutilsInterface
 		public EArgumentException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EArgumentException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EArgumentException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EArgumentException(uint Ident) : base(Ident) {}
+		public EArgumentException(ulong Ident) : base(Ident) {}
 		public EArgumentException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EArgumentException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EArgumentException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EArgumentException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EArgumentException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EArgumentException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EArgumentException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EArgumentException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EArgumentException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EArgumentException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2271,13 +2303,13 @@ public class SysutilsInterface
 		public EArgumentOutOfRangeException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EArgumentOutOfRangeException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EArgumentOutOfRangeException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EArgumentOutOfRangeException(uint Ident) : base(Ident) {}
+		public EArgumentOutOfRangeException(ulong Ident) : base(Ident) {}
 		public EArgumentOutOfRangeException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EArgumentOutOfRangeException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EArgumentOutOfRangeException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EArgumentOutOfRangeException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EArgumentOutOfRangeException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EArgumentOutOfRangeException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EArgumentOutOfRangeException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EArgumentOutOfRangeException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EArgumentOutOfRangeException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EArgumentOutOfRangeException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2289,13 +2321,13 @@ public class SysutilsInterface
 		public EArgumentNilException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EArgumentNilException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EArgumentNilException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EArgumentNilException(uint Ident) : base(Ident) {}
+		public EArgumentNilException(ulong Ident) : base(Ident) {}
 		public EArgumentNilException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EArgumentNilException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EArgumentNilException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EArgumentNilException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EArgumentNilException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EArgumentNilException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EArgumentNilException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EArgumentNilException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EArgumentNilException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EArgumentNilException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2307,13 +2339,13 @@ public class SysutilsInterface
 		public EPathTooLongException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EPathTooLongException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EPathTooLongException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EPathTooLongException(uint Ident) : base(Ident) {}
+		public EPathTooLongException(ulong Ident) : base(Ident) {}
 		public EPathTooLongException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EPathTooLongException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EPathTooLongException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EPathTooLongException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EPathTooLongException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EPathTooLongException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EPathTooLongException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EPathTooLongException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EPathTooLongException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EPathTooLongException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2325,13 +2357,13 @@ public class SysutilsInterface
 		public ENotSupportedException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public ENotSupportedException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public ENotSupportedException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public ENotSupportedException(uint Ident) : base(Ident) {}
+		public ENotSupportedException(ulong Ident) : base(Ident) {}
 		public ENotSupportedException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public ENotSupportedException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public ENotSupportedException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public ENotSupportedException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public ENotSupportedException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public ENotSupportedException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public ENotSupportedException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public ENotSupportedException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public ENotSupportedException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public ENotSupportedException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2343,13 +2375,13 @@ public class SysutilsInterface
 		public EDirectoryNotFoundException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EDirectoryNotFoundException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EDirectoryNotFoundException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EDirectoryNotFoundException(uint Ident) : base(Ident) {}
+		public EDirectoryNotFoundException(ulong Ident) : base(Ident) {}
 		public EDirectoryNotFoundException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EDirectoryNotFoundException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EDirectoryNotFoundException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EDirectoryNotFoundException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EDirectoryNotFoundException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EDirectoryNotFoundException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EDirectoryNotFoundException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EDirectoryNotFoundException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EDirectoryNotFoundException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EDirectoryNotFoundException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2361,13 +2393,13 @@ public class SysutilsInterface
 		public EFileNotFoundException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EFileNotFoundException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EFileNotFoundException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EFileNotFoundException(uint Ident) : base(Ident) {}
+		public EFileNotFoundException(ulong Ident) : base(Ident) {}
 		public EFileNotFoundException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EFileNotFoundException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EFileNotFoundException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EFileNotFoundException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EFileNotFoundException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EFileNotFoundException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EFileNotFoundException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EFileNotFoundException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EFileNotFoundException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EFileNotFoundException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2379,13 +2411,13 @@ public class SysutilsInterface
 		public EPathNotFoundException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EPathNotFoundException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EPathNotFoundException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EPathNotFoundException(uint Ident) : base(Ident) {}
+		public EPathNotFoundException(ulong Ident) : base(Ident) {}
 		public EPathNotFoundException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EPathNotFoundException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EPathNotFoundException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EPathNotFoundException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EPathNotFoundException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EPathNotFoundException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EPathNotFoundException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EPathNotFoundException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EPathNotFoundException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EPathNotFoundException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2397,13 +2429,13 @@ public class SysutilsInterface
 		public EInvalidOpException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EInvalidOpException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EInvalidOpException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EInvalidOpException(uint Ident) : base(Ident) {}
+		public EInvalidOpException(ulong Ident) : base(Ident) {}
 		public EInvalidOpException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EInvalidOpException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EInvalidOpException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EInvalidOpException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EInvalidOpException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EInvalidOpException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EInvalidOpException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EInvalidOpException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EInvalidOpException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EInvalidOpException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2415,13 +2447,13 @@ public class SysutilsInterface
 		public ENoConstructException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public ENoConstructException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public ENoConstructException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public ENoConstructException(uint Ident) : base(Ident) {}
+		public ENoConstructException(ulong Ident) : base(Ident) {}
 		public ENoConstructException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public ENoConstructException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public ENoConstructException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public ENoConstructException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public ENoConstructException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public ENoConstructException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public ENoConstructException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public ENoConstructException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public ENoConstructException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public ENoConstructException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2433,13 +2465,13 @@ public class SysutilsInterface
 		public EAbort(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EAbort(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EAbort(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EAbort(uint Ident) : base(Ident) {}
+		public EAbort(ulong Ident) : base(Ident) {}
 		public EAbort(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EAbort(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EAbort(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EAbort(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EAbort(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EAbort(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EAbort(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EAbort(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EAbort(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EAbort(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2451,13 +2483,13 @@ public class SysutilsInterface
 		public EAbstractError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EAbstractError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EAbstractError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EAbstractError(uint Ident) : base(Ident) {}
+		public EAbstractError(ulong Ident) : base(Ident) {}
 		public EAbstractError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EAbstractError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EAbstractError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EAbstractError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EAbstractError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EAbstractError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EAbstractError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EAbstractError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EAbstractError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EAbstractError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2469,13 +2501,13 @@ public class SysutilsInterface
 		public EAssertionFailed(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EAssertionFailed(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EAssertionFailed(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EAssertionFailed(uint Ident) : base(Ident) {}
+		public EAssertionFailed(ulong Ident) : base(Ident) {}
 		public EAssertionFailed(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EAssertionFailed(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EAssertionFailed(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EAssertionFailed(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EAssertionFailed(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EAssertionFailed(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EAssertionFailed(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EAssertionFailed(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EAssertionFailed(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EAssertionFailed(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2487,13 +2519,13 @@ public class SysutilsInterface
 		public ECFError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public ECFError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public ECFError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public ECFError(uint Ident) : base(Ident) {}
+		public ECFError(ulong Ident) : base(Ident) {}
 		public ECFError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public ECFError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public ECFError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public ECFError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public ECFError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public ECFError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public ECFError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public ECFError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public ECFError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public ECFError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2505,13 +2537,13 @@ public class SysutilsInterface
 		public EConvertError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EConvertError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EConvertError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EConvertError(uint Ident) : base(Ident) {}
+		public EConvertError(ulong Ident) : base(Ident) {}
 		public EConvertError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EConvertError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EConvertError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EConvertError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EConvertError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EConvertError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EConvertError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EConvertError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EConvertError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EConvertError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2523,13 +2555,13 @@ public class SysutilsInterface
 		public EEncodingError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EEncodingError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EEncodingError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EEncodingError(uint Ident) : base(Ident) {}
+		public EEncodingError(ulong Ident) : base(Ident) {}
 		public EEncodingError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EEncodingError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EEncodingError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EEncodingError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EEncodingError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EEncodingError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EEncodingError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EEncodingError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EEncodingError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EEncodingError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2541,13 +2573,13 @@ public class SysutilsInterface
 		public EIntfCastError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EIntfCastError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EIntfCastError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EIntfCastError(uint Ident) : base(Ident) {}
+		public EIntfCastError(ulong Ident) : base(Ident) {}
 		public EIntfCastError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EIntfCastError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EIntfCastError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EIntfCastError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EIntfCastError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EIntfCastError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EIntfCastError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EIntfCastError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EIntfCastError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EIntfCastError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2559,13 +2591,13 @@ public class SysutilsInterface
 		public EInvalidCast(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EInvalidCast(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EInvalidCast(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EInvalidCast(uint Ident) : base(Ident) {}
+		public EInvalidCast(ulong Ident) : base(Ident) {}
 		public EInvalidCast(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EInvalidCast(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EInvalidCast(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EInvalidCast(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EInvalidCast(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EInvalidCast(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EInvalidCast(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EInvalidCast(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EInvalidCast(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EInvalidCast(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2577,13 +2609,13 @@ public class SysutilsInterface
 		public EInvalidContainer(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EInvalidContainer(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EInvalidContainer(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EInvalidContainer(uint Ident) : base(Ident) {}
+		public EInvalidContainer(ulong Ident) : base(Ident) {}
 		public EInvalidContainer(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EInvalidContainer(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EInvalidContainer(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EInvalidContainer(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EInvalidContainer(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EInvalidContainer(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EInvalidContainer(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EInvalidContainer(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EInvalidContainer(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EInvalidContainer(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2595,13 +2627,13 @@ public class SysutilsInterface
 		public EInvalidInsert(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EInvalidInsert(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EInvalidInsert(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EInvalidInsert(uint Ident) : base(Ident) {}
+		public EInvalidInsert(ulong Ident) : base(Ident) {}
 		public EInvalidInsert(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EInvalidInsert(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EInvalidInsert(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EInvalidInsert(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EInvalidInsert(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EInvalidInsert(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EInvalidInsert(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EInvalidInsert(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EInvalidInsert(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EInvalidInsert(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2613,13 +2645,13 @@ public class SysutilsInterface
 		public ENotImplemented(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public ENotImplemented(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public ENotImplemented(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public ENotImplemented(uint Ident) : base(Ident) {}
+		public ENotImplemented(ulong Ident) : base(Ident) {}
 		public ENotImplemented(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public ENotImplemented(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public ENotImplemented(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public ENotImplemented(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public ENotImplemented(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public ENotImplemented(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public ENotImplemented(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public ENotImplemented(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public ENotImplemented(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public ENotImplemented(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2631,13 +2663,13 @@ public class SysutilsInterface
 		public EObjectDisposed(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EObjectDisposed(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EObjectDisposed(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EObjectDisposed(uint Ident) : base(Ident) {}
+		public EObjectDisposed(ulong Ident) : base(Ident) {}
 		public EObjectDisposed(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EObjectDisposed(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EObjectDisposed(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EObjectDisposed(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EObjectDisposed(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EObjectDisposed(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EObjectDisposed(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EObjectDisposed(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EObjectDisposed(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EObjectDisposed(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2649,13 +2681,13 @@ public class SysutilsInterface
 		public EOperationCancelled(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EOperationCancelled(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EOperationCancelled(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EOperationCancelled(uint Ident) : base(Ident) {}
+		public EOperationCancelled(ulong Ident) : base(Ident) {}
 		public EOperationCancelled(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EOperationCancelled(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EOperationCancelled(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EOperationCancelled(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EOperationCancelled(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EOperationCancelled(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EOperationCancelled(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EOperationCancelled(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EOperationCancelled(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EOperationCancelled(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2667,13 +2699,13 @@ public class SysutilsInterface
 		public EPackageError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EPackageError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EPackageError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EPackageError(uint Ident) : base(Ident) {}
+		public EPackageError(ulong Ident) : base(Ident) {}
 		public EPackageError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EPackageError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EPackageError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EPackageError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EPackageError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EPackageError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EPackageError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EPackageError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EPackageError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EPackageError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2685,13 +2717,13 @@ public class SysutilsInterface
 		public EProgrammerNotFound(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EProgrammerNotFound(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EProgrammerNotFound(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EProgrammerNotFound(uint Ident) : base(Ident) {}
+		public EProgrammerNotFound(ulong Ident) : base(Ident) {}
 		public EProgrammerNotFound(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EProgrammerNotFound(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EProgrammerNotFound(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EProgrammerNotFound(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EProgrammerNotFound(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EProgrammerNotFound(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EProgrammerNotFound(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EProgrammerNotFound(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EProgrammerNotFound(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EProgrammerNotFound(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2703,13 +2735,13 @@ public class SysutilsInterface
 		public EPropReadOnly(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EPropReadOnly(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EPropReadOnly(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EPropReadOnly(uint Ident) : base(Ident) {}
+		public EPropReadOnly(ulong Ident) : base(Ident) {}
 		public EPropReadOnly(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EPropReadOnly(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EPropReadOnly(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EPropReadOnly(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EPropReadOnly(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EPropReadOnly(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EPropReadOnly(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EPropReadOnly(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EPropReadOnly(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EPropReadOnly(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2721,13 +2753,13 @@ public class SysutilsInterface
 		public EPropWriteOnly(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EPropWriteOnly(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EPropWriteOnly(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EPropWriteOnly(uint Ident) : base(Ident) {}
+		public EPropWriteOnly(ulong Ident) : base(Ident) {}
 		public EPropWriteOnly(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EPropWriteOnly(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EPropWriteOnly(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EPropWriteOnly(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EPropWriteOnly(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EPropWriteOnly(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EPropWriteOnly(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EPropWriteOnly(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EPropWriteOnly(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EPropWriteOnly(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2739,13 +2771,13 @@ public class SysutilsInterface
 		public ESafecallException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public ESafecallException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public ESafecallException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public ESafecallException(uint Ident) : base(Ident) {}
+		public ESafecallException(ulong Ident) : base(Ident) {}
 		public ESafecallException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public ESafecallException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public ESafecallException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public ESafecallException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public ESafecallException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public ESafecallException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public ESafecallException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public ESafecallException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public ESafecallException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public ESafecallException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2757,13 +2789,13 @@ public class SysutilsInterface
 		public EVariantError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EVariantError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EVariantError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EVariantError(uint Ident) : base(Ident) {}
+		public EVariantError(ulong Ident) : base(Ident) {}
 		public EVariantError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EVariantError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EVariantError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EVariantError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EVariantError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EVariantError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EVariantError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EVariantError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EVariantError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EVariantError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2775,13 +2807,13 @@ public class SysutilsInterface
 		public EHeapException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EHeapException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EHeapException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EHeapException(uint Ident) : base(Ident) {}
+		public EHeapException(ulong Ident) : base(Ident) {}
 		public EHeapException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EHeapException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EHeapException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EHeapException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EHeapException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EHeapException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EHeapException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EHeapException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EHeapException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EHeapException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2793,13 +2825,13 @@ public class SysutilsInterface
 		public EOutOfMemory(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EOutOfMemory(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EOutOfMemory(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EOutOfMemory(uint Ident) : base(Ident) {}
+		public EOutOfMemory(ulong Ident) : base(Ident) {}
 		public EOutOfMemory(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EOutOfMemory(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EOutOfMemory(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EOutOfMemory(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EOutOfMemory(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EOutOfMemory(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EOutOfMemory(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EOutOfMemory(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EOutOfMemory(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EOutOfMemory(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2811,13 +2843,13 @@ public class SysutilsInterface
 		public EInvalidPointer(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EInvalidPointer(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EInvalidPointer(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EInvalidPointer(uint Ident) : base(Ident) {}
+		public EInvalidPointer(ulong Ident) : base(Ident) {}
 		public EInvalidPointer(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EInvalidPointer(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EInvalidPointer(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EInvalidPointer(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EInvalidPointer(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EInvalidPointer(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EInvalidPointer(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EInvalidPointer(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EInvalidPointer(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EInvalidPointer(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2829,13 +2861,13 @@ public class SysutilsInterface
 		public EInOutError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EInOutError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EInOutError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EInOutError(uint Ident) : base(Ident) {}
+		public EInOutError(ulong Ident) : base(Ident) {}
 		public EInOutError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EInOutError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EInOutError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EInOutError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EInOutError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EInOutError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EInOutError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EInOutError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EInOutError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EInOutError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2847,13 +2879,13 @@ public class SysutilsInterface
 		public EExternal(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EExternal(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EExternal(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EExternal(uint Ident) : base(Ident) {}
+		public EExternal(ulong Ident) : base(Ident) {}
 		public EExternal(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EExternal(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EExternal(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EExternal(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EExternal(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EExternal(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EExternal(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EExternal(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EExternal(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EExternal(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2865,13 +2897,13 @@ public class SysutilsInterface
 		public EExternalException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EExternalException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EExternalException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EExternalException(uint Ident) : base(Ident) {}
+		public EExternalException(ulong Ident) : base(Ident) {}
 		public EExternalException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EExternalException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EExternalException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EExternalException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EExternalException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EExternalException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EExternalException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EExternalException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EExternalException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EExternalException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2883,13 +2915,13 @@ public class SysutilsInterface
 		public EAccessViolation(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EAccessViolation(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EAccessViolation(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EAccessViolation(uint Ident) : base(Ident) {}
+		public EAccessViolation(ulong Ident) : base(Ident) {}
 		public EAccessViolation(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EAccessViolation(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EAccessViolation(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EAccessViolation(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EAccessViolation(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EAccessViolation(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EAccessViolation(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EAccessViolation(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EAccessViolation(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EAccessViolation(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2901,13 +2933,13 @@ public class SysutilsInterface
 		public EControlC(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EControlC(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EControlC(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EControlC(uint Ident) : base(Ident) {}
+		public EControlC(ulong Ident) : base(Ident) {}
 		public EControlC(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EControlC(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EControlC(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EControlC(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EControlC(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EControlC(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EControlC(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EControlC(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EControlC(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EControlC(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2919,13 +2951,13 @@ public class SysutilsInterface
 		public EPrivilege(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EPrivilege(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EPrivilege(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EPrivilege(uint Ident) : base(Ident) {}
+		public EPrivilege(ulong Ident) : base(Ident) {}
 		public EPrivilege(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EPrivilege(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EPrivilege(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EPrivilege(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EPrivilege(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EPrivilege(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EPrivilege(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EPrivilege(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EPrivilege(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EPrivilege(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2937,13 +2969,13 @@ public class SysutilsInterface
 		public EStackOverflow(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EStackOverflow(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EStackOverflow(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EStackOverflow(uint Ident) : base(Ident) {}
+		public EStackOverflow(ulong Ident) : base(Ident) {}
 		public EStackOverflow(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EStackOverflow(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EStackOverflow(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EStackOverflow(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EStackOverflow(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EStackOverflow(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EStackOverflow(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EStackOverflow(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EStackOverflow(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EStackOverflow(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2955,13 +2987,13 @@ public class SysutilsInterface
 		public EIntError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EIntError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EIntError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EIntError(uint Ident) : base(Ident) {}
+		public EIntError(ulong Ident) : base(Ident) {}
 		public EIntError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EIntError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EIntError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EIntError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EIntError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EIntError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EIntError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EIntError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EIntError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EIntError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2973,13 +3005,13 @@ public class SysutilsInterface
 		public EDivByZero(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EDivByZero(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EDivByZero(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EDivByZero(uint Ident) : base(Ident) {}
+		public EDivByZero(ulong Ident) : base(Ident) {}
 		public EDivByZero(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EDivByZero(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EDivByZero(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EDivByZero(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EDivByZero(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EDivByZero(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EDivByZero(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EDivByZero(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EDivByZero(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EDivByZero(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -2991,13 +3023,13 @@ public class SysutilsInterface
 		public ERangeError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public ERangeError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public ERangeError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public ERangeError(uint Ident) : base(Ident) {}
+		public ERangeError(ulong Ident) : base(Ident) {}
 		public ERangeError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public ERangeError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public ERangeError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public ERangeError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public ERangeError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public ERangeError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public ERangeError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public ERangeError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public ERangeError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public ERangeError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3009,13 +3041,13 @@ public class SysutilsInterface
 		public EIntOverflow(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EIntOverflow(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EIntOverflow(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EIntOverflow(uint Ident) : base(Ident) {}
+		public EIntOverflow(ulong Ident) : base(Ident) {}
 		public EIntOverflow(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EIntOverflow(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EIntOverflow(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EIntOverflow(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EIntOverflow(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EIntOverflow(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EIntOverflow(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EIntOverflow(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EIntOverflow(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EIntOverflow(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3027,13 +3059,13 @@ public class SysutilsInterface
 		public EMathError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EMathError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EMathError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EMathError(uint Ident) : base(Ident) {}
+		public EMathError(ulong Ident) : base(Ident) {}
 		public EMathError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EMathError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EMathError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EMathError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EMathError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EMathError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EMathError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EMathError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EMathError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EMathError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3045,13 +3077,13 @@ public class SysutilsInterface
 		public EInvalidOp(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EInvalidOp(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EInvalidOp(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EInvalidOp(uint Ident) : base(Ident) {}
+		public EInvalidOp(ulong Ident) : base(Ident) {}
 		public EInvalidOp(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EInvalidOp(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EInvalidOp(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EInvalidOp(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EInvalidOp(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EInvalidOp(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EInvalidOp(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EInvalidOp(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EInvalidOp(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EInvalidOp(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3063,13 +3095,13 @@ public class SysutilsInterface
 		public EZeroDivide(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EZeroDivide(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EZeroDivide(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EZeroDivide(uint Ident) : base(Ident) {}
+		public EZeroDivide(ulong Ident) : base(Ident) {}
 		public EZeroDivide(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EZeroDivide(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EZeroDivide(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EZeroDivide(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EZeroDivide(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EZeroDivide(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EZeroDivide(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EZeroDivide(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EZeroDivide(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EZeroDivide(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3081,13 +3113,13 @@ public class SysutilsInterface
 		public EOverflow(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EOverflow(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EOverflow(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EOverflow(uint Ident) : base(Ident) {}
+		public EOverflow(ulong Ident) : base(Ident) {}
 		public EOverflow(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EOverflow(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EOverflow(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EOverflow(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EOverflow(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EOverflow(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EOverflow(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EOverflow(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EOverflow(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EOverflow(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3099,13 +3131,13 @@ public class SysutilsInterface
 		public EUnderflow(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EUnderflow(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EUnderflow(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EUnderflow(uint Ident) : base(Ident) {}
+		public EUnderflow(ulong Ident) : base(Ident) {}
 		public EUnderflow(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EUnderflow(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EUnderflow(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EUnderflow(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EUnderflow(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EUnderflow(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EUnderflow(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EUnderflow(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EUnderflow(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EUnderflow(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3117,13 +3149,13 @@ public class SysutilsInterface
 		public EOSError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EOSError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EOSError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EOSError(uint Ident) : base(Ident) {}
+		public EOSError(ulong Ident) : base(Ident) {}
 		public EOSError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EOSError(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EOSError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EOSError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EOSError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EOSError(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EOSError(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EOSError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EOSError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EOSError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3135,13 +3167,13 @@ public class SysutilsInterface
 		public EWin32Error(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EWin32Error(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EWin32Error(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EWin32Error(uint Ident) : base(Ident) {}
+		public EWin32Error(ulong Ident) : base(Ident) {}
 		public EWin32Error(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EWin32Error(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EWin32Error(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EWin32Error(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EWin32Error(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EWin32Error(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EWin32Error(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EWin32Error(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EWin32Error(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EWin32Error(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3153,13 +3185,13 @@ public class SysutilsInterface
 		public EMonitor(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EMonitor(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EMonitor(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EMonitor(uint Ident) : base(Ident) {}
+		public EMonitor(ulong Ident) : base(Ident) {}
 		public EMonitor(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EMonitor(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EMonitor(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EMonitor(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EMonitor(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EMonitor(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EMonitor(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EMonitor(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EMonitor(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EMonitor(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3171,13 +3203,13 @@ public class SysutilsInterface
 		public EMonitorLockException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EMonitorLockException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EMonitorLockException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EMonitorLockException(uint Ident) : base(Ident) {}
+		public EMonitorLockException(ulong Ident) : base(Ident) {}
 		public EMonitorLockException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EMonitorLockException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EMonitorLockException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EMonitorLockException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EMonitorLockException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EMonitorLockException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EMonitorLockException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EMonitorLockException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EMonitorLockException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EMonitorLockException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -3189,13 +3221,13 @@ public class SysutilsInterface
 		public ENoMonitorSupportException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public ENoMonitorSupportException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public ENoMonitorSupportException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public ENoMonitorSupportException(uint Ident) : base(Ident) {}
+		public ENoMonitorSupportException(ulong Ident) : base(Ident) {}
 		public ENoMonitorSupportException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public ENoMonitorSupportException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public ENoMonitorSupportException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public ENoMonitorSupportException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public ENoMonitorSupportException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public ENoMonitorSupportException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public ENoMonitorSupportException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public ENoMonitorSupportException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public ENoMonitorSupportException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public ENoMonitorSupportException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
   /*
@@ -3259,47 +3291,52 @@ public class SysutilsInterface
 	public const int faVirtual = 0x00010000;
 	public const int faAnyFile = 0x000001FF;
   /* Public dynamic-array aliases used throughout the Delphi RTL. */
+  //TBytes = array of Byte;
+
+  //TCharArray = array of Char;
+
 
   /* Number of days in the twelve months of a year. */
 
+
   /* Keep simple value types first so their translation can be verified
     independently from the special Exception handling. */
-	public enum TFloatFormat {ffGeneral,
+	public enum TFloatFormat : byte {ffGeneral,
                    ffExponent,
                    ffFixed,
                    ffNumber,
                    ffCurrency };
-	public enum TReplaceFlag {rfReplaceAll,
+	public enum TReplaceFlag : byte {rfReplaceAll,
                    rfIgnoreCase };
-	public enum TTextLineBreakStyle {tlbsCRLF,
+	public enum TTextLineBreakStyle : byte {tlbsCRLF,
                           tlbsLF };
-	public enum TStringSplitOptions {None,
+	public enum TStringSplitOptions : byte {None,
                           ExcludeEmpty,
                           ExcludeLastEmpty };
-	public enum TFilenameCaseMatch {mkNone,
+	public enum TFilenameCaseMatch : byte {mkNone,
                          mkExactMatch,
                          mkSingleMatch,
                          mkAmbiguous };
-	public enum TCmdLineSwitchType {clstValueNextParam,
+	public enum TCmdLineSwitchType : byte {clstValueNextParam,
                          clstValueAppended };
-	public enum TLocaleOptions {loInvariantLocale,
+	public enum TLocaleOptions : byte {loInvariantLocale,
                      loUserLocale };
-	public enum TMbcsByteType {mbSingleByte,
+	public enum TMbcsByteType : byte {mbSingleByte,
                     mbLeadByte,
                     mbTrailByte };
-	public enum TFileSystemAttribute {fsCaseSensitive,
+	public enum TFileSystemAttribute : byte {fsCaseSensitive,
                            fsCasePreserving,
                            fsLocal,
                            fsNetwork,
                            fsRemovable,
                            fsSymLink };
-	public enum TFloatValue {fvExtended,
+	public enum TFloatValue : byte {fvExtended,
                   fvCurrency };
 	//#pragma pack (push, 1)
 
 	//#pragma pack (pop)
 
-	public enum TNameType {ntContainsUnit,
+	public enum TNameType : byte {ntContainsUnit,
                 ntRequiresPackage,
                 ntDcpBpiName };
 
@@ -3307,10 +3344,21 @@ public class SysutilsInterface
   /* Callback/procedural types used by the public SysUtils package and
     termination APIs. */
 public delegate void TProcedure();
+public delegate void TProc();
+public delegate void TProc<T>(T Arg1);
+public delegate void TProc<T1, T2>(T1 Arg1, T2 Arg2);
+public delegate void TProc<T1, T2, T3>(T1 Arg1, T2 Arg2, T3 Arg3);
+public delegate void TProc<T1, T2, T3, T4>(T1 Arg1, T2 Arg2, T3 Arg3, T4 Arg4);
+public delegate TResult TFunc<TResult>();
+public delegate TResult TFunc<T, TResult>(T Arg1);
+public delegate TResult TFunc<T1, T2, TResult>(T1 Arg1, T2 Arg2);
+public delegate TResult TFunc<T1, T2, T3, TResult>(T1 Arg1, T2 Arg2, T3 Arg3);
+public delegate TResult TFunc<T1, T2, T3, T4, TResult>(T1 Arg1, T2 Arg2, T3 Arg3, T4 Arg4);
+public delegate bool TPredicate<T>(T Arg1);
 public delegate bool TTerminateProc();
-public delegate bool TValidatePackageProc(uint Module);
-public delegate void TPackageInfoProc(string Name, TNameType NameType, byte Flags, IntPtr Param);
-public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
+public delegate bool TValidatePackageProc(ulong Module);
+public delegate void TPackageInfoProc(string Name, TNameType NameType, byte Flags, Pointer Param);
+public delegate long TGrowCollectionFunc(long OldCapacity, long NewCount);
 	//#pragma pack (push, 1)
 
 	//#pragma pack (pop)
@@ -4127,7 +4175,7 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 		int result = 0;
 		return result;
 	}
-	public static bool CompareMem(Pointer P1, Pointer P2, int Length)
+	public static bool CompareMem(Pointer P1, Pointer P2, long Length)
 	{
 		bool result = false;
 		return result;
@@ -5070,88 +5118,88 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 		int result = 0;
 		return result;
 	}
-	public static int FileSetDate(uint Handle, int Age)
+	public static int FileSetDate(ulong Handle, int Age)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint FileOpen(string FileName, uint Mode)
+	public static ulong FileOpen(string FileName, uint Mode)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int FileRead(uint Handle, UntypedPointer Buffer, uint Count)
-	{
-		int result = 0;
-		return result;
-	}
-	public static int FileWrite(uint Handle, UntypedPointer Buffer, uint Count)
+	public static int FileRead(ulong Handle, UntypedPointer Buffer, uint Count)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint FileCreate(string FileName)
-	{
-		uint result = 0 /*Native*/;
-		return result;
-	}
-	public static uint FileCreate(string FileName, int Rights)
-	{
-		uint result = 0 /*Native*/;
-		return result;
-	}
-	public static uint FileCreate(string FileName, uint Mode, int Rights)
-	{
-		uint result = 0 /*Native*/;
-		return result;
-	}
-	public static int FileSeek(uint Handle, int Offset, int Origin)
+	public static int FileWrite(ulong Handle, UntypedPointer Buffer, uint Count)
 	{
 		int result = 0;
 		return result;
 	}
-	public static long FileSeek(uint Handle, long Offset, int Origin)
+	public static ulong FileCreate(string FileName)
+	{
+		ulong result = 0 /*Native*/;
+		return result;
+	}
+	public static ulong FileCreate(string FileName, int Rights)
+	{
+		ulong result = 0 /*Native*/;
+		return result;
+	}
+	public static ulong FileCreate(string FileName, uint Mode, int Rights)
+	{
+		ulong result = 0 /*Native*/;
+		return result;
+	}
+	public static int FileSeek(ulong Handle, int Offset, int Origin)
+	{
+		int result = 0;
+		return result;
+	}
+	public static long FileSeek(ulong Handle, long Offset, int Origin)
 	{
 		long result = 0;
 		return result;
 	}
-	public static int FileGetDate(uint Handle)
+	public static int FileGetDate(ulong Handle)
 	{
 		int result = 0;
 		return result;
 	}
-	public static void FileClose(uint Handle)
+	public static void FileClose(ulong Handle)
 	{
 	}
 
 /* Environment, resource and command-line helpers */
 
 /* Package, termination and collection-growth helpers */
-	public static uint SafeLoadLibrary(string FileName, uint ErrorMode = 0x8000)
+	public static ulong SafeLoadLibrary(string FileName, uint ErrorMode = 0x8000)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint LoadPackage(string Name)
+	public static ulong LoadPackage(string Name)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint LoadPackage(string Name, TValidatePackageProc AValidatePackage)
+	public static ulong LoadPackage(string Name, TValidatePackageProc AValidatePackage)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static void InitializePackage(uint Module)
+	public static void InitializePackage(ulong Module)
 	{
 	}
-	public static void InitializePackage(uint Module, TValidatePackageProc AValidatePackage)
+	public static void InitializePackage(ulong Module, TValidatePackageProc AValidatePackage)
 	{
 	}
-	public static void FinalizePackage(uint Module)
+	public static void FinalizePackage(ulong Module)
 	{
 	}
-	public static void UnloadPackage(uint Module)
+	public static void UnloadPackage(ulong Module)
 	{
 	}
 	public static string GetPackageDescription(PChar ModuleName)
@@ -5159,10 +5207,10 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 		string result = string.Empty;
 		return result;
 	}
-	public static void GetPackageInfo(uint Module, Pointer Param, ref int Flags, TPackageInfoProc InfoProc)
+	public static void GetPackageInfo(ulong Module, Pointer Param, ref int Flags, TPackageInfoProc InfoProc)
 	{
 	}
-	public static uint GetPackageTargets(uint Module)
+	public static uint GetPackageTargets(ulong Module)
 	{
 		uint result = 0;
 		return result;
@@ -5178,9 +5226,9 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 		bool result = false;
 		return result;
 	}
-	public static int GrowCollection(int OldCapacity, int NewCount)
+	public static long GrowCollection(long OldCapacity, long NewCount)
 	{
-		int result = 0 /*Native*/;
+		long result = 0 /*Native*/;
 		return result;
 	}
 	public static TGrowCollectionFunc SetGrowCollectionFunc(TGrowCollectionFunc Func)
@@ -5267,17 +5315,17 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 		int result = 0;
 		return result;
 	}
-	public static string GetModuleName(uint Module)
+	public static string GetModuleName(ulong Module)
 	{
 		string result = string.Empty;
 		return result;
 	}
-	public static string LoadStr(uint Ident)
+	public static string LoadStr(ulong Ident)
 	{
 		string result = string.Empty;
 		return result;
 	}
-	public static string FmtLoadStr(uint Ident, params TVarRec[] Args)
+	public static string FmtLoadStr(ulong Ident, params TVarRec[] Args)
 	{
 		string result = string.Empty;
 		return result;
@@ -5297,8 +5345,9 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 		bool result = false;
 		return result;
 	}
-	public static bool FindCmdLineSwitch(string Switch, ref string Value, bool IgnoreCase = true, TSet SwitchTypes = new TSet() << (int) TCmdLineSwitchType.clstValueNextParam << (int) TCmdLineSwitchType.clstValueAppended)
+	public static bool FindCmdLineSwitch(string Switch, ref string Value, bool IgnoreCase = true, TSet SwitchTypes = null)
 	{
+		SwitchTypes ??= (new TSet() << (int) TCmdLineSwitchType.clstValueNextParam << (int) TCmdLineSwitchType.clstValueAppended);
 		bool result = false;
 		return result;
 	}
@@ -5396,7 +5445,7 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 	public static void CheckOSError(int LastError)
 	{
 	}
-	public static string SysErrorMessage(uint ErrorCode, uint AModuleHandle = 0)
+	public static string SysErrorMessage(uint ErrorCode, ulong AModuleHandle = 0)
 	{
 		string result = string.Empty;
 		return result;

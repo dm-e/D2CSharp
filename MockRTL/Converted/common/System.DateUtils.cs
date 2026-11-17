@@ -57,13 +57,13 @@ public class DateutilsInterface
 		public EDateTimeException(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
 		public EDateTimeException(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
 		public EDateTimeException(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
-		public EDateTimeException(uint Ident) : base(Ident) {}
+		public EDateTimeException(ulong Ident) : base(Ident) {}
 		public EDateTimeException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
-		public EDateTimeException(uint Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EDateTimeException(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
 		public EDateTimeException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
 		public EDateTimeException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
-		public EDateTimeException(uint Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
-		public EDateTimeException(uint Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EDateTimeException(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EDateTimeException(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
 		public EDateTimeException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
 	}	
 
@@ -115,7 +115,7 @@ public class DateutilsInterface
 	public const int MonthNovember = 11;
 	public const int MonthDecember = 12;
   /* Public DateUtils helper types used by common APIs. */
-	public enum TDateTimePart {dtpYear,
+	public enum TDateTimePart : byte {dtpYear,
                     dtpMonth,
                     dtpWeek,
                     dtpDay,
@@ -123,7 +123,7 @@ public class DateutilsInterface
                     dtpMinute,
                     dtpSecond,
                     dtpMilliSecond };
-	public enum TISO8601ToDateOption {ioReturnUTC,
+	public enum TISO8601ToDateOption : byte {ioReturnUTC,
                            ioNoTZIsLocal };
 
 

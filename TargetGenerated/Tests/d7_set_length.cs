@@ -40,8 +40,8 @@ namespace D7_set_length
         {
             bool result = false;
             string Text = string.Empty;
-            int[] Values = new int[] { };
-            int[][] Matrix = new int[][] { };
+            int[] Values = null;
+            int[][] Matrix = null;
             int Row = 0;
             int Column = 0;
             bool CheckResult1 = false;
@@ -53,32 +53,32 @@ namespace D7_set_length
             bool CheckResult7 = false;
             Text = "converter";
             SetLength(ref Text, 4);
-            Array.Resize(ref Values, 5);
-            for (Column = 0 /*# Low(Values) */.AsInteger(); Column <= Values.Length - 1 /*# High(Values) */; Column++)
+            SetLength(ref Values, 5);
+            for (Column = 0 /*# Low(Values) */.AsInteger(); Column <= Length(Values) - 1 /*# High(Values) */; Column++)
             {
                 Values[Column] = Column * Column;
             }
-            Array.Resize(ref Values, 7);
-            Array.Resize(ref Matrix, 2);
-            for (Row = 0 /*# Low(Matrix) */.AsInteger(); Row <= Matrix.Length - 1 /*# High(Matrix) */; Row++)
+            SetLength(ref Values, 7);
+            SetLength(ref Matrix, 2);
+            for (Row = 0 /*# Low(Matrix) */.AsInteger(); Row <= Length(Matrix) - 1 /*# High(Matrix) */; Row++)
             {
-                Array.Resize(ref Matrix[Row], 3);
-                for (Column = 0 /*# Low(Matrix[Row]) */.AsInteger(); Column <= Matrix[Row].Length - 1 /*# High(Matrix[Row]) */; Column++)
+                SetLength(ref Matrix[Row], 3);
+                for (Column = 0 /*# Low(Matrix[Row]) */.AsInteger(); Column <= Length(Matrix[Row]) - 1 /*# High(Matrix[Row]) */; Column++)
                 {
                     Matrix[Row][Column] = Row * 10 + Column;
                 }
             }
             CheckResult1 = (Text == "conv");
             result = CheckResult1;
-            CheckResult2 = (Values.Length == 7);
+            CheckResult2 = (Length(Values) == 7);
             result = result && CheckResult2;
             CheckResult3 = (Values[4] == 16);
             result = result && CheckResult3;
             CheckResult4 = (Values[5] == 0);
             result = result && CheckResult4;
-            CheckResult5 = (Matrix.Length == 2);
+            CheckResult5 = (Length(Matrix) == 2);
             result = result && CheckResult5;
-            CheckResult6 = (Matrix[1].Length == 3);
+            CheckResult6 = (Length(Matrix[1]) == 3);
             result = result && CheckResult6;
             CheckResult7 = (Matrix[1][2] == 12);
             result = result && CheckResult7;

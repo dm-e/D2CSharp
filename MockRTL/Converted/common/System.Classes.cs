@@ -47,6 +47,24 @@ namespace Classes
 public class ClassesInterface
 {
 
+	public class EStringListError : DException
+	{
+
+
+		public EStringListError(string Msg) : base(Msg) {}
+		public EStringListError(string Msg, params TVarRec[] Args) : base(Msg, Args) {}
+		public EStringListError(string Msg, TVarRec[] Args, int AHelpContext) : base(Msg, Args, AHelpContext) {}
+		public EStringListError(string Msg, int AHelpContext) : base(Msg, AHelpContext) {}
+		public EStringListError(ulong Ident) : base(Ident) {}
+		public EStringListError(Pointer<TResStringRec> ResStringRec) : base(ResStringRec) {}
+		public EStringListError(ulong Ident, params TVarRec[] Args) : base(Ident, Args) {}
+		public EStringListError(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(ResStringRec, Args) {}
+		public EStringListError(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(ResStringRec, Args, AHelpContext) {}
+		public EStringListError(ulong Ident, TVarRec[] Args, int AHelpContext) : base(Ident, Args, AHelpContext) {}
+		public EStringListError(ulong Ident, int AHelpContext) : base(Ident, AHelpContext) {}
+		public EStringListError(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec, AHelpContext) {}
+	}	
+
 	public class TInterfacedPersistent : TPersistent, IInterface
 	{
 
@@ -54,7 +72,9 @@ public class ClassesInterface
 /* TInterfacedPersistent */
 		protected virtual int QueryInterface(Guid IID, out object Obj)
 		{
+			Obj = null;
 			int result = 0;
+
 			result = E_NOINTERFACE;
 			return result;
 		}
@@ -101,7 +121,7 @@ public class ClassesInterface
 			get;
 		}
 	}	
-	public interface IInterfaceList
+	public interface IInterfaceList : IInterface
 	{
 		int GetCapacity();
 		int GetCount();
@@ -150,7 +170,7 @@ public class ClassesInterface
 
 	public class TList : TObject
 	{
-		private Pointer[] FList = new Pointer[]{};
+		private Pointer[] FList = null;
 		private int FCount;
 		private int FCapacity;
 		private Pointer Get(int Index)
@@ -192,10 +212,10 @@ public class ClassesInterface
 		public void Delete(int Index)
 		{
 		}
-		public static void Error(string Msg, int Data)
+		public static void Error(string Msg, long Data)
 		{
 		}
-		public static void Error(Pointer<TResStringRec> Msg, int Data)
+		public static void Error(Pointer<TResStringRec> Msg, long Data)
 		{
 		}
 		public void Exchange(int Index1, int Index2)
@@ -321,6 +341,8 @@ public class ClassesInterface
 				return GetCurrent();
 			}
 		}
+
+		public TListEnumerator() {}
 	}	
 
 	public class TBits : TObject
@@ -378,7 +400,7 @@ public class ClassesInterface
 
 	public class TInterfaceList : TInterfacedObject, IInterfaceList, IInterfaceListEx
 	{
-		private IInterface[] FItems = new IInterface[]{};
+		private IInterface[] FItems = null;
 		private int FCount;
 		private int FCapacity;
 
@@ -535,6 +557,8 @@ public class ClassesInterface
 				return GetCurrent();
 			}
 		}
+
+		public TInterfaceListEnumerator() {}
 	}	
 
 	public class TObservers : TObject
@@ -766,6 +790,8 @@ public class ClassesInterface
 				SetDisplayName(value);
 			}
 		}
+
+		public TCollectionItem() {}
 	}	
 
 	public class TCollection : TPersistent
@@ -905,6 +931,8 @@ public class ClassesInterface
 		/*property Items [Index: integer]: TCollectionItem read GetItem write SetItem;*/
 		public TCollectionItem ReadPropertyItems(int Index) { return GetItem(Index);}
 		public void WritePropertyItems(int Index, TCollectionItem Value){SetItem(Index, Value);}
+
+		public TCollection() {}
 	}	
 
 	public class TCollectionEnumerator : TObject
@@ -937,6 +965,8 @@ public class ClassesInterface
 				return GetCurrent();
 			}
 		}
+
+		public TCollectionEnumerator() {}
 	}	
 
 	public class TOwnedCollection : TCollection
@@ -955,6 +985,8 @@ public class ClassesInterface
 		{
 			//# base.Create(ItemClass);
 		}
+
+		public TOwnedCollection() {}
 	}	
 
 	abstract public class TStrings : TPersistent
@@ -1514,7 +1546,31 @@ public class ClassesInterface
 		{
 		}
 		abstract public int Read(UntypedPointer Buffer, int Count);
+		public virtual int Read(byte[] Buffer, int Offset, int Count)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		public int Read(ref byte[] Buffer, int Count)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
 		abstract public int Write(UntypedPointer Buffer, int Count);
+		public virtual int Write(byte[] Buffer, int Offset, int Count)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		public int Write(byte[] Buffer, int Count)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
 		public virtual int Seek(int Offset, ushort Origin)
 		{
 			int result = 0;
@@ -1530,7 +1586,19 @@ public class ClassesInterface
 		public void ReadBuffer(UntypedPointer Buffer, int Count)
 		{
 		}
+		public void ReadBuffer(ref byte[] Buffer, long Count)
+		{
+		}
+		public void ReadBuffer(ref byte[] Buffer, long Offset, long Count)
+		{
+		}
 		public void WriteBuffer(UntypedPointer Buffer, int Count)
+		{
+		}
+		public void WriteBuffer(byte[] Buffer, long Count)
+		{
+		}
+		public void WriteBuffer(byte[] Buffer, long Offset, long Count)
 		{
 		}
 		public long CopyFrom(TStream Source, long Count)
@@ -1578,10 +1646,10 @@ public class ClassesInterface
 
 	public class THandleStream : TStream
 	{
-		private uint FHandle;
+		private ulong FHandle;
 
 /* THandleStream */
-		public THandleStream(uint AHandle)
+		public THandleStream(ulong AHandle)
 		{
 			;
 		}
@@ -1591,7 +1659,19 @@ public class ClassesInterface
 			result = 0;
 			return result;
 		}
+		public override int Read(byte[] Buffer, int Offset, int Count)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
 		public override int Write(UntypedPointer Buffer, int Count)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		public override int Write(byte[] Buffer, int Offset, int Count)
 		{
 			int result = 0;
 			result = 0;
@@ -1604,13 +1684,15 @@ public class ClassesInterface
 			return result;
 		}
 		/*property Handle : THandle read FHandle;*/
-		public uint Handle
+		public ulong Handle
 		{
 			get
 			{
 				return FHandle;
 			}
 		}
+
+		public THandleStream() {}
 	}	
 
 	public class TFileStream : THandleStream
@@ -1637,7 +1719,8 @@ public class ClassesInterface
 			}
 		}
 
-		public TFileStream(uint AHandle) : base(AHandle) {}
+		public TFileStream(ulong AHandle) : base(AHandle) {}
+		public TFileStream() {}
 	}	
 
 	public class TCustomMemoryStream : TStream
@@ -1647,7 +1730,7 @@ public class ClassesInterface
 		private long FPosition;
 
 /* TCustomMemoryStream */
-		protected void SetPointer(Pointer Ptr, int Size)
+		protected void SetPointer(Pointer Ptr, long Size)
 		{
 		}
 		public override int Read(UntypedPointer Buffer, int Count)
@@ -1676,22 +1759,22 @@ public class ClassesInterface
 				return FMemory;
 			}
 		}
+		internal void  __D2CUnit_TCustomMemoryStream_SetPointer(Pointer Ptr, long Size) { SetPointer(Ptr, Size); }
 
 		public TCustomMemoryStream() {}
 		public override int Write(UntypedPointer Buffer, int Count)
 		{
 			throw new NotImplementedException();
-			return 0;
 		}
 	}	
 
 	public class TMemoryStream : TCustomMemoryStream
 	{
-		private int FCapacity;
-		private void SetCapacity(int NewCapacity)
+		private long FCapacity;
+		private void SetCapacity(long NewCapacity)
 		{
 		}
-		protected virtual Pointer Realloc(ref int NewCapacity)
+		protected virtual Pointer Realloc(ref long NewCapacity)
 		{
 			Pointer result = default;
 			result = default;
@@ -1725,7 +1808,7 @@ public class ClassesInterface
 			return result;
 		}
 		/*property Capacity : int read FCapacity write SetCapacity;*/
-		public int Capacity
+		public long Capacity
 		{
 			get
 			{
@@ -1812,10 +1895,67 @@ public class ClassesInterface
 		public TStringStream() {}
 	}	
 
+
+  /* Additional stream types. */
+
+	public class TBufferedFileStream : TFileStream
+	{
+
+
+/* TBufferedFileStream */
+		public TBufferedFileStream(string AFileName, ushort Mode, int BufferSize = 32768)
+		:		base(AFileName, Mode)
+		{
+			//# base.Create(AFileName, Mode);
+		}
+		public TBufferedFileStream(string AFileName, ushort Mode, uint Rights, int BufferSize = 32768)
+		:		base(AFileName, Mode, Rights)
+		{
+			//# base.Create(AFileName, Mode, (int) Rights);
+		}
+		public void FlushBuffer()
+		{
+		}
+
+		public TBufferedFileStream(string FileName, ushort Mode) : base(FileName, Mode) {}
+		public TBufferedFileStream(string FileName, ushort Mode, uint Rights) : base(FileName, Mode, Rights) {}
+		public TBufferedFileStream(ulong AHandle) : base(AHandle) {}
+		public TBufferedFileStream() {}
+	}	
+
+	public class TPointerStream : TCustomMemoryStream
+	{
+		private bool FReadOnly;
+
+/* TPointerStream */
+		public TPointerStream(Pointer Ptr, long Size, bool ReadOnly = false)
+		{
+			;
+			FReadOnly = ReadOnly;
+			__D2CUnit_TCustomMemoryStream_SetPointer(Ptr, Size);
+		}
+		public override int Write(UntypedPointer Buffer, int Count)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		/*property ReadOnly : bool read FReadOnly;*/
+		public bool ReadOnly
+		{
+			get
+			{
+				return FReadOnly;
+			}
+		}
+
+		public TPointerStream() {}
+	}	
+
 	public class TBytesStream : TMemoryStream
 	{
-		private byte[] FBytes = new byte[]{};
-		protected override Pointer Realloc(ref int NewCapacity)
+		private byte[] FBytes = null;
+		protected override Pointer Realloc(ref long NewCapacity)
 		{
 			Pointer result = default;
 			result = default;
@@ -1835,6 +1975,8 @@ public class ClassesInterface
 				return FBytes;
 			}
 		}
+
+		public TBytesStream() {}
 	}	
 
 	public class TResourceStream : TCustomMemoryStream
@@ -1842,11 +1984,11 @@ public class ClassesInterface
 
 
 /* TResourceStream */
-		public TResourceStream(uint Instance, string ResName, PChar ResType)
+		public TResourceStream(ulong Instance, string ResName, PChar ResType)
 		{
 			;
 		}
-		public TResourceStream(uint Instance, int ResID, PChar ResType)
+		public TResourceStream(ulong Instance, int ResID, PChar ResType)
 		{
 			;
 		}
@@ -1931,6 +2073,8 @@ public class ClassesInterface
 				return FTerminated;
 			}
 		}
+
+		public TThread() {}
 	}	
 
 	public class TThreadList : TObject
@@ -2012,9 +2156,120 @@ public class ClassesInterface
 				return GetCurrent();
 			}
 		}
+
+		public TStringsEnumerator() {}
 	}	
 
-	public class TStringReader : TObject
+	abstract public class TTextReader : TObject
+	{
+		abstract public int Peek();
+		abstract public int Read();
+		abstract public int Read(ref char[] Buffer, int Index, int Count);
+
+/* TTextReader */
+		public virtual int ReadBlock(ref char[] Buffer, int Index, int Count)
+		{
+			int result = 0;
+			result = 0;
+			return result;
+		}
+		abstract public string ReadLine();
+		abstract public string ReadToEnd();
+		public TTextReaderEnumerator GetEnumerator()
+		{
+			TTextReaderEnumerator result = default;
+			result = default;
+			return result;
+		}
+
+		public TTextReader() {}
+	}	
+
+	public class TTextReaderEnumerator : TObject
+	{
+		private TTextReader FReader;
+		private string FCurrent = string.Empty;
+
+/* TTextReaderEnumerator */
+		public TTextReaderEnumerator(TTextReader AReader)
+		{
+			;
+		}
+		public bool MoveNext()
+		{
+			bool result = false;
+			result = false;
+			return result;
+		}
+		/*property Current : string read FCurrent;*/
+		public string Current
+		{
+			get
+			{
+				return FCurrent;
+			}
+		}
+
+		public TTextReaderEnumerator() {}
+	}	
+
+	public class TTextWriter : TObject
+	{
+		private string FNewLine = string.Empty;
+
+/* TTextWriter */
+		public TTextWriter()
+		{
+			;
+		}
+		public virtual void Close()
+		{
+		}
+		public virtual void Flush()
+		{
+		}
+		public virtual void Write(bool Value)
+		{
+		}
+		public virtual void Write(char Value)
+		{
+		}
+		public virtual void Write(int Value)
+		{
+		}
+		public virtual void Write(long Value)
+		{
+		}
+		public virtual void Write(float Value)
+		{
+		}
+		public virtual void Write(double Value)
+		{
+		}
+		public virtual void Write(string Value)
+		{
+		}
+		public virtual void WriteLine()
+		{
+		}
+		public virtual void WriteLine(string Value)
+		{
+		}
+		/*property NewLine : string read FNewLine write FNewLine;*/
+		public string NewLine
+		{
+			get
+			{
+				return FNewLine;
+			}
+			set
+			{
+				FNewLine = value;
+			}
+		}
+	}	
+
+	public class TStringReader : TTextReader
 	{
 		private string FData = string.Empty;
 		private int FPosition;
@@ -2024,39 +2279,41 @@ public class ClassesInterface
 		{
 			;
 		}
-		public int Peek()
+		public override int Peek()
 		{
 			int result = 0;
 			result = -1;
 			return result;
 		}
-		public int Read()
+		public override int Read()
 		{
 			int result = 0;
 			result = -1;
 			return result;
 		}
-		public int Read(ref char[] Buffer, int Index, int Count)
+		public override int Read(ref char[] Buffer, int Index, int Count)
 		{
 			int result = 0;
 			result = 0;
 			return result;
 		}
-		public string ReadLine()
+		public override string ReadLine()
 		{
 			string result = string.Empty;
 			result = "";
 			return result;
 		}
-		public string ReadToEnd()
+		public override string ReadToEnd()
 		{
 			string result = string.Empty;
 			result = "";
 			return result;
 		}
+
+		public TStringReader() {}
 	}	
 
-	public class TStringWriter : TObject
+	public class TStringWriter : TTextWriter
 	{
 		private TStringBuilder FBuilder;
 
@@ -2069,16 +2326,16 @@ public class ClassesInterface
 		{
 			;
 		}
-		public void Write(string Value)
+		public override void Write(string Value)
 		{
 		}
-		public void Write(char Value)
+		public override void Write(char Value)
 		{
 		}
-		public void WriteLine()
+		public override void WriteLine()
 		{
 		}
-		public void WriteLine(string Value)
+		public override void WriteLine(string Value)
 		{
 		}
 		public override string ToString()
@@ -2097,7 +2354,7 @@ public class ClassesInterface
 		}
 	}	
 
-	public class TStreamReader : TObject
+	public class TStreamReader : TTextReader
 	{
 		private TStream FStream;
 		private TEncoding FEncoding;
@@ -2136,37 +2393,37 @@ public class ClassesInterface
 		public void Close()
 		{
 		}
-		public int Peek()
+		public override int Peek()
 		{
 			int result = 0;
 			result = -1;
 			return result;
 		}
-		public int Read()
+		public override int Read()
 		{
 			int result = 0;
 			result = -1;
 			return result;
 		}
-		public int Read(ref char[] Buffer, int Index, int Count)
+		public override int Read(ref char[] Buffer, int Index, int Count)
 		{
 			int result = 0;
 			result = 0;
 			return result;
 		}
-		public int ReadBlock(ref char[] Buffer, int Index, int Count)
+		public override int ReadBlock(ref char[] Buffer, int Index, int Count)
 		{
 			int result = 0;
 			result = 0;
 			return result;
 		}
-		public string ReadLine()
+		public override string ReadLine()
 		{
 			string result = string.Empty;
 			result = "";
 			return result;
 		}
-		public string ReadToEnd()
+		public override string ReadToEnd()
 		{
 			string result = string.Empty;
 			result = "";
@@ -2200,7 +2457,7 @@ public class ClassesInterface
 		public TStreamReader() {}
 	}	
 
-	public class TStreamWriter : TObject
+	public class TStreamWriter : TTextWriter
 	{
 		private TStream FStream;
 		private TEncoding FEncoding;
@@ -2232,22 +2489,22 @@ public class ClassesInterface
 				//# inherited;
 			}
 		}
-		public void Close()
+		public override void Close()
 		{
 		}
-		public void Flush()
+		public override void Flush()
 		{
 		}
-		public void Write(string Value)
+		public override void Write(string Value)
 		{
 		}
-		public void Write(char Value)
+		public override void Write(char Value)
 		{
 		}
-		public void WriteLine()
+		public override void WriteLine()
 		{
 		}
-		public void WriteLine(string Value)
+		public override void WriteLine(string Value)
 		{
 		}
 		/*property AutoFlush : bool read FAutoFlush write FAutoFlush;*/
@@ -2325,6 +2582,8 @@ public class ClassesInterface
 				return FReference;
 			}
 		}
+
+		public TRecall() {}
 	}	
 
 	public class TParser : TObject
@@ -2405,6 +2664,8 @@ public class ClassesInterface
 				return FToken;
 			}
 		}
+
+		public TParser() {}
 	}	
 
 	public class TBasicActionLink : TObject
@@ -2480,128 +2741,8 @@ public class ClassesInterface
 				return FClient;
 			}
 		}
-	}	
 
-	abstract public class TTextReader : TObject
-	{
-		abstract public int Peek();
-
-/* TTextReader */
-		abstract public int Read();
-		public virtual int Read(ref char[] Buffer, int Index, int Count)
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual int ReadBlock(ref char[] Buffer, int Index, int Count)
-		{
-			int result = 0;
-			result = 0;
-			return result;
-		}
-		public virtual string ReadLine()
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		public virtual string ReadToEnd()
-		{
-			string result = string.Empty;
-			result = "";
-			return result;
-		}
-		public TTextReaderEnumerator GetEnumerator()
-		{
-			TTextReaderEnumerator result = default;
-			result = default;
-			return result;
-		}
-
-		public TTextReader() {}
-	}	
-
-	public class TTextReaderEnumerator : TObject
-	{
-		private TTextReader FReader;
-		private string FCurrent = string.Empty;
-
-/* TTextReaderEnumerator */
-		public TTextReaderEnumerator(TTextReader AReader)
-		{
-			;
-		}
-		public bool MoveNext()
-		{
-			bool result = false;
-			result = false;
-			return result;
-		}
-		/*property Current : string read FCurrent;*/
-		public string Current
-		{
-			get
-			{
-				return FCurrent;
-			}
-		}
-	}	
-
-	public class TTextWriter : TObject
-	{
-		private string FNewLine = string.Empty;
-
-/* TTextWriter */
-		public TTextWriter()
-		{
-			;
-		}
-		public virtual void Close()
-		{
-		}
-		public virtual void Flush()
-		{
-		}
-		public virtual void Write(bool Value)
-		{
-		}
-		public virtual void Write(char Value)
-		{
-		}
-		public virtual void Write(int Value)
-		{
-		}
-		public virtual void Write(long Value)
-		{
-		}
-		public virtual void Write(float Value)
-		{
-		}
-		public virtual void Write(double Value)
-		{
-		}
-		public virtual void Write(string Value)
-		{
-		}
-		public virtual void WriteLine()
-		{
-		}
-		public virtual void WriteLine(string Value)
-		{
-		}
-		/*property NewLine : string read FNewLine write FNewLine;*/
-		public string NewLine
-		{
-			get
-			{
-				return FNewLine;
-			}
-			set
-			{
-				FNewLine = value;
-			}
-		}
+		public TBasicActionLink() {}
 	}	
 
 	public class TBinaryReader : TObject
@@ -2643,7 +2784,7 @@ public class ClassesInterface
 		}
 		public virtual byte[] ReadBytes(int Count)
 		{
-			byte[] result = new byte[]{};
+			byte[] result = null;
 			return result;
 		}
 		public virtual char ReadChar()
@@ -2654,7 +2795,7 @@ public class ClassesInterface
 		}
 		public virtual char[] ReadChars(int Count)
 		{
-			char[] result = new char[]{};
+			char[] result = null;
 			return result;
 		}
 		public virtual double ReadDouble()
@@ -2870,6 +3011,8 @@ public class ClassesInterface
 				FRoot = value;
 			}
 		}
+
+		public TFiler() {}
 	}	
 
 	public class TReader : TFiler
@@ -2971,6 +3114,8 @@ public class ClassesInterface
 			Variant result = default(Variant);
 			return result;
 		}
+
+		public TReader() {}
 	}	
 
 	public class TWriter : TFiler
@@ -3028,13 +3173,15 @@ public class ClassesInterface
 		public void WriteVariant(Variant Value)
 		{
 		}
+
+		public TWriter() {}
 	}	
 
 	public class TComponent : TPersistent
 	{
 		private TComponent FOwner;
 		private string FName = string.Empty;
-		private int FTag;
+		private long FTag;
 		private TSet FComponentState = new TSet();
 		private TSet FComponentStyle = new TSet();
 		private TObservers FObservers;
@@ -3275,7 +3422,7 @@ public class ClassesInterface
 			}
 		}
 		/*property Tag : int read FTag write FTag;*/
-		public int Tag
+		public long Tag
 		{
 			get
 			{
@@ -3286,6 +3433,8 @@ public class ClassesInterface
 				FTag = value;
 			}
 		}
+
+		public TComponent() {}
 	}	
 
 	public class TComponentEnumerator : TObject
@@ -3318,6 +3467,8 @@ public class ClassesInterface
 				return GetCurrent();
 			}
 		}
+
+		public TComponentEnumerator() {}
 	}	
 
 	public class TBasicAction : TComponent
@@ -3420,6 +3571,8 @@ public class ClassesInterface
 				FOnUpdate = value;
 			}
 		}
+
+		public TBasicAction() {}
 	}	
 
 	public class TDataModule : TComponent
@@ -3485,16 +3638,18 @@ public class ClassesInterface
 				FOnDestroy = value;
 			}
 		}
+
+		public TDataModule() {}
 	}	
-	public const int fmCreate = 0xFF00;
+	public const int fmCreate = 0xFFFF;
 	public const int MaxListSize = 0x07FFFFFF;
-	public enum TSeekOrigin {soBeginning,
+	public enum TSeekOrigin : byte {soBeginning,
                   soCurrent,
                   soEnd };
-	public enum TStreamOwnership {soReference,
+	public enum TStreamOwnership : byte {soReference,
                        soOwned };
 public delegate void TNotifyEvent(TObject Sender);
-public delegate bool THelpEvent(ushort Command, int Data, ref bool CallHelp);
+public delegate bool THelpEvent(ushort Command, long Data, ref bool CallHelp);
 public delegate void TObserverToggleEvent(IInterface AObserver, bool Value);
 public delegate bool TCanObserveEvent(int ID);
 public delegate void TObserverAddedEvent(int ID, IObserver Observer);
@@ -3504,9 +3659,9 @@ public delegate void TReaderProc(TReader Reader);
 public delegate void TWriterProc(TWriter Writer);
 public delegate void TStreamProc(TStream Stream);
 public delegate void TGetChildProc(TComponent Child);
-public delegate int TListSortCompare(IntPtr Item1, IntPtr Item2);
+public delegate int TListSortCompare(Pointer Item1, Pointer Item2);
 public delegate int TStringListSortCompare(TStringList List, int Index1, int Index2);
-	public enum TComponentStateItem {csLoading,
+	public enum TComponentStateItem : byte {csLoading,
                           csReading,
                           csWriting,
                           csDestroying,
@@ -3517,35 +3672,36 @@ public delegate int TStringListSortCompare(TStringList List, int Index1, int Ind
                           csFreeNotification,
                           csInline,
                           csDesignInstance };
-	public enum TComponentStyleItem {csInheritable,
+	public enum TComponentStyleItem : byte {csInheritable,
                           csCheckPropAvail,
                           csSubComponent,
                           csTransient };
-	public enum TOperation {opInsert,
+	public enum TOperation : byte {opInsert,
                  opRemove };
-	public enum TStringsDefinedItem {sdDelimiter,
+	public enum TStringsDefinedItem : byte {sdDelimiter,
                           sdQuoteChar,
                           sdNameValueSeparator,
                           sdLineBreak,
                           sdStrictDelimiter };
-	public enum TDuplicates {dupIgnore,
+	public enum TDuplicates : byte {dupIgnore,
                   dupAccept,
                   dupError };
-	public enum TListNotification {lnAdded,
+	public enum TListNotification : byte {lnAdded,
                         lnExtracted,
                         lnDeleted };
-	public enum TCollectionNotification {cnAdded,
+	public enum TCollectionNotification : byte {cnAdded,
                               cnExtracting,
                               cnRemoved };
-	public enum TAlignment {taLeftJustify,
+	public enum TAlignment : byte {taLeftJustify,
                  taRightJustify,
                  taCenter };
-	public enum TToken {toEOF,
+	public enum TToken : byte {toEOF,
              toSymbol,
              toString,
              toInteger,
              toFloat,
              toWString };
+
 	public static ushort StreamOriginalFormat()
 	{
 		ushort result = 0;

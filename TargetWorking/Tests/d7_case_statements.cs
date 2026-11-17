@@ -64,7 +64,7 @@ namespace D7_case_statements
             result = result && CheckResult6;
             CheckResult7 = (CharacterGroup('q') == 3);
             result = result && CheckResult7;
-            CheckResult8 = (CharacterGroup(((char)0x03A9)) == 4);
+            CheckResult8 = (CharacterGroup(((char)(0x03A9))) == 4);
             result = result && CheckResult8;
             CheckResult9 = (CharacterGroup('.') == 5);
             result = result && CheckResult9;
@@ -79,7 +79,7 @@ namespace D7_case_statements
     file class D7_case_statementsImplementation
     {
 
-        public enum TBuildState
+        public enum TBuildState : byte
         {
             bsQueued,
             bsRunning,
@@ -90,15 +90,16 @@ namespace D7_case_statements
         [StructLayout(LayoutKind.Explicit, Size = 24)]
         public struct TPayload
         {
-            [FieldOffset(0)]
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
             public ShortString Name;
-            [FieldOffset(8)]
+            [global::System.Runtime.InteropServices.FieldOffset(8)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool IsRange;
-            [FieldOffset(12)]
+            [global::System.Runtime.InteropServices.FieldOffset(12)]
             public int Value;
-            [FieldOffset(12)]
+            [global::System.Runtime.InteropServices.FieldOffset(12)]
             public int FirstValue;
-            [FieldOffset(16)]
+            [global::System.Runtime.InteropServices.FieldOffset(16)]
             public int LastValue;
             public void CreateRecordMembers()
             {
@@ -262,7 +263,7 @@ namespace D7_case_statements
             int result = 0;
             int Index = 0;
             result = 0;
-            for (Index = 1; Index <= AText.Length; Index++)
+            for (Index = 1; Index <= DelphiLength(AText); Index++)
             {
                 switch (AText[Index - 1])
                 {

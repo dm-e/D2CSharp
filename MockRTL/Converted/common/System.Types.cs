@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System;
 using static System.SystemInterface;
 using static System.Types.TypesImplementation;
@@ -45,6 +46,7 @@ namespace Types
 public class TypesInterface
 {
 
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct TSmallPoint
 	{
 		public short X;
@@ -387,24 +389,24 @@ public class TypesInterface
     the subrange here also lets D2CSharp distinguish this API type from a
     general Integer while remaining simple enough for the MockRTL.
   */
-	public enum TDirection {FromBeginning,
+	public enum TDirection : byte {FromBeginning,
                  FromEnd };
-	public enum TDuplicates {dupIgnore,
+	public enum TDuplicates : byte {dupIgnore,
                   dupAccept,
                   dupError };
-	public enum TEndian {Little,
+	public enum TEndian : byte {Little,
               Big };
-	public enum TSplitRectType {srLeft,
+	public enum TSplitRectType : byte {srLeft,
                      srRight,
                      srTop,
                      srBottom };
-	public enum THorzRectAlign {Center,
+	public enum THorzRectAlign : byte {Center,
                      Left,
                      Right };
-	public enum TVertRectAlign {Center,
+	public enum TVertRectAlign : byte {Center,
                      Top,
                      Bottom };
-	public enum TPointFType {ptInteger,
+	public enum TPointFType : byte {ptInteger,
                   ptFloat };
 
 

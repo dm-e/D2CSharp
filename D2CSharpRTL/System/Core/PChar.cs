@@ -25,6 +25,11 @@ namespace System
     {
         private Pointer<char> FPointer;
 
+        public static PChar FromLocation(Func<string> getter, Action<string> setter)
+        {
+            return new PChar(StringPointer.FromLocation(new Ref<string>(getter, setter)));
+        }
+
         public PChar(int size, bool alloc = false)
         {
             if (size < 0)
@@ -44,6 +49,10 @@ namespace System
         public PChar(char value)
         {
             FPointer = new Pointer<char>(new[] { value, '\0' });
+        }
+
+        public PChar(AnsiString? value) : this(value?.Decode())
+        {
         }
 
         public PChar(string? value, int index = 0)

@@ -57,17 +57,17 @@ namespace D7_position_search
             result = CheckResult1;
             CheckResult2 = (AnsiPos("Blue", TextValue) == 0);
             result = result && CheckResult2;
-            CheckResult3 = (TextValue.IndexOf("red") + 1 == 1);
+            CheckResult3 = (DelphiPos(("red").ToString(), (TextValue).ToString()) == 1);
             result = result && CheckResult3;
-            CheckResult4 = (TextValue.IndexOf("red", 2 - 1) + 1 == 10);
+            CheckResult4 = (DelphiPos(("red").ToString(), (TextValue).ToString(), 2) == 10);
             result = result && CheckResult4;
-            CheckResult5 = (TextValue.IndexOf("red", 11 - 1) + 1 == 0);
+            CheckResult5 = (DelphiPos(("red").ToString(), (TextValue).ToString(), 11) == 0);
             result = result && CheckResult5;
-            CheckResult6 = (ShortValue.IndexOf("red") + 1 == 1);
+            CheckResult6 = (DelphiPos(("red").ToString(), (ShortValue).ToString()) == 1);
             result = result && CheckResult6;
-            CheckResult7 = (ShortValue.IndexOf("red", 2 - 1) + 1 == 10);
+            CheckResult7 = (DelphiPos(("red").ToString(), (ShortValue).ToString(), 2) == 10);
             result = result && CheckResult7;
-            CheckResult8 = (ShortValue.IndexOf("green") + 1 == 0);
+            CheckResult8 = (DelphiPos(("green").ToString(), (ShortValue).ToString()) == 0);
             result = result && CheckResult8;
             return result;
         }

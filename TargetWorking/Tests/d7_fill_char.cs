@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System;
 using static D7_fill_char.D7_fill_charImplementation;
 using static D7_fill_char.D7_fill_charInterface;
@@ -50,11 +51,11 @@ namespace D7_fill_char
             Probe.Counter = 99;
             Probe.Enabled = true;
             Probe.Code = 17;
-            Probe = new TProbeRecord();  //# FillChar(Probe, SizeOf(Probe)0);
+            FillChar(Pointer<TProbeRecord>.FromStorage(new Ref<TProbeRecord>(() => Probe, __d2cUntypedValue => Probe = __d2cUntypedValue), DelphiTypeLayout.SizeOf<TProbeRecord>()).ToUntypedPointer(), 8 /* SizeOf(TProbeRecord) */, 0);
             CheckResult1 = Probe.Counter == 0;
             CheckResult2 = !Probe.Enabled;
             CheckResult3 = Probe.Code == 0;
-            FillChar(ref Buffer, Buffer.Length, (byte)0xA5);
+            FillChar(new UntypedPointer(Buffer), (8 * (int)DelphiTypeSize.Byte), 0xA5);
             CheckResult4 = true;
             for (Index = 0 /*# Low(Buffer) */; Index <= 7 /*# High(Buffer) */; Index++)
             {
@@ -74,10 +75,15 @@ namespace D7_fill_char
     {
 
 
+        [StructLayout(LayoutKind.Explicit, Size = 8)]
         public struct TProbeRecord
         {
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
             public int Counter;
+            [global::System.Runtime.InteropServices.FieldOffset(4)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool Enabled;
+            [global::System.Runtime.InteropServices.FieldOffset(5)]
             public byte Code;
             public static TProbeRecord CreateRecord()
             {

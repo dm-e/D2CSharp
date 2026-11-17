@@ -54,6 +54,7 @@ namespace D7_interfaces_basic
     file class D7_interfaces_basicImplementation
     {
 
+        [Guid("31C1730F-F8B7-49AE-934C-27AB0A97F780")]
         public interface IValueProvider : IInterface
         {
 

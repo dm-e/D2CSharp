@@ -44,17 +44,17 @@ namespace D7_set_include
             bool CheckResult2 = false;
             bool CheckResult3 = false;
             bool CheckResult4 = false;
-            Features = new TSet();
+            Features = (new TSet());
             Features = Features << (int)TFeature.ftCache;
             Features = Features << (int)TFeature.ftMetrics;
             Features = Features << (int)TFeature.ftCache;
-            CheckResult1 = !(Features.Contains((int)TFeature.ftLogging));
+            CheckResult1 = !(Features.Contains((int)(TFeature.ftLogging)));
             result = CheckResult1;
-            CheckResult2 = (Features.Contains((int)TFeature.ftCache));
+            CheckResult2 = (Features.Contains((int)(TFeature.ftCache)));
             result = result && CheckResult2;
-            CheckResult3 = (Features.Contains((int)TFeature.ftMetrics));
+            CheckResult3 = (Features.Contains((int)(TFeature.ftMetrics)));
             result = result && CheckResult3;
-            CheckResult4 = !(Features.Contains((int)TFeature.ftTracing));
+            CheckResult4 = !(Features.Contains((int)(TFeature.ftTracing)));
             result = result && CheckResult4;
             return result;
         }
@@ -65,7 +65,7 @@ namespace D7_set_include
     file class D7_set_includeImplementation
     {
 
-        public enum TFeature
+        public enum TFeature : byte
         {
             ftLogging,
             ftCache,

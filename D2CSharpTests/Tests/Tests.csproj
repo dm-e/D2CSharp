@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="StaticArrayPointerRegression.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\..\TargetWorking\Tests\d7_abstract_classes.cs" Link="d7_abstract_classes.cs" />
     <Compile Include="..\..\TargetWorking\Tests\d7_ansi_case.cs" Link="d7_ansi_case.cs" />
     <Compile Include="..\..\TargetWorking\Tests\d7_ansi_compare.cs" Link="d7_ansi_compare.cs" />
@@ -73,6 +77,10 @@
     <Compile Include="..\..\TargetWorking\Tests\d7_with_statement.cs" Link="d7_with_statement.cs" />
     <Compile Include="..\..\TargetWorking\Tests\factory.cs" Link="factory.cs" />
     <Compile Include="..\..\TargetWorking\Tests\objfree.cs" Link="objfree.cs" />
+    <Compile Include="..\..\TargetWorking\Tests\system_inifiles.cs" Link="system_inifiles.cs" />
+    <Compile Include="..\..\TargetWorking\Tests\system_ioutils.cs" Link="system_ioutils.cs" />
+    <Compile Include="..\..\TargetWorking\Tests\system_timespan.cs" Link="system_timespan.cs" />
+    <Compile Include="..\..\TargetWorking\Tests\system_uitypes.cs" Link="system_uitypes.cs" />
     <Compile Include="..\..\TargetWorking\Tests\vstatic.cs" Link="vstatic.cs" />
   </ItemGroup>
 

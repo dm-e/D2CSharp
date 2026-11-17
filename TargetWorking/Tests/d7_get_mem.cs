@@ -47,7 +47,7 @@ namespace D7_get_mem
             bool CheckResult3 = false;
             bool CheckResult4 = false;
             Block = default;
-            GetMem(ref Block, DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 8 }).ByteSize, DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 8 }));
+            GetMem(ref Block, (8 * (int)DelphiTypeSize.Integer), DelphiStaticArrayInfo.Create<int>(new int[] { 0 }, new int[] { 8 }));
             try
             {
                 Sum = 0;

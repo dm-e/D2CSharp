@@ -50,22 +50,22 @@ namespace D7_sets
             bool CheckResult6 = false;
             bool CheckResult7 = false;
             bool CheckResult8 = false;
-            Active = new TSet() << (int)TSignal.sgRed << (int)TSignal.sgGreen;
-            Active = Active + (new TSet() << (int)TSignal.sgBlue);
-            Active = Active - (new TSet() << (int)TSignal.sgRed);
-            EvenValues = new TSet();
+            Active = (new TSet() << (int)TSignal.sgRed << (int)TSignal.sgGreen);
+            Active = Active + ((new TSet() << (int)TSignal.sgBlue));
+            Active = Active - ((new TSet() << (int)TSignal.sgRed));
+            EvenValues = (new TSet());
             for (Index = 0 /*# Low(TSmallNumber) */; Index <= 31 /*# High(TSmallNumber) */; Index++)
             {
                 if ((Index % 2) == 0)
                     EvenValues = EvenValues << (int)Index;
             }
-            CheckResult1 = !(Active.Contains((int)TSignal.sgRed));
+            CheckResult1 = !(Active.Contains((int)(TSignal.sgRed)));
             result = CheckResult1;
-            CheckResult2 = !(Active.Contains((int)TSignal.sgAmber));
+            CheckResult2 = !(Active.Contains((int)(TSignal.sgAmber)));
             result = result && CheckResult2;
-            CheckResult3 = (Active.Contains((int)TSignal.sgGreen));
+            CheckResult3 = (Active.Contains((int)(TSignal.sgGreen)));
             result = result && CheckResult3;
-            CheckResult4 = (Active.Contains((int)TSignal.sgBlue));
+            CheckResult4 = (Active.Contains((int)(TSignal.sgBlue)));
             result = result && CheckResult4;
             CheckResult5 = (EvenValues.Contains(0));
             result = result && CheckResult5;
@@ -84,7 +84,7 @@ namespace D7_sets
     file class D7_setsImplementation
     {
 
-        public enum TSignal
+        public enum TSignal : byte
         {
             sgRed,
             sgAmber,

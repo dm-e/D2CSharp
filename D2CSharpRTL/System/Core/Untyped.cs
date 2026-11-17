@@ -24,6 +24,56 @@ using System.Threading;
 
 namespace System
 {
+    // A const untyped pointer argument addresses the pointer value itself.
+    // Keep its target pinned while exposing the serialized address to native IO.
+    internal sealed class PointerValueBacking : PointerBacking
+    {
+        private readonly Func<PointerPin> FPinTarget;
+        internal PointerValueBacking(Func<PointerPin> pinTarget) => FPinTarget = pinTarget;
+        internal override nint ByteLength => D2C.PointerSize;
+        internal override bool IsReadOnly => true;
+
+        private byte[] AddressBytes(IntPtr address)
+        {
+            return D2C.PointerSize == 4
+                ? BitConverter.GetBytes(unchecked((int)address.ToInt64()))
+                : BitConverter.GetBytes(address.ToInt64());
+        }
+
+        internal override byte ReadByte(nint offset)
+        {
+            ValidateRange(offset, 1);
+            using PointerPin target = FPinTarget();
+            return AddressBytes(target.Address)[checked((int)offset)];
+        }
+
+        internal override void WriteByte(nint offset, byte value) =>
+            throw new InvalidOperationException("A pointer value snapshot is read-only.");
+
+        internal override IntPtr GetPersistentAddress(nint offset) =>
+            throw new InvalidOperationException("A pointer value snapshot requires a pin.");
+
+        internal override PointerPin Pin(nint offset)
+        {
+            ValidateRange(offset, 0);
+            PointerPin target = FPinTarget();
+            try
+            {
+                PointerPin storage = PointerBackingRegistry.ForArray(AddressBytes(target.Address)).Pin(offset);
+                return new PointerPin(storage.Address, () =>
+                {
+                    try { storage.Dispose(); }
+                    finally { target.Dispose(); }
+                });
+            }
+            catch
+            {
+                target.Dispose();
+                throw;
+            }
+        }
+    }
+
     public struct UntypedPointer : IPointer<byte>, IEquatable<UntypedPointer>
     {
         private PointerView FView;
@@ -119,6 +169,12 @@ namespace System
                 return;
             }
 
+            if (PointerBackingRegistry.TryResolvePin(address, capacity, out FView))
+            {
+                if (ownsMemory)
+                    throw new ArgumentException("Pinned managed storage cannot be owned as native memory.", nameof(ownsMemory));
+                return;
+            }
             nint length = capacity == 0 ? -1 : capacity;
             FView = PointerView.FromBacking(
                 new NativeMemoryBacking(address, length, ownsMemory));
@@ -232,7 +288,15 @@ namespace System
         public T Read<T>(int index = 0)
         {
             if (typeof(T) == typeof(string))
+            {
+                if (FView.Backing != null && FView.Backing.TryReadValue(
+                    checked(FView.ByteOffset + index), out T value))
+                {
+                    FView.ValidateRelativeRange(index, DelphiTypeLayout.SizeOf<T>());
+                    return value;
+                }
                 return (T)(object)ReadUtf16String(index);
+            }
 
             return FView.Read<T>(index);
         }
@@ -241,6 +305,12 @@ namespace System
         {
             if (typeof(T) == typeof(string))
             {
+                if (FView.Backing != null && FView.Backing.TryReadValue(
+                    checked(FView.ByteOffset + index), out T previous))
+                {
+                    FView.Write(index, value);
+                    return;
+                }
                 string text = (object?)value == null
                     ? string.Empty
                     : (string)(object)value!;
@@ -360,6 +430,32 @@ namespace System
 
             return new UntypedPointer(bytes, charIndex);
         }
+
+        private static UntypedPointer FromPointerValue(Func<PointerPin> pinTarget, int byteIndex)
+        {
+            PointerView view = PointerView.FromBacking(new PointerValueBacking(pinTarget));
+            if (byteIndex < 0 || byteIndex > view.ByteLength)
+                throw new ArgumentOutOfRangeException(nameof(byteIndex));
+            return new UntypedPointer(view.Slice(byteIndex));
+        }
+
+        public static UntypedPointer FromValue(PChar value, int byteIndex = 0) =>
+            FromPointerValue(value.Pin, byteIndex);
+
+        public static UntypedPointer FromValue(PAnsiChar value, int byteIndex = 0) =>
+            FromPointerValue(value.Pin, byteIndex);
+
+        public static UntypedPointer FromValue(Pointer value, int byteIndex = 0) =>
+            FromPointerValue(value.Pin, byteIndex);
+
+        public static UntypedPointer FromValue(UntypedPointer value, int byteIndex = 0) =>
+            FromPointerValue(value.Pin, byteIndex);
+
+        public static UntypedPointer FromValue<T>(Pointer<T> value, int byteIndex = 0) =>
+            FromPointerValue(value.Pin, byteIndex);
+
+        public static UntypedPointer FromValue(TSet value, int byteIndex = 0) =>
+            FromByteIndex(value?.ToBytes() ?? new byte[TSet.DelphiSizeOf], byteIndex);
 
         public static UntypedPointer FromValue<T>(
             T value,
@@ -572,18 +668,30 @@ namespace System
             return new UntypedPointer(address);
         }
 
+        /// <summary>Addresses an element of a rectangular array using CLR indices.</summary>
+        public static UntypedPointer FromArrayElement(Array array, params int[] indices)
+        {
+            ArgumentNullException.ThrowIfNull(array);
+            ArgumentNullException.ThrowIfNull(indices);
+            if (indices.Length != array.Rank)
+                throw new ArgumentException("One index per array dimension is required.", nameof(indices));
+            int linearIndex = 0;
+            for (int dimension = 0; dimension < indices.Length; dimension++)
+            {
+                int index = checked(indices[dimension] - array.GetLowerBound(dimension));
+                int length = array.GetLength(dimension);
+                if ((uint)index >= (uint)length) throw new IndexOutOfRangeException();
+                linearIndex = checked(linearIndex * length + index);
+            }
+            return new UntypedPointer(array, linearIndex);
+        }
+
         private static PointerView CreateArrayElementView(
             Array? array,
             int elementIndex)
         {
             if (array == null)
                 return default;
-
-            if (array.Rank != 1)
-            {
-                throw new NotSupportedException(
-                    "Only one-dimensional array pointer views are supported.");
-            }
 
             if (elementIndex < 0 || elementIndex > array.Length)
                 throw new ArgumentOutOfRangeException(nameof(elementIndex));

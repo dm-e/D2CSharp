@@ -45,6 +45,34 @@ namespace System
         private readonly uint[] bits;
         private int version;
 
+        public static explicit operator byte(TSet value)
+        {
+            return value == null ? (byte)0 : unchecked((byte)value.bits[0]);
+        }
+
+        public static explicit operator int(TSet value) => unchecked((int)(value?.bits[0] ?? 0));
+
+        public static explicit operator TSet(int value)
+        {
+            var result = new TSet();
+            result.bits[0] = unchecked((uint)value);
+            return result;
+        }
+
+        internal byte[] ToBytes()
+        {
+            var result = new byte[DelphiSizeOf];
+            Buffer.BlockCopy(bits, 0, result, 0, result.Length);
+            return result;
+        }
+
+        internal static TSet FromBytes(byte[] bytes)
+        {
+            var result = new TSet();
+            Buffer.BlockCopy(bytes, 0, result.bits, 0, Math.Min(bytes.Length, DelphiSizeOf));
+            return result;
+        }
+
         public TSet()
         {
             bits = new uint[WordCount];

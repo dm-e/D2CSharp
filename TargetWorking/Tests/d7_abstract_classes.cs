@@ -75,6 +75,17 @@ namespace D7_abstract_classes
                     return FProfile;
                 }
             }
+            internal string __D2CUnit_TImportTask_Profile
+            {
+                get
+                {
+                    return Profile;
+                }
+                set
+                {
+                    Profile = value;
+                }
+            }
 
             public TImportTask()
             {
@@ -85,7 +96,7 @@ namespace D7_abstract_classes
         {
             protected override void Configure()
             {
-                Profile = "delimited:semicolon";
+                __D2CUnit_TImportTask_Profile = "delimited:semicolon";
             }
 
             public TDelimitedImportTask(string ASourceName) : base(ASourceName) { }
@@ -98,7 +109,7 @@ namespace D7_abstract_classes
         {
             protected override void Configure()
             {
-                Profile = "structured:object";
+                __D2CUnit_TImportTask_Profile = "structured:object";
             }
 
             public TStructuredImportTask(string ASourceName) : base(ASourceName) { }

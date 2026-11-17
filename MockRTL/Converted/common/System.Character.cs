@@ -36,6 +36,7 @@ namespace Character
   Part of the D2CSharp project by t2t-soft. See LICENSE and NOTICE.
 */
 
+
 public class CharacterInterface
 {
 
@@ -365,7 +366,7 @@ public class CharacterInterface
     It is repeated here as a translation-compatible fallback until the
     System MockRTL exposes UCS4Char directly.
   */
-	public enum TUnicodeCategory {ucControl,
+	public enum TUnicodeCategory : byte {ucControl,
                        ucFormat,
                        ucUnassigned,
                        ucPrivateUse,

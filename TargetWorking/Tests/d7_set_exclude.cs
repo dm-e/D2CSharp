@@ -44,16 +44,16 @@ namespace D7_set_exclude
             bool CheckResult2 = false;
             bool CheckResult3 = false;
             bool CheckResult4 = false;
-            Flags = new TSet() << (int)TAccessFlag.afRead << (int)TAccessFlag.afWrite << (int)TAccessFlag.afAudit;
+            Flags = (new TSet() << (int)TAccessFlag.afRead << (int)TAccessFlag.afWrite << (int)TAccessFlag.afAudit);
             Flags = Flags >> (int)TAccessFlag.afWrite;
             Flags = Flags >> (int)TAccessFlag.afExecute;
-            CheckResult1 = (Flags.Contains((int)TAccessFlag.afRead));
+            CheckResult1 = (Flags.Contains((int)(TAccessFlag.afRead)));
             result = CheckResult1;
-            CheckResult2 = !(Flags.Contains((int)TAccessFlag.afWrite));
+            CheckResult2 = !(Flags.Contains((int)(TAccessFlag.afWrite)));
             result = result && CheckResult2;
-            CheckResult3 = !(Flags.Contains((int)TAccessFlag.afExecute));
+            CheckResult3 = !(Flags.Contains((int)(TAccessFlag.afExecute)));
             result = result && CheckResult3;
-            CheckResult4 = (Flags.Contains((int)TAccessFlag.afAudit));
+            CheckResult4 = (Flags.Contains((int)(TAccessFlag.afAudit)));
             result = result && CheckResult4;
             return result;
         }
@@ -64,7 +64,7 @@ namespace D7_set_exclude
     file class D7_set_excludeImplementation
     {
 
-        public enum TAccessFlag
+        public enum TAccessFlag : byte
         {
             afRead,
             afWrite,

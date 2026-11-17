@@ -19,6 +19,64 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 
+/// <summary>
+/// Delphi storage sizes, independent of the corresponding CLR representation.
+/// Equal sizes intentionally have equal enum values. Cast a member to int for
+/// a C# constant expression; use D2C.SizeOf when the member is selected at runtime.
+/// </summary>
+public enum DelphiTypeSize
+{
+    Untyped = 0,
+    Boolean = 1,
+    ByteBool = 1,
+    ShortInt = 1,
+    Byte = 1,
+    AnsiChar = 1,
+    SmallInt = 2,
+    Word = 2,
+    WordBool = 2,
+    Char = 2,
+    WideChar = 2,
+    Integer = 4,
+    Cardinal = 4,
+    LongInt = 4,
+    LongWord = 4,
+    LongBool = 4,
+    Single = 4,
+    Real48 = 6,
+    Int64 = 8,
+    UInt64 = 8,
+    Comp = 8,
+    Real = 8,
+    Double = 8,
+    Currency = 8,
+    TDateTime = 8,
+    Extended = D2C.PointerSize == 8 ? 8 : 10,
+    NativeInt = D2C.PointerSize,
+    NativeUInt = D2C.PointerSize,
+    Pointer = D2C.PointerSize,
+    PChar = D2C.PointerSize,
+    PWideChar = D2C.PointerSize,
+    PAnsiChar = D2C.PointerSize,
+    String = D2C.PointerSize,
+    UnicodeString = D2C.PointerSize,
+    AnsiString = D2C.PointerSize,
+    WideString = D2C.PointerSize,
+    DynamicArray = D2C.PointerSize,
+    Class = D2C.PointerSize,
+    ClassReference = D2C.PointerSize,
+    Interface = D2C.PointerSize,
+    Procedure = D2C.PointerSize,
+    AnonymousMethod = D2C.PointerSize,
+    Method = 2 * D2C.PointerSize,
+    ShortString = 256,
+    Variant = D2C.PointerSize == 8 ? 24 : 16,
+    OleVariant = D2C.PointerSize == 8 ? 24 : 16,
+    TVarRec = 2 * D2C.PointerSize,
+    File = D2C.PointerSize == 8 ? 616 : 592,
+    TextFile = D2C.PointerSize == 8 ? 754 : 730
+}
+
 public static class D2C
 {
     public enum DelphiTargetPlatform
@@ -29,6 +87,12 @@ public static class D2C
 
     private static readonly ConcurrentDictionary<Type, int> SizeCache =
         new ConcurrentDictionary<Type, int>();
+
+    /// <summary>Returns a Delphi size selected at runtime.</summary>
+    public static int SizeOf(DelphiTypeSize type)
+    {
+        return (int)type;
+    }
 
     public static int SizeOf<T>()
     {
@@ -51,7 +115,7 @@ public static class D2C
         return SizeCache.GetOrAdd(Type, CalculateSizeOf);
     }
 
-#if D2C_TARGET_WIN64
+#if D2C_TARGET_WIN64 || WIN64
     public const int PointerSize = 8;
 #else
     public const int PointerSize = 4;
@@ -345,12 +409,12 @@ public static class D2C
     {
         get
         {
-            return IntPtr.Size == 8;
+            return PointerSize == 8;
         }
     }
 
     public const DelphiTargetPlatform TargetPlatform =
-  DelphiTargetPlatform.Win32;
+        PointerSize == 8 ? DelphiTargetPlatform.Win64 : DelphiTargetPlatform.Win32;
 
     public static int SizeOfExtended
     {

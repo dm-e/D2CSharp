@@ -39,13 +39,12 @@ namespace D7_set_string
         public static bool RunSetStringChecks()
         {
             bool result = false;
-            char[] Letters = new char[7/*# range 0..6*/] { 'A', 'u', 'r', 'o', 'r', 'a', '!' };
             string Text = string.Empty;
             PChar Start = default;
             bool CheckResult1 = false;
             bool CheckResult2 = false;
             bool CheckResult3 = false;
-            Start = new PChar(Letters, 0);
+            Start = new PChar((Pointer<char[]>.FromField(typeof(__d2cConstants_2), "D7_set_string.__d2cConstants_2.__d2cConstants_2.Letters", static owner => __d2cConstants_2.Letters, static (owner, value) => DelphiStaticArrayInfo.Create<char>(new int[] { 0 }, new int[] { 7 }).Copy(value, __d2cConstants_2.Letters), DelphiStaticArrayInfo.Create<char>(new int[] { 0 }, new int[] { 7 }))).AsStaticArrayPointer(DelphiStaticArrayInfo.Create<char>(new int[] { 0 }, new int[] { 7 })).ElementPointer<char>(0));
             SetString(ref Text, Start, 6);
             CheckResult1 = Text == "Aurora";
             result = CheckResult1;
@@ -61,6 +60,16 @@ namespace D7_set_string
 
     } // class D7_set_stringInterface
 
+
+    public class __d2cConstants_2
+    {
+
+        public static char[] Letters = new char[7/*# range 0..6*/] { 'A', 'u', 'r', 'o', 'r', 'a', '!' };
+
+        public __d2cConstants_2()
+        {
+        }
+    }
 
     file class D7_set_stringImplementation
     {

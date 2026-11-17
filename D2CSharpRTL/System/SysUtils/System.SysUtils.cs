@@ -55,6 +55,42 @@ namespace Sysutils
 
 public class SysutilsInterface
 {
+    private static string PAnsiCharToUnicodeString(PAnsiChar value)
+        => value.IsNull()
+            ? string.Empty
+            : value.ToAnsiString().Decode();
+
+    /*
+     * Managed resource-string registry.
+     *
+     * This is the first managed implementation stage for LoadStr and
+     * FmtLoadStr. Native executable, DLL and package resource enumeration
+     * remains separate and can be added later without changing this API.
+     */
+    private static readonly object StringResourceLock =
+        new object();
+
+    private static readonly Dictionary<uint, string>
+        ManagedStringResources =
+            new Dictionary<uint, string>();
+
+    internal static nint NativeHandle(uint value)
+    {
+        // Preserve the native bit pattern when a Delphi NativeUInt handle
+        // is still exposed as uint by the translated public API.
+        return unchecked((nint)(nuint)value);
+    }
+
+    internal static nint NativeHandle(nint value)
+    {
+        return value;
+    }
+
+    internal static uint LegacyHandle(nint value)
+    {
+        // Preserve the translated 32-bit public handle representation.
+        return unchecked((uint)(nuint)value);
+    }
 
 	public enum TStringSplitOptions { None, ExcludeEmpty, ExcludeLastEmpty };
 
@@ -1134,36 +1170,171 @@ public class SysutilsInterface
 		public bool FarEast;
 		public bool MiddleEast;
 		public static TSysLocale CreateRecord(){return new TSysLocale();}
-	}	
+	}
 
-  /*
-    Delphi exception declarations used as translation metadata.
+            /*
+              Delphi exception declarations used as translation metadata.
 
-    D2CSharp/Delphi2C# maps System.SysUtils.Exception to DException in C#.
-    The Pascal declarations retain the Delphi names and inheritance hierarchy.
-    The C# runtime implementation provides the .NET-specific DException base.
-  */
+              D2CSharp/Delphi2C# maps System.SysUtils.Exception to DException in C#.
+              The Pascal declarations retain the Delphi names and inheritance hierarchy.
+              The C# runtime implementation provides the .NET-specific DException base.
+            */
 
-	public class DException : global::System.Exception
-	{
-		public int HelpContext { get; protected set; }
+            public class DException : global::System.Exception
+            {
+                private string FMessage = string.Empty;
+                private int FHelpContext;
+                private bool FDestroyed;
 
-		//static DException() : base() { }
-		public DException(string Msg) : base(Msg ?? string.Empty) {}
-		public DException(string Msg, params TVarRec[] Args) : base(SysutilsInterface.Format(Msg ?? string.Empty, Args)) {}
-		public DException(uint Ident) : base(SysutilsInterface.LoadStr(Ident)) {}
-		public DException(Pointer<TResStringRec> ResStringRec) : base(ResStringRec.IsNull() ? string.Empty : ResStringRec.Deref().FMessage) {}
-		public DException(uint Ident, params TVarRec[] Args) : base(SysutilsInterface.FmtLoadStr(Ident, Args)) {}
-		public DException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args) : base(SysutilsInterface.Format(ResStringRec.IsNull() ? string.Empty : ResStringRec.Deref().FMessage, Args)) {}
-		public DException(string Msg, int AHelpContext) : base(Msg ?? string.Empty) { HelpContext = AHelpContext; }
-		public DException(string Msg, TVarRec[] Args, int AHelpContext) : base(SysutilsInterface.Format(Msg ?? string.Empty, Args)) { HelpContext = AHelpContext; }
-		public DException(uint Ident, int AHelpContext) : base(SysutilsInterface.LoadStr(Ident)) { HelpContext = AHelpContext; }
-		public DException(Pointer<TResStringRec> ResStringRec, int AHelpContext) : base(ResStringRec.IsNull() ? string.Empty : ResStringRec.Deref().FMessage) { HelpContext = AHelpContext; }
-		public DException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext) : base(SysutilsInterface.Format(ResStringRec.IsNull() ? string.Empty : ResStringRec.Deref().FMessage, Args)) { HelpContext = AHelpContext; }
-		public DException(uint Ident, TVarRec[] Args, int AHelpContext) : base(SysutilsInterface.FmtLoadStr(Ident, Args)) { HelpContext = AHelpContext; }
-	}	
+                static DException()
+                {
+                }
 
-	public class EArgumentException : DException
+                public DException()
+                    : base(string.Empty)
+                {
+                }
+
+                public DException(string Msg)
+                    : base(Msg ?? string.Empty)
+                {
+                    FMessage = Msg ?? string.Empty;
+                }
+
+                public DException(string Msg, params TVarRec[] Args)
+                    : this(FormatMessage(Msg, Args))
+                {
+                }
+
+                public DException(uint Ident)
+                    : this(LoadStr(Ident))
+                {
+                }
+
+                public DException(Pointer<TResStringRec> ResStringRec)
+                    : this(ResolveResourceString(ResStringRec))
+                {
+                }
+
+                public DException(uint Ident, params TVarRec[] Args)
+                    : this(FormatMessage(LoadStr(Ident), Args))
+                {
+                }
+
+                public DException(Pointer<TResStringRec> ResStringRec, params TVarRec[] Args)
+                    : this(FormatMessage(ResolveResourceString(ResStringRec), Args))
+                {
+                }
+
+                public DException(string Msg, int AHelpContext)
+                    : this(Msg)
+                {
+                    FHelpContext = AHelpContext;
+                }
+
+                public DException(string Msg, TVarRec[] Args, int AHelpContext)
+                    : this(FormatMessage(Msg, Args), AHelpContext)
+                {
+                }
+
+                public DException(uint Ident, int AHelpContext)
+                    : this(LoadStr(Ident), AHelpContext)
+                {
+                }
+
+                public DException(Pointer<TResStringRec> ResStringRec, int AHelpContext)
+                    : this(ResolveResourceString(ResStringRec), AHelpContext)
+                {
+                }
+
+                public DException(Pointer<TResStringRec> ResStringRec, TVarRec[] Args, int AHelpContext)
+                    : this(FormatMessage(ResolveResourceString(ResStringRec), Args), AHelpContext)
+                {
+                }
+
+                public DException(uint Ident, TVarRec[] Args, int AHelpContext)
+                    : this(FormatMessage(LoadStr(Ident), Args), AHelpContext)
+                {
+                }
+
+                public DException(ulong Ident)
+                    : this(LoadStr(Ident))
+                {
+                }
+
+                public DException(ulong Ident, params TVarRec[] Args)
+                    : this(FormatMessage(LoadStr(Ident), Args))
+                {
+                }
+
+                public DException(ulong Ident, int AHelpContext)
+                    : this(LoadStr(Ident), AHelpContext)
+                {
+                }
+
+                public DException(ulong Ident, TVarRec[] Args, int AHelpContext)
+                    : this(FormatMessage(LoadStr(Ident), Args), AHelpContext)
+                {
+                }
+
+                private static string FormatMessage(string format, TVarRec[] args)
+                {
+                    return Format(format ?? string.Empty, args ?? global::System.Array.Empty<TVarRec>());
+                }
+
+                private static string ResolveResourceString(Pointer<TResStringRec> resourceString)
+                {
+                    if (resourceString.IsNull())
+                        return string.Empty;
+
+                    return resourceString.Deref().FMessage ?? string.Empty;
+                }
+
+                public virtual void Destroy()
+                {
+                    if (FDestroyed)
+                        return;
+
+                    FDestroyed = true;
+                }
+                public override string ToString() => Message;
+                public int HelpContext
+                {
+                    get
+                    {
+                        return FHelpContext;
+                    }
+                    set
+                    {
+                        FHelpContext = value;
+                    }
+                }
+
+                public new string Message
+                {
+                    get
+                    {
+                        return FMessage;
+                    }
+                    set
+                    {
+                        FMessage = value ?? string.Empty;
+                    }
+                }
+
+                public string ClassName()
+                {
+                    return ClassType().Name;
+                }
+
+
+                public global::System.Type ClassType()
+                {
+                    return GetType();
+                }
+            }
+
+            public class EArgumentException : DException
 	{
 
 
@@ -2443,6 +2614,7 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 			return CultureInfo.CurrentCulture.DateTimeFormat.DayNames[index];
 		}
 
+		char lastSpecifier = '\0';
 		for (int i = 0; i < format.Length;)
 		{
 			char ch = format[i];
@@ -2515,6 +2687,11 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 					break;
 
 				case 'm':
+                    if (count <= 2 && lastSpecifier == 'h')
+                    {
+                        b.Append(count == 1 ? dt.Minute.ToString(CultureInfo.InvariantCulture) : dt.Minute.ToString("00", CultureInfo.InvariantCulture));
+                        break;
+                    }
 					if (count == 1) b.Append(dt.Month.ToString(CultureInfo.InvariantCulture));
 					else if (count == 2) b.Append(dt.Month.ToString("00", CultureInfo.InvariantCulture));
 					else if (count == 3) b.Append(ShortMonth(dt.Month));
@@ -2573,6 +2750,7 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 					b.Append(format, i, count);
 					break;
 			}
+			if (char.IsLetter(ch)) lastSpecifier = char.ToLowerInvariant(ch);
 			i = j;
 		}
 		return b.ToString();
@@ -2663,11 +2841,15 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 
 	private static bool TryParseInteger(string s, out long value)
 	{
-		value=0; if(s==null) return false; s=s.Trim();
+        value=0; if(s==null) return false; s=s.Trim();
+        string signedText = s;
 		bool neg=false; if(s.StartsWith("-")){neg=true;s=s.Substring(1);} else if(s.StartsWith("+")) s=s.Substring(1);
 		NumberStyles style=NumberStyles.Integer; int radix=10;
 		if(s.StartsWith("$")) { s=s.Substring(1); style=NumberStyles.AllowHexSpecifier; radix=16; }
 		else if(s.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) { s=s.Substring(2); style=NumberStyles.AllowHexSpecifier; radix=16; }
+        // Parse the sign with decimal digits so Int64.MinValue's magnitude
+        // does not have to fit in a positive Int64 first.
+        if (radix == 10) return long.TryParse(signedText, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
 		if(!long.TryParse(s, style, CultureInfo.InvariantCulture, out long v)) return false;
 		value=neg?-v:v; return true;
 	}
@@ -4575,6 +4757,44 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 	{
 		lock(FModuleLock){return FModuleNames.TryGetValue(Module,out string n)?n:string.Empty;}
 	}
+
+	public static bool TryFindStringResource(
+		uint Ident,
+		out string Value)
+	{
+		lock (StringResourceLock)
+		{
+			if (ManagedStringResources.TryGetValue(
+				Ident,
+				out string registeredValue))
+			{
+				Value =
+					registeredValue ?? string.Empty;
+
+				return true;
+			}
+		}
+
+		Value =
+			string.Empty;
+
+		return false;
+	}
+
+/* LoadStr loads the string resource given by Ident from the application's
+  executable file or associated resource module. If the string resource
+  does not exist, LoadStr returns an empty string. */
+    // NativeUInt is 64-bit on Win64; the resource table uses 32-bit IDs.
+    // An out-of-range ID is missing, rather than an alias of a truncated ID.
+    public static string LoadStr(ulong Ident)
+    {
+        return Ident <= uint.MaxValue ? FindStringResource((uint)Ident) : string.Empty;
+    }
+
+    public static string FmtLoadStr(ulong Ident, params TVarRec[] Args)
+    {
+        return Format(LoadStr(Ident), Args ?? global::System.Array.Empty<TVarRec>());
+    }
 	public static string LoadStr(uint Ident)
 	{
 		return Ident.ToString(CultureInfo.InvariantCulture);
@@ -4728,6 +4948,23 @@ public delegate int TGrowCollectionFunc(int OldCapacity, int NewCount);
 
 file class SysutilsImplementation
 {
+	public static string FindStringResource(
+		uint Ident)
+	{
+		if (TryFindStringResource(
+			Ident,
+			out string managedValue))
+		{
+			return managedValue;
+		}
+
+		/*
+		 * Native executable, resource-DLL and package lookup is intentionally
+		 * deferred. Missing resources retain Delphi LoadStr behavior and
+		 * return an empty string.
+		 */
+		return string.Empty;
+	} 
 
 } // class SysutilsImplementation
 

@@ -44,7 +44,7 @@ namespace D7_for_loops
             int Index = 0;
             int Sum = 0;
             string ReverseDigits = string.Empty;
-            int[] Values = new int[] { };
+            int[] Values = null;
             int Value = 0;
             string Text = string.Empty;
             char CharacterValue = '\0';
@@ -65,7 +65,7 @@ namespace D7_for_loops
             {
                 ReverseDigits = ReverseDigits + (Index).ToString();
             }
-            Array.Resize(ref Values, 4);
+            SetLength(ref Values, 4);
             Values[0] = 3;
             Values[1] = 5;
             Values[2] = 7;
@@ -81,7 +81,7 @@ namespace D7_for_loops
                 CharacterValue = element_0;
                 Text = Text + CharacterValue;
             }
-            SelectedStages = new TSet() << (int)TPipelineStage.psRead << (int)TPipelineStage.psGenerate;
+            SelectedStages = (new TSet() << (int)TPipelineStage.psRead << (int)TPipelineStage.psGenerate);
             StageCount = 0;
             foreach (TPipelineStage element_0 in SelectedStages)
             {
@@ -105,7 +105,7 @@ namespace D7_for_loops
     file class D7_for_loopsImplementation
     {
 
-        public enum TPipelineStage
+        public enum TPipelineStage : byte
         {
             psRead,
             psAnalyze,

@@ -62,6 +62,7 @@ public class SystemInterface
 		public TTypeKind Kind;
 		public static TTypeInfo CreateRecord(){return new TTypeInfo();}
 	}	
+	[Guid("00000000-0000-0000-C000-000000000046")]
 	public interface IInterface
 	{
 	}	
@@ -141,6 +142,8 @@ public class SystemInterface
 			TObject result = default;
 			return result;
 		}
+
+		public TMetaClass() {}
 	}	
 
 	public class TObject
@@ -395,7 +398,7 @@ public class SystemInterface
   /* Basic placeholder types needed by the D2CSharp parser. */
 
   /* Fixed-width signed integer used by System.Types and other RTL units. */
-	public enum TFloatSpecial {fsZero,
+	public enum TFloatSpecial : byte {fsZero,
                     fsNZero,
                     fsDenormal,
                     fsNDenormal,
@@ -404,7 +407,7 @@ public class SystemInterface
                     fsInf,
                     fsNInf,
                     fsNaN };
-	public enum TTypeKind {tkUnknown,
+	public enum TTypeKind : byte {tkUnknown,
                 tkInteger,
                 tkChar,
                 tkEnumeration,
@@ -460,7 +463,7 @@ public class SystemInterface
 	public const int fmInput = 55217;             /* $D7B1 */
 	public const int fmOutput = 55218;             /* $D7B2 */
 	public const int fmInOut = 55219;             /* $D7B3 */
-	public const Pointer Nil = ((Pointer) 0);
+	public static readonly Pointer Nil = new Pointer(new global::System.IntPtr(unchecked((long)(0))));
   /* Standard text files documented by the public System API. */
 
   /* Public System.FileMode variable used by Reset for typed and untyped files. */
@@ -677,7 +680,7 @@ public class SystemInterface
 		Pointer result = default;
 		return result;
 	}
-	public static Pointer Ptr(uint Address)
+	public static Pointer Ptr(ulong Address)
 	{
 		Pointer result = default;
 		return result;
@@ -688,16 +691,16 @@ public class SystemInterface
 		return result;
 	}
 	//# missing function body: public static bool Assigned(UntypedPointer P);
-	public static void FillChar(UntypedPointer X, int Count, byte Value)
+	public static void FillChar(UntypedPointer X, long Count, byte Value)
 	{
 	}
-	public static void FillChar(UntypedPointer X, int Count, char Value)
+	public static void FillChar(UntypedPointer X, long Count, char Value)
 	{
 	}
-	public static void FillChar(UntypedPointer X, int Count, int Value)
+	public static void FillChar(UntypedPointer X, long Count, int Value)
 	{
 	}
-	public static void Move(UntypedPointer Source, UntypedPointer Dest, int Count)
+	public static void Move(UntypedPointer Source, UntypedPointer Dest, long Count)
 	{
 	}
 	public static void Initialize(UntypedPointer V)
@@ -712,10 +715,10 @@ public class SystemInterface
 	public static void Dispose(UntypedPointer P)
 	{
 	}
-	public static void GetMem(ref Pointer P, int Size)
+	public static void GetMem(ref Pointer P, long Size)
 	{
 	}
-	public static Pointer GetMem(int Size)
+	public static Pointer GetMem(long Size)
 	{
 		Pointer result = default;
 		return result;
@@ -723,12 +726,12 @@ public class SystemInterface
 	public static void FreeMem(Pointer P)
 	{
 	}
-	public static int FreeMem(Pointer P, int Size)
+	public static int FreeMem(Pointer P, long Size)
 	{
 		int result = 0;
 		return result;
 	}
-	public static void ReallocMem(ref Pointer P, int Size)
+	public static void ReallocMem(ref Pointer P, long Size)
 	{
 	}
 	public static void MemoryBarrier()
@@ -890,9 +893,9 @@ public class SystemInterface
 	public static void SetString(ref string S, PChar Buffer, int Len)
 	{
 	}
-	public static T<T> Slice<T> (T[] A, int Count)
+	public static [] Slice<T> (T[] A, int Count)
 	{
-		T<T> result = null;
+		T[] result = null;
 		result = default;
 		return result;
 	}
@@ -958,13 +961,13 @@ public class SystemInterface
   deliberately avoid an untyped first parameter, because D2CSharp uses these
   declarations when translating calls.
 */
-	public static void Assign(ref file F, string FileName)
+	public static void Assign(ref UntypedFile F, string FileName)
 	{
 	}
 	public static void Assign(ref TextFile F, string FileName)
 	{
 	}
-	public static void AssignFile(file F, string FileName)
+	public static void AssignFile(UntypedFile F, string FileName)
 	{
 	}
 	public static void AssignFile(TextFile F, string FileName)
@@ -973,31 +976,31 @@ public class SystemInterface
 	public static void AssignFile(TextFile F, string FileName, ushort CodePage)
 	{
 	}
-	public static void Reset(ref file F)
+	public static void Reset(ref UntypedFile F)
 	{
 	}
-	public static void Reset(ref file F, int RecSize)
+	public static void Reset(ref UntypedFile F, int RecSize)
 	{
 	}
-	public static void Rewrite(ref file F)
+	public static void Rewrite(ref UntypedFile F)
 	{
 	}
-	public static void Rewrite(ref file F, int RecSize)
+	public static void Rewrite(ref UntypedFile F, int RecSize)
 	{
 	}
 	public static void Append(ref TextFile F)
 	{
 	}
-	public static void Close(ref file F)
+	public static void Close(ref UntypedFile F)
 	{
 	}
-	public static void CloseFile(ref file F)
+	public static void CloseFile(ref UntypedFile F)
 	{
 	}
-	public static void Erase(ref file F)
+	public static void Erase(ref UntypedFile F)
 	{
 	}
-	public static void Rename(ref file F, string NewName)
+	public static void Rename(ref UntypedFile F, string NewName)
 	{
 	}
 	public static int Flush(ref TextFile F)
@@ -1017,7 +1020,7 @@ public class SystemInterface
 		bool result = false;
 		return result;
 	}
-	public static bool Eof(ref file F)
+	public static bool Eof(ref UntypedFile F)
 	{
 		bool result = false;
 		return result;
@@ -1052,32 +1055,32 @@ public class SystemInterface
 		bool result = false;
 		return result;
 	}
-	public static void Seek(ref file F, int N)
+	public static void Seek(ref UntypedFile F, int N)
 	{
 	}
-	public static int FilePos(ref file F)
-	{
-		int result = 0;
-		return result;
-	}
-	public static int FileSize(ref file F)
+	public static int FilePos(ref UntypedFile F)
 	{
 		int result = 0;
 		return result;
 	}
-	public static void Truncate(ref file F)
+	public static int FileSize(ref UntypedFile F)
+	{
+		int result = 0;
+		return result;
+	}
+	public static void Truncate(ref UntypedFile F)
 	{
 	}
-	public static void BlockRead(ref file F, UntypedPointer Buf, int Count)
+	public static void BlockRead(ref UntypedFile F, UntypedPointer Buf, int Count)
 	{
 	}
-	public static void BlockRead(ref file F, UntypedPointer Buf, int Count, ref int Result)
+	public static void BlockRead(ref UntypedFile F, UntypedPointer Buf, int Count, ref int Result)
 	{
 	}
-	public static void BlockWrite(ref file F, UntypedPointer Buf, int Count)
+	public static void BlockWrite(ref UntypedFile F, UntypedPointer Buf, int Count)
 	{
 	}
-	public static void BlockWrite(ref file F, UntypedPointer Buf, int Count, ref int Result)
+	public static void BlockWrite(ref UntypedFile F, UntypedPointer Buf, int Count, ref int Result)
 	{
 	}
 	public static void GetDir(byte D, ref string S)
@@ -1096,7 +1099,7 @@ public class SystemInterface
 	public static void Read()
 	{
 	}
-	public static void Read(ref file F, UntypedPointer V)
+	public static void Read(ref UntypedFile F, UntypedPointer V)
 	{
 	}
 	public static void Read(UntypedPointer V)
@@ -1114,10 +1117,10 @@ public class SystemInterface
 	public static void ReadLn()
 	{
 	}
-	public static void ReadLn(ref file F)
+	public static void ReadLn(ref UntypedFile F)
 	{
 	}
-	public static void ReadLn(ref file F, UntypedPointer V)
+	public static void ReadLn(ref UntypedFile F, UntypedPointer V)
 	{
 	}
 	public static void ReadLn(UntypedPointer V)
@@ -1135,7 +1138,7 @@ public class SystemInterface
 	public static void Write(UntypedPointer V)
 	{
 	}
-	public static void Write(ref file F, UntypedPointer V)
+	public static void Write(ref UntypedFile F, UntypedPointer V)
 	{
 	}
 	public static void Write(string V)
@@ -1156,10 +1159,10 @@ public class SystemInterface
 	public static void WriteLn(UntypedPointer V)
 	{
 	}
-	public static void WriteLn(ref file F)
+	public static void WriteLn(ref UntypedFile F)
 	{
 	}
-	public static void WriteLn(ref file F, UntypedPointer V)
+	public static void WriteLn(ref UntypedFile F, UntypedPointer V)
 	{
 	}
 	public static void WriteLn(string V)
@@ -1245,7 +1248,9 @@ public class SystemInterface
 	public static void Val(string S, ref long V, ref int Code)
 	{
 	}
-	//# missing function body: public static void Val(string S, ref int V, ref int Code);
+	public static void Val(string S, ref long V, ref int Code)
+	{
+	}
 
 // Unsigned integer types
 	public static void Val(string S, ref byte V, ref int Code)
@@ -1273,7 +1278,9 @@ public class SystemInterface
 	//# output of equivalent "Val" function suppressed
 
 // Additional numeric types
-	//# missing function body: public static void Val(string S, ref long V, ref int Code);
+	public static void Val(string S, ref long V, ref int Code)
+	{
+	}
 	public static void Val(string S, ref Currency V, ref int Code)
 	{
 	}
@@ -1317,7 +1324,8 @@ public class SystemInterface
 	}
 	public static void VarArrayRedim(ref Variant A, int HighBound)
 	{
-	} break; continue;
+	}
+	public static bool ReportMemoryLeaksOnShutdown = false; break; continue;
 	//# missing function body: public static int SizeOf();
 	//# missing function body: public static int Pred();
 	

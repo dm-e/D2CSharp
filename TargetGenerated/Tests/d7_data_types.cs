@@ -75,7 +75,7 @@ namespace D7_data_types
     file class D7_data_typesImplementation
     {
 
-        public enum TTransport
+        public enum TTransport : byte
         {
             trLocal,
             trNetwork,
@@ -97,8 +97,8 @@ namespace D7_data_types
         public static int IntegerValue = 0;
         public static long Int64Value = 0;
         public static ulong UInt64Value = 0;
-        public static int NativeIntegerValue = 0 /*Native*/;
-        public static uint NativeUnsignedValue = 0 /*Native*/;
+        public static long NativeIntegerValue = 0 /*Native*/;
+        public static ulong NativeUnsignedValue = 0 /*Native*/;
         public static float SingleValue = 0.0F;
         public static Currency CurrencyValue = 0.0M;
         public static double DoubleValue = 0.0D;
@@ -256,7 +256,7 @@ namespace D7_data_types
             ShortString.Assign(ref Agent.Identifier, DefaultAgent);
             ShortString.Assign(ref Agent.HostName, "node-17");
             Agent.WorkerCount = (byte)DefaultWorkers;
-            ActiveDays = new TSet() << 1 << 3 << 5;
+            ActiveDays = (new TSet() << 1 << 3 << 5);
             Transport = TTransport.trCloud;
             TransportNames[0] = "local";
             TransportNames[1] = "network";

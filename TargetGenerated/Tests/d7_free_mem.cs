@@ -45,7 +45,7 @@ namespace D7_free_mem
             bool CheckResult2 = false;
             bool CheckResult3 = false;
             Buffer = default;
-            GetMem(ref Buffer, DelphiStaticArrayInfo.Create<byte>(new int[] { 0 }, new int[] { 16 }).ByteSize, DelphiStaticArrayInfo.Create<byte>(new int[] { 0 }, new int[] { 16 }));
+            GetMem(ref Buffer, (16 * (int)DelphiTypeSize.Byte), DelphiStaticArrayInfo.Create<byte>(new int[] { 0 }, new int[] { 16 }));
             try
             {
                 for (Index = 0 /*# Low(Buffer^) */; Index <= 15 /*# High(Buffer^) */; Index++)

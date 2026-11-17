@@ -56,6 +56,16 @@ namespace D7_currency
     } // class D7_currencyInterface
 
 
+    public class __d2cConstants_1
+    {
+
+        public static string[] Expected = new string[4/*# range 0..3*/] { "CRD27", "27CRD", "CRD 27", "27 CRD" };
+
+        public __d2cConstants_1()
+        {
+        }
+    }
+
     file class D7_currencyImplementation
     {
 
@@ -76,7 +86,6 @@ namespace D7_currency
         public static bool CheckCurrencyLayouts()
         {
             bool result = false;
-            string[] Expected = new string[4/*# range 0..3*/] { "CRD27", "27CRD", "CRD 27", "27 CRD" };
             TFormatSettings SavedSettings = TFormatSettings.CreateRecord();
             int Layout = 0;
             string Rendered = string.Empty;
@@ -89,8 +98,8 @@ namespace D7_currency
                 for (Layout = 0; Layout <= 3; Layout++)
                 {
                     FormatSettings.CurrencyFormat = (byte)Layout;
-                    Rendered = CurrToStrF(27, TFloatFormat.ffCurrency, 0);
-                    result = result && (Rendered == Expected[Layout]);
+                    Rendered = CurrToStrF(27, System.Sysutils.SysutilsInterface.TFloatFormat.ffCurrency, 0);
+                    result = result && (Rendered == __d2cConstants_1.Expected[Layout]);
                 }
             }
             finally
@@ -124,8 +133,8 @@ namespace D7_currency
                 Amount = 7654.321M;
                 FormattedAmount = Format("%m", new TVarRec[] { TVarRec.FromCurrency(Amount) });
                 CurrencyAsString = CurrToStr(42.375M);
-                CurrencyWithThreeDecimals = CurrToStrF(Amount, TFloatFormat.ffCurrency, 3);
-                CurrencyWithoutDecimals = CurrToStrF(Amount, TFloatFormat.ffCurrency, 0);
+                CurrencyWithThreeDecimals = CurrToStrF(Amount, System.Sysutils.SysutilsInterface.TFloatFormat.ffCurrency, 3);
+                CurrencyWithoutDecimals = CurrToStrF(Amount, System.Sysutils.SysutilsInterface.TFloatFormat.ffCurrency, 0);
                 IsFormattedAmountValid = FormattedAmount == "7.654,32 CRD";
                 IsCurrencyStringValid = CurrencyAsString == "42,375";
                 IsThreeDecimalFormatValid = CurrencyWithThreeDecimals == "7.654,321 CRD";

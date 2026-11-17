@@ -1,4 +1,4 @@
-﻿using System.Sysutils;
+using System.Sysutils;
 using System;
 using static System.Classes.ClassesImplementation;
 using static System.Classes.ClassesInterface;
@@ -46,6 +46,13 @@ namespace Classes
 
 public class ClassesInterface
 {
+    public class EStringListError : DException
+    {
+        public EStringListError() { }
+        public EStringListError(string message) : base(message) { }
+        public EStringListError(string message, params TVarRec[] args) : base(message, args) { }
+    }
+
 
 	public class TInterfacedPersistent : TPersistent, IInterface
 	{
@@ -1743,6 +1750,36 @@ public class ClassesInterface
 			}
 		}
 
+		public void ReadBuffer(ref byte[] Buffer, int Count)
+		{
+			ReadBuffer(Buffer, 0, Count);
+		}
+
+		public void ReadBuffer(ref byte[] Buffer, int Offset, int Count)
+		{
+			ReadBuffer(Buffer, Offset, Count);
+		}
+
+		public void ReadBuffer(byte[] Buffer, int Count)
+		{
+			ReadBuffer(Buffer, 0, Count);
+		}
+
+		public void ReadBuffer(byte[] Buffer, int Offset, int Count)
+		{
+			if (Buffer == null)
+				throw new global::System.ArgumentNullException(nameof(Buffer));
+			if (Offset < 0 || Count < 0 || Offset > Buffer.Length || Count > Buffer.Length - Offset)
+				throw new global::System.ArgumentOutOfRangeException(
+					Offset < 0 || Offset > Buffer.Length ? nameof(Offset) : nameof(Count));
+			if (Count == 0)
+				return;
+
+			byte[] Data = new byte[Count];
+			ReadBuffer(new UntypedPointer(Data), Count);
+			global::System.Array.Copy(Data, 0, Buffer, Offset, Count);
+		}
+
 		public void WriteBuffer(UntypedPointer Buffer, int Count)
 		{
 			int Total = 0;
@@ -1757,6 +1794,28 @@ public class ClassesInterface
 					throw new global::System.IO.IOException("Unable to write to stream.");
 				Total += N;
 			}
+		}
+
+		public void WriteBuffer(byte[] Buffer, int Count)
+		{
+			if (Buffer == null)
+				throw new global::System.ArgumentNullException(nameof(Buffer));
+			WriteBuffer(Buffer, 0, Count);
+		}
+
+		public void WriteBuffer(byte[] Buffer, int Offset, int Count)
+		{
+			if (Buffer == null)
+				throw new global::System.ArgumentNullException(nameof(Buffer));
+			if (Offset < 0 || Count < 0 || Offset > Buffer.Length || Count > Buffer.Length - Offset)
+				throw new global::System.ArgumentOutOfRangeException(
+					Offset < 0 || Offset > Buffer.Length ? nameof(Offset) : nameof(Count));
+			if (Count == 0)
+				return;
+
+			byte[] Data = new byte[Count];
+			global::System.Array.Copy(Buffer, Offset, Data, 0, Count);
+			WriteBuffer(new UntypedPointer(Data), Count);
 		}
 
 		public long CopyFrom(TStream Source, long Count)
@@ -2230,6 +2289,86 @@ public class ClassesInterface
 
 		public TStringStream() : this(string.Empty) {}
 	}	
+
+	public class TBufferedFileStream : TFileStream
+	{
+		private readonly int FBufferSize;
+
+		public TBufferedFileStream() : base((uint)0) { FBufferSize = 32768; }
+
+		public TBufferedFileStream(string AFileName, ushort Mode, int BufferSize = 32768)
+			: base(AFileName, Mode)
+		{
+			if (BufferSize <= 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(BufferSize));
+			FBufferSize = BufferSize;
+		}
+
+		public TBufferedFileStream(string AFileName, ushort Mode, uint Rights, int BufferSize = 32768)
+			: base(AFileName, Mode, Rights)
+		{
+			if (BufferSize <= 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(BufferSize));
+			FBufferSize = BufferSize;
+		}
+
+		// FileStream already performs managed buffering. FlushBuffer forwards
+		// the explicit Delphi flush request to the underlying stream.
+		public void FlushBuffer() => ManagedStream.Flush();
+	}
+
+	public class TPointerStream : TCustomMemoryStream
+	{
+		private Pointer FPointer;
+		private bool FReadOnly;
+
+		public TPointerStream() : this(default(Pointer), 0, false) { }
+
+		public TPointerStream(Pointer Ptr, int Size, bool ReadOnly = false)
+		{
+			if (Size < 0)
+				throw new global::System.ArgumentOutOfRangeException(nameof(Size));
+			if (Size != 0 && Ptr.IsNull())
+				throw new global::System.ArgumentNullException(nameof(Ptr));
+			FPointer = Ptr;
+			FReadOnly = ReadOnly;
+			SetPointer(Ptr, Size);
+		}
+
+		protected override void SetSize(long NewSize) =>
+			throw new global::System.NotSupportedException("TPointerStream cannot be resized.");
+
+		public override int Read(UntypedPointer Buffer, int Count)
+		{
+			if (FBuffer.Length > 0)
+				DelphiMemory.Move(FPointer, new UntypedPointer(FBuffer), FBuffer.Length);
+			return base.Read(Buffer, Count);
+		}
+
+		public override int Write(UntypedPointer Buffer, int Count)
+		{
+			if (FReadOnly)
+				throw new global::System.NotSupportedException("TPointerStream is read-only.");
+			if (Count <= 0)
+				return 0;
+			if (FPosition < 0 || FPosition >= FBuffer.Length)
+				return 0;
+			int Written = (int)global::System.Math.Min(Count, FBuffer.Length - FPosition);
+			if (Written <= 0)
+				return 0;
+			// Keep the complete external memory region synchronized, including
+			// changes performed through other aliases of the original pointer.
+			DelphiMemory.Move(FPointer, new UntypedPointer(FBuffer), FBuffer.Length);
+			byte[] Temp = new byte[Written];
+			DelphiMemory.Move(Buffer, new UntypedPointer(Temp), Written);
+			global::System.Array.Copy(Temp, 0, FBuffer, (int)FPosition, Written);
+			DelphiMemory.Move(new UntypedPointer(FBuffer), FPointer.ToUntypedPointer(), FBuffer.Length);
+			FPosition += Written;
+			return Written;
+		}
+
+		public bool ReadOnly => FReadOnly;
+	}
 
 	public class TBytesStream : TMemoryStream
 	{
@@ -3029,8 +3168,6 @@ public class ClassesInterface
 	{
 		private readonly TTextReader FReader;
 		private string FCurrent = string.Empty;
-		public TTextReaderEnumerator() { }
-
 
 		public TTextReaderEnumerator(TTextReader AReader)
 		{
@@ -3320,8 +3457,6 @@ public class ClassesInterface
 		}
 
 /* TFiler */
-		public TFiler() : this(null, 0) { }
-
 		public TFiler(TStream Stream, int BufSize)
 		{
 			;
@@ -3353,8 +3488,6 @@ public class ClassesInterface
 
 
 /* TReader */
-		public TReader() : this(null, 0) { }
-
 		public TReader(TStream Stream, int BufSize)
 		:		base(Stream, BufSize)
 		{
@@ -3439,8 +3572,6 @@ public class ClassesInterface
 
 
 /* TWriter */
-		public TWriter() : this(null, 0) { }
-
 		public TWriter(TStream Stream, int BufSize)
 		:		base(Stream, BufSize)
 		{
@@ -3617,8 +3748,6 @@ public class ClassesInterface
 		}
 
 /* TComponent */
-		public TComponent() : this(null) { }
-
 		public TComponent(TComponent AOwner)
 		{
 			FName = string.Empty;
@@ -3788,8 +3917,6 @@ public class ClassesInterface
 				return null;
 			return FComponent.ReadPropertyComponents(FIndex);
 		}
-		public TComponentEnumerator() : this(new TComponent(null)) { }
-
 
 		public TComponentEnumerator(TComponent AComponent)
 		{
@@ -3832,8 +3959,6 @@ public class ClassesInterface
 		}
 
 /* TBasicAction */
-		public TBasicAction() : this(null) { }
-
 		public TBasicAction(TComponent AOwner)
 		:		base(AOwner)
 		{
@@ -3913,8 +4038,6 @@ public class ClassesInterface
 		private TNotifyEvent FOnDestroy;
 
 /* TDataModule */
-		public TDataModule() : this(null) { }
-
 		public TDataModule(TComponent AOwner)
 		:		base(AOwner)
 		{

@@ -48,7 +48,7 @@ namespace Strutils
 
 public class StrutilsInterface
 {
-	public enum TStringSeachOption {soDown,
+	public enum TStringSeachOption : byte {soDown,
                          soMatchCase,
                          soWholeWord };
 
@@ -268,7 +268,7 @@ public delegate bool TCompareTextProc(string AText, string AOther);
 	}
 	public static string[] SplitString(string S, string Delimiters)
 	{
-		string[] result = new string[]{};
+		string[] result = null;
 		return result;
 	}
 	public static string Soundex(string AText, int /*1..MaxInt*/ ALength = 4)

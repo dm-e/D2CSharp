@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Sysutils;
 using System;
 using static D7_text_write.D7_text_writeImplementation;
@@ -60,6 +61,7 @@ namespace D7_text_write
         public struct TProbeEntry
         {
             public int Code;
+            [MarshalAs(UnmanagedType.U1)]
             public bool Enabled;
             public static TProbeEntry CreateRecord()
             {

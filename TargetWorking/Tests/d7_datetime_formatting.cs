@@ -81,11 +81,11 @@ namespace D7_datetime_formatting
                 result = result && CheckResult4;
                 CheckResult5 = (RenderDateTime("dddddd", Sample) == "SundayX, 14 MonthEleven 2027");
                 result = result && CheckResult5;
-                CheckResult6 = (RenderDateTime("t", Sample) == "16~07");
+                CheckResult6 = (RenderDateTime(("t").ToString(), Sample) == "16~07");
                 result = result && CheckResult6;
                 CheckResult7 = (RenderDateTime("tt", Sample) == "16~07~08");
                 result = result && CheckResult7;
-                CheckResult8 = (RenderDateTime("c", Sample) == "2027|11|14 16~07~08");
+                CheckResult8 = (RenderDateTime(("c").ToString(), Sample) == "2027|11|14 16~07~08");
                 result = result && CheckResult8;
                 CheckResult9 = (RenderDateTime("hh:nn ampm", Sample) == "04~07 pmx");
                 result = result && CheckResult9;

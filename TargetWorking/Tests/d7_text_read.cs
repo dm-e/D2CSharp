@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Sysutils;
 using System;
 using static D7_text_read.D7_text_readImplementation;
@@ -107,6 +108,7 @@ namespace D7_text_read
         public struct TReadEntry
         {
             public int Code;
+            [MarshalAs(UnmanagedType.U1)]
             public bool Active;
             public static TReadEntry CreateRecord()
             {

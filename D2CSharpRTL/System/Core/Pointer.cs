@@ -35,6 +35,15 @@ namespace System
             }
         }
 
+        public static Pointer FromAnsiString(AnsiString? value)
+        {
+            // Delphi Pointer(AnsiString) is nil for an empty string, otherwise
+            // it addresses the existing bytes, including embedded nulls.
+            return value is null || value.Length == 0
+                ? default
+                : new PAnsiChar(value).AsPointer().ToPointer();
+        }
+
 
 
         internal Pointer(UntypedPointer value)
@@ -251,6 +260,17 @@ namespace System
             return new Pointer<TObject>(cell).ToPointer();
         }
 
+        private static readonly ConditionalWeakTable<object, object[]> FManagedReferenceCells = new();
+
+        internal static Pointer FromManagedReference(object? value)
+        {
+            if (value == null) return default;
+            if (value is TObject instance) return FromObject(instance);
+            if (value is string text) return new PChar(text).ToUntypedPointer();
+            object[] cell = FManagedReferenceCells.GetValue(value, static item => new[] { item });
+            return new Pointer<object>(cell).ToPointer();
+        }
+
         public TObject? ToObject()
         {
             return IsNull()
@@ -382,6 +402,10 @@ namespace System
         /// <summary>Address a typed variable using its declared Delphi size.</summary>
         public static Pointer<T> FromReference(Ref<T> location, int size) =>
             new(new UntypedPointer(PointerView.FromBacking(ReferenceBacking<T>.ForLocation(location, size))));
+
+        /// <summary>Borrow a variable's byte-addressable storage for an untyped parameter.</summary>
+        public static Pointer<T> FromStorage(Ref<T> location, int size) =>
+            new(new UntypedPointer(PointerView.FromBacking(ReferenceBacking<T>.ForLocation(location, size, true))));
 
         /// <summary>Address an array field through a typed record variable pointer.</summary>
         public static Pointer<T> FromRecordField<TRecord>(Pointer<TRecord> record,
@@ -572,14 +596,14 @@ namespace System
         public void SetNull() => FValue.SetNull();
         public T Deref() => FValue.Read<T>();
 
-        public T this[int index]
+        public readonly T this[int index]
         {
             get => FValue.Read<T>(checked(
                 index * ValueSize));
             set => Assign(value, index);
         }
 
-        public void Assign(T value, int index = 0)
+        public readonly void Assign(T value, int index = 0)
         {
             FValue.Write(value, checked(
                 index * ValueSize));
@@ -589,6 +613,11 @@ namespace System
         {
             FValue.Inc(checked(count * ValueSize));
         }
+
+        public void Inc(uint count) => Inc(checked((int)count));
+        public void Inc(ulong count) => Inc(checked((int)count));
+        public void Dec(ulong count) => Dec(checked((int)count));
+        public void Dec(uint count) => Dec(checked((int)count));
 
         public void Dec(int count)
         {
@@ -623,6 +652,10 @@ namespace System
 
         public static Pointer<T> operator +(Pointer<T> pointer, int delta) => pointer.Add(delta);
         public static Pointer<T> operator -(Pointer<T> pointer, int delta) => pointer.Add(checked(-delta));
+        public static Pointer<T> operator +(Pointer<T> pointer, ulong delta) => pointer.Add(checked((int)delta));
+        public static Pointer<T> operator -(Pointer<T> pointer, ulong delta) => pointer.Add(checked(-(int)delta));
+        public static Pointer<T> operator +(Pointer<T> pointer, uint delta) => pointer.Add(checked((int)delta));
+        public static Pointer<T> operator -(Pointer<T> pointer, uint delta) => pointer.Add(checked(-(int)delta));
         public static Pointer<T> operator ++(Pointer<T> pointer) => pointer.Add(1);
         public static Pointer<T> operator --(Pointer<T> pointer) => pointer.Add(-1);
 

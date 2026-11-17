@@ -65,9 +65,9 @@ namespace D7_str_procedure
             CheckResult4 = (Text == "      48.4");
             result = result && CheckResult4;
             Str(RealValue, ref Text);
-            CheckResult5 = (Text.IndexOf("4.8375") + 1 > 0);
+            CheckResult5 = (DelphiPos(("4.8375").ToString(), (Text).ToString()) > 0);
             result = result && CheckResult5;
-            CheckResult6 = (Text.IndexOf("E+") + 1 > 0);
+            CheckResult6 = (DelphiPos(("E+").ToString(), (Text).ToString()) > 0);
             result = result && CheckResult6;
             return result;
         }

@@ -1,3 +1,4 @@
+using System.Text;
 using System;
 using static System.SystemInterface;
 using static Winapi.Windows.WindowsImplementation;
@@ -94,20 +95,20 @@ public class WindowsInterface
 
 	public struct TOverlapped
 	{
-		public uint Internal;
-		public uint InternalHigh;
+		public ulong Internal;
+		public ulong InternalHigh;
 		public uint Offset;
 		public uint OffsetHigh;
-		public uint hEvent;
+		public ulong hEvent;
 		public static TOverlapped CreateRecord(){return new TOverlapped();}
 	}	
 
 	public struct TMsg
 	{
-		public uint hwnd;
+		public ulong hwnd;
 		public uint message;
-		public uint wParam;
-		public int lParam;
+		public ulong wParam;
+		public long lParam;
 		public uint time;
 		public TPoint pt;
 		public void CreateRecordMembers()
@@ -128,10 +129,10 @@ public class WindowsInterface
 		public TFNWndProc lpfnWndProc;
 		public int cbClsExtra;
 		public int cbWndExtra;
-		public uint hInstance;
-		public uint hIcon;
-		public uint hCursor;
-		public uint hbrBackground;
+		public ulong hInstance;
+		public ulong hIcon;
+		public ulong hCursor;
+		public ulong hbrBackground;
 		public PChar lpszMenuName;
 		public PChar lpszClassName;
 		public static TWndClass CreateRecord(){return new TWndClass();}
@@ -144,13 +145,13 @@ public class WindowsInterface
 		public TFNWndProc lpfnWndProc;
 		public int cbClsExtra;
 		public int cbWndExtra;
-		public uint hInstance;
-		public uint hIcon;
-		public uint hCursor;
-		public uint hbrBackground;
+		public ulong hInstance;
+		public ulong hIcon;
+		public ulong hCursor;
+		public ulong hbrBackground;
 		public PChar lpszMenuName;
 		public PChar lpszClassName;
-		public uint hIconSm;
+		public ulong hIconSm;
 		public static TWndClassEx CreateRecord(){return new TWndClassEx();}
 	}	
 
@@ -171,16 +172,16 @@ public class WindowsInterface
 		public ushort wShowWindow;
 		public ushort cbReserved2;
 		public Pointer<byte> lpReserved2;
-		public uint hStdInput;
-		public uint hStdOutput;
-		public uint hStdError;
+		public ulong hStdInput;
+		public ulong hStdOutput;
+		public ulong hStdError;
 		public static TStartupInfo CreateRecord(){return new TStartupInfo();}
 	}	
 
 	public struct TProcessInformation
 	{
-		public uint hProcess;
-		public uint hThread;
+		public ulong hProcess;
+		public ulong hThread;
 		public uint dwProcessId;
 		public uint dwThreadId;
 		public static TProcessInformation CreateRecord(){return new TProcessInformation();}
@@ -198,6 +199,12 @@ public class WindowsInterface
 		public uint dwReserved1;
 		public char[] cFileName;
 		public char[] cAlternateFileName;
+		public static TWin32FindData D2CCloneValue(TWin32FindData value)
+		{
+			value.cAlternateFileName = DelphiStaticArrayInfo.Create<char>(new int[] { 0 }, new int[] { 14 }).Clone(value.cAlternateFileName);
+			value.cFileName = DelphiStaticArrayInfo.Create<char>(new int[] { 0 }, new int[] { 260 }).Clone(value.cFileName);
+			return value;
+		}
 		public void CreateRecordMembers()
 		{
 			ftCreationTime = TFileTime.CreateRecord();
@@ -213,19 +220,58 @@ public class WindowsInterface
 			return tmp;
 		}
 	}	
+  /* Virtual-key codes; Pascal identifiers are case-insensitive. *//*
+  D2CSharp Runtime Library (RTL)
+
+  Mocking declarations for Delphi Winapi.Windows.
+  Target compatibility: RAD Studio XE3.
+
+  This file intentionally contains declarations and empty implementations
+  only. It is not a replacement for the Windows API and is intended as input
+  for D2CSharp translation and type resolution.
+
+  Copyright (c) 2026 Dr. Detlef Meyer-Eltz, t2t-soft
+  SPDX-License-Identifier: Apache-2.0
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Part of the D2CSharp project by t2t-soft. See LICENSE and NOTICE.
+*/
   /* Basic Win32 scalar types. */
-public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
+public delegate long TFNWndProc(ulong hWnd, uint Msg, ulong wParam, long lParam);
+  /* Virtual-key codes; Pascal identifiers are case-insensitive. */
+	public const int VK_SHIFT = 0x10;
+	public const int vkTab = 0x09;
+	public const int vkPrior = 0x21;
+	public const int vkNext = 0x22;
+	public const int vkEnd = 0x23;
+	public const int vkHome = 0x24;
+	public const int vkLeft = 0x25;
+	public const int vkUp = 0x26;
+	public const int vkRight = 0x27;
+	public const int vkDown = 0x28;
+	public const int vkDelete = 0x2E;
 	public const int MAX_PATH = 260;
-	public const uint INVALID_HANDLE_VALUE = unchecked((uint) -1);
-	public const uint INFINITE = ((uint) 0xFFFFFFFF);
-	public const uint WAIT_OBJECT_0 = ((uint) 0x00000000);
-	public const uint WAIT_ABANDONED = ((uint) 0x00000080);
-	public const uint WAIT_TIMEOUT = ((uint) 0x00000102);
-	public const uint WAIT_FAILED = ((uint) 0xFFFFFFFF);
-	public const uint GENERIC_READ = ((uint) 0x80000000);
-	public const uint GENERIC_WRITE = ((uint) 0x40000000);
-	public const uint GENERIC_EXECUTE = ((uint) 0x20000000);
-	public const uint GENERIC_ALL = ((uint) 0x10000000);
+	public const ulong INVALID_HANDLE_VALUE = unchecked((ulong) -1);
+	public const uint INFINITE = ((uint)(0xFFFFFFFF));
+	public const uint WAIT_OBJECT_0 = ((uint)(0x00000000));
+	public const uint WAIT_ABANDONED = ((uint)(0x00000080));
+	public const uint WAIT_TIMEOUT = ((uint)(0x00000102));
+	public const uint WAIT_FAILED = ((uint)(0xFFFFFFFF));
+	public const uint GENERIC_READ = ((uint)(0x80000000));
+	public const uint GENERIC_WRITE = ((uint)(0x40000000));
+	public const uint GENERIC_EXECUTE = ((uint)(0x20000000));
+	public const uint GENERIC_ALL = ((uint)(0x10000000));
 	public const int FILE_SHARE_READ = 0x00000001;
 	public const int FILE_SHARE_WRITE = 0x00000002;
 	public const int FILE_SHARE_DELETE = 0x00000004;
@@ -245,7 +291,7 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 	public const int FILE_ATTRIBUTE_OFFLINE = 0x00001000;
 	public const int FILE_ATTRIBUTE_NOT_CONTENT_INDEXED = 0x00002000;
 	public const int FILE_ATTRIBUTE_ENCRYPTED = 0x00004000;
-	public const uint INVALID_FILE_ATTRIBUTES = ((uint) 0xFFFFFFFF);
+	public const uint INVALID_FILE_ATTRIBUTES = ((uint)(0xFFFFFFFF));
 	public const int FILE_BEGIN = 0;
 	public const int FILE_CURRENT = 1;
 	public const int FILE_END = 2;
@@ -306,10 +352,10 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 	public const int SWP_NOCOPYBITS = 0x0100;
 	public const int SWP_NOOWNERZORDER = 0x0200;
 	public const int SWP_NOSENDCHANGING = 0x0400;
-	public const uint HWND_TOP = ((uint) 0);
-	public const uint HWND_BOTTOM = ((uint) 1);
-	public const uint HWND_TOPMOST = unchecked((uint) -1);
-	public const uint HWND_NOTOPMOST = unchecked((uint) -2);
+	public const ulong HWND_TOP = unchecked((ulong) 0);
+	public const ulong HWND_BOTTOM = unchecked((ulong) 1);
+	public const ulong HWND_TOPMOST = unchecked((ulong) -1);
+	public const ulong HWND_NOTOPMOST = unchecked((ulong) -2);
 	public const int GWL_WNDPROC = -4;
 	public const int GWL_HINSTANCE = -6;
 	public const int GWL_HWNDPARENT = -8;
@@ -374,17 +420,41 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 	public const int REG_DWORD = 4;
 	public const int REG_MULTI_SZ = 7;
 	public const int REG_QWORD = 11;
-	public const uint HKEY_CLASSES_ROOT = ((uint) 0x80000000);
-	public const uint HKEY_CURRENT_USER = ((uint) 0x80000001);
-	public const uint HKEY_LOCAL_MACHINE = ((uint) 0x80000002);
-	public const uint HKEY_USERS = ((uint) 0x80000003);
-	public const uint HKEY_PERFORMANCE_DATA = ((uint) 0x80000004);
-	public const uint HKEY_CURRENT_CONFIG = ((uint) 0x80000005);
+	public const ulong HKEY_CLASSES_ROOT = unchecked((ulong) 0x80000000);
+	public const ulong HKEY_CURRENT_USER = unchecked((ulong) 0x80000001);
+	public const ulong HKEY_LOCAL_MACHINE = unchecked((ulong) 0x80000002);
+	public const ulong HKEY_USERS = unchecked((ulong) 0x80000003);
+	public const ulong HKEY_PERFORMANCE_DATA = unchecked((ulong) 0x80000004);
+	public const ulong HKEY_CURRENT_CONFIG = unchecked((ulong) 0x80000005);
 
 /* Error handling and timing */
 	public static uint /*stdcall*/ GetLastError()
 	{
 		uint result = 0;
+		return result;
+	}
+	public static string /*stdcall*/ CharLower(StringBuilder lpsz)
+	{
+		string result = default;
+		result = ref lpsz;
+		return result;
+	}
+	public static string /*stdcall*/ CharLowerW(StringBuilder lpsz)
+	{
+		string result = default;
+		result = ref lpsz;
+		return result;
+	}
+	public static string /*stdcall*/ CharUpper(StringBuilder lpsz)
+	{
+		string result = default;
+		result = ref lpsz;
+		return result;
+	}
+	public static string /*stdcall*/ CharUpperW(StringBuilder lpsz)
+	{
+		string result = default;
+		result = ref lpsz;
 		return result;
 	}
 	public static void /*stdcall*/ SetLastError(uint dwErrCode)
@@ -415,9 +485,9 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 	}
 
 /* Process, thread and module functions */
-	public static uint /*stdcall*/ GetCurrentProcess()
+	public static ulong /*stdcall*/ GetCurrentProcess()
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
 	public static uint /*stdcall*/ GetCurrentProcessId()
@@ -425,9 +495,9 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 		uint result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ GetCurrentThread()
+	public static ulong /*stdcall*/ GetCurrentThread()
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
 	public static uint /*stdcall*/ GetCurrentThreadId()
@@ -435,47 +505,47 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 		uint result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ LoadLibrary(PChar lpLibFileName)
+	public static ulong /*stdcall*/ LoadLibrary(PChar lpLibFileName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ LoadLibraryA(PAnsiChar lpLibFileName)
+	public static ulong /*stdcall*/ LoadLibraryA(PAnsiChar lpLibFileName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ LoadLibraryW(PChar lpLibFileName)
+	public static ulong /*stdcall*/ LoadLibraryW(PChar lpLibFileName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ FreeLibrary(uint hLibModule)
+	public static int /*stdcall*/ FreeLibrary(ulong hLibModule)
 	{
 		int result = 0;
 		return result;
 	}
-	public static Pointer /*stdcall*/ GetProcAddress(uint hModule, PAnsiChar lpProcName)
+	public static Pointer /*stdcall*/ GetProcAddress(ulong hModule, PAnsiChar lpProcName)
 	{
 		Pointer result = default;
 		return result;
 	}
-	public static uint /*stdcall*/ GetModuleHandle(PChar lpModuleName)
+	public static ulong /*stdcall*/ GetModuleHandle(PChar lpModuleName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ GetModuleHandleA(PAnsiChar lpModuleName)
+	public static ulong /*stdcall*/ GetModuleHandleA(PAnsiChar lpModuleName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ GetModuleHandleW(PChar lpModuleName)
+	public static ulong /*stdcall*/ GetModuleHandleW(PChar lpModuleName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ GetModuleFileName(uint hModule, PChar lpFilename, uint nSize)
+	public static uint /*stdcall*/ GetModuleFileName(ulong hModule, PChar lpFilename, uint nSize)
 	{
 		uint result = 0;
 		return result;
@@ -485,69 +555,69 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ TerminateProcess(uint hProcess, uint uExitCode)
+	public static int /*stdcall*/ TerminateProcess(ulong hProcess, uint uExitCode)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ GetExitCodeProcess(uint hProcess, ref uint lpExitCode)
+	public static int /*stdcall*/ GetExitCodeProcess(ulong hProcess, ref uint lpExitCode)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ CloseHandle(uint hObject)
+	public static int /*stdcall*/ CloseHandle(ulong hObject)
 	{
 		int result = 0;
 		return result;
 	}
 
 /* Synchronization */
-	public static uint /*stdcall*/ CreateEvent(Pointer<TSecurityAttributes> lpEventAttributes, int bManualReset, int bInitialState, PChar lpName)
+	public static ulong /*stdcall*/ CreateEvent(Pointer<TSecurityAttributes> lpEventAttributes, int bManualReset, int bInitialState, PChar lpName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ OpenEvent(uint dwDesiredAccess, int bInheritHandle, PChar lpName)
+	public static ulong /*stdcall*/ OpenEvent(uint dwDesiredAccess, int bInheritHandle, PChar lpName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ SetEvent(uint hEvent)
-	{
-		int result = 0;
-		return result;
-	}
-	public static int /*stdcall*/ ResetEvent(uint hEvent)
+	public static int /*stdcall*/ SetEvent(ulong hEvent)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ CreateMutex(Pointer<TSecurityAttributes> lpMutexAttributes, int bInitialOwner, PChar lpName)
-	{
-		uint result = 0 /*Native*/;
-		return result;
-	}
-	public static int /*stdcall*/ ReleaseMutex(uint hMutex)
+	public static int /*stdcall*/ ResetEvent(ulong hEvent)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ CreateSemaphore(Pointer<TSecurityAttributes> lpSemaphoreAttributes, int lInitialCount, int lMaximumCount, PChar lpName)
+	public static ulong /*stdcall*/ CreateMutex(Pointer<TSecurityAttributes> lpMutexAttributes, int bInitialOwner, PChar lpName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ ReleaseSemaphore(uint hSemaphore, int lReleaseCount, Pointer<int> lpPreviousCount)
+	public static int /*stdcall*/ ReleaseMutex(ulong hMutex)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ WaitForSingleObject(uint hHandle, uint dwMilliseconds)
+	public static ulong /*stdcall*/ CreateSemaphore(Pointer<TSecurityAttributes> lpSemaphoreAttributes, int lInitialCount, int lMaximumCount, PChar lpName)
+	{
+		ulong result = 0 /*Native*/;
+		return result;
+	}
+	public static int /*stdcall*/ ReleaseSemaphore(ulong hSemaphore, int lReleaseCount, Pointer<int> lpPreviousCount)
+	{
+		int result = 0;
+		return result;
+	}
+	public static uint /*stdcall*/ WaitForSingleObject(ulong hHandle, uint dwMilliseconds)
 	{
 		uint result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ WaitForMultipleObjects(uint nCount, Pointer<uint> lpHandles, int bWaitAll, uint dwMilliseconds)
+	public static uint /*stdcall*/ WaitForMultipleObjects(uint nCount, Pointer<ulong> lpHandles, int bWaitAll, uint dwMilliseconds)
 	{
 		uint result = 0;
 		return result;
@@ -574,37 +644,37 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 	}
 
 /* File system */
-	public static uint /*stdcall*/ CreateFile(PChar lpFileName, uint dwDesiredAccess, uint dwShareMode, Pointer<TSecurityAttributes> lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, uint hTemplateFile)
+	public static ulong /*stdcall*/ CreateFile(PChar lpFileName, uint dwDesiredAccess, uint dwShareMode, Pointer<TSecurityAttributes> lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, ulong hTemplateFile)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ ReadFile(uint hFile, UntypedPointer Buffer, uint nNumberOfBytesToRead, ref uint lpNumberOfBytesRead, Pointer<TOverlapped> lpOverlapped)
-	{
-		int result = 0;
-		return result;
-	}
-	public static int /*stdcall*/ WriteFile(uint hFile, UntypedPointer Buffer, uint nNumberOfBytesToWrite, ref uint lpNumberOfBytesWritten, Pointer<TOverlapped> lpOverlapped)
+	public static int /*stdcall*/ ReadFile(ulong hFile, UntypedPointer Buffer, uint nNumberOfBytesToRead, ref uint lpNumberOfBytesRead, Pointer<TOverlapped> lpOverlapped)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ SetFilePointer(uint hFile, int lDistanceToMove, Pointer<int> lpDistanceToMoveHigh, uint dwMoveMethod)
+	public static int /*stdcall*/ WriteFile(ulong hFile, UntypedPointer Buffer, uint nNumberOfBytesToWrite, ref uint lpNumberOfBytesWritten, Pointer<TOverlapped> lpOverlapped)
+	{
+		int result = 0;
+		return result;
+	}
+	public static uint /*stdcall*/ SetFilePointer(ulong hFile, int lDistanceToMove, Pointer<int> lpDistanceToMoveHigh, uint dwMoveMethod)
 	{
 		uint result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ SetEndOfFile(uint hFile)
+	public static int /*stdcall*/ SetEndOfFile(ulong hFile)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ FlushFileBuffers(uint hFile)
+	public static int /*stdcall*/ FlushFileBuffers(ulong hFile)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ GetFileSize(uint hFile, Pointer<uint> lpFileSizeHigh)
+	public static uint /*stdcall*/ GetFileSize(ulong hFile, Pointer<uint> lpFileSizeHigh)
 	{
 		uint result = 0;
 		return result;
@@ -664,17 +734,17 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 		uint result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ FindFirstFile(PChar lpFileName, ref TWin32FindData lpFindFileData)
+	public static ulong /*stdcall*/ FindFirstFile(PChar lpFileName, ref TWin32FindData lpFindFileData)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ FindNextFile(uint hFindFile, ref TWin32FindData lpFindFileData)
+	public static int /*stdcall*/ FindNextFile(ulong hFindFile, ref TWin32FindData lpFindFileData)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ FindClose(uint hFindFile)
+	public static int /*stdcall*/ FindClose(ulong hFindFile)
 	{
 		int result = 0;
 		return result;
@@ -709,155 +779,155 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 	}
 
 /* Windows and messages */
-	public static int /*stdcall*/ MessageBox(uint hWnd, PChar lpText, PChar lpCaption, uint uType)
+	public static int /*stdcall*/ MessageBox(ulong hWnd, PChar lpText, PChar lpCaption, uint uType)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ MessageBoxA(uint hWnd, PAnsiChar lpText, PAnsiChar lpCaption, uint uType)
+	public static int /*stdcall*/ MessageBoxA(ulong hWnd, PAnsiChar lpText, PAnsiChar lpCaption, uint uType)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ MessageBoxW(uint hWnd, PChar lpText, PChar lpCaption, uint uType)
+	public static int /*stdcall*/ MessageBoxW(ulong hWnd, PChar lpText, PChar lpCaption, uint uType)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ FindWindow(PChar lpClassName, PChar lpWindowName)
+	public static ulong /*stdcall*/ FindWindow(PChar lpClassName, PChar lpWindowName)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ GetDesktopWindow()
+	public static ulong /*stdcall*/ GetDesktopWindow()
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ GetForegroundWindow()
+	public static ulong /*stdcall*/ GetForegroundWindow()
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ SetForegroundWindow(uint hWnd)
+	public static int /*stdcall*/ SetForegroundWindow(ulong hWnd)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ GetActiveWindow()
+	public static ulong /*stdcall*/ GetActiveWindow()
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ GetFocus()
+	public static ulong /*stdcall*/ GetFocus()
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static uint /*stdcall*/ SetFocus(uint hWnd)
+	public static ulong /*stdcall*/ SetFocus(ulong hWnd)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ IsWindow(uint hWnd)
+	public static int /*stdcall*/ IsWindow(ulong hWnd)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ IsWindowVisible(uint hWnd)
+	public static int /*stdcall*/ IsWindowVisible(ulong hWnd)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ IsWindowEnabled(uint hWnd)
+	public static int /*stdcall*/ IsWindowEnabled(ulong hWnd)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ ShowWindow(uint hWnd, int nCmdShow)
+	public static int /*stdcall*/ ShowWindow(ulong hWnd, int nCmdShow)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ EnableWindow(uint hWnd, int bEnable)
+	public static int /*stdcall*/ EnableWindow(ulong hWnd, int bEnable)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ DestroyWindow(uint hWnd)
+	public static int /*stdcall*/ DestroyWindow(ulong hWnd)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ GetWindowRect(uint hWnd, ref TRect lpRect)
+	public static int /*stdcall*/ GetWindowRect(ulong hWnd, ref TRect lpRect)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ GetClientRect(uint hWnd, ref TRect lpRect)
+	public static int /*stdcall*/ GetClientRect(ulong hWnd, ref TRect lpRect)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ ClientToScreen(uint hWnd, ref TPoint lpPoint)
+	public static int /*stdcall*/ ClientToScreen(ulong hWnd, ref TPoint lpPoint)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ ScreenToClient(uint hWnd, ref TPoint lpPoint)
+	public static int /*stdcall*/ ScreenToClient(ulong hWnd, ref TPoint lpPoint)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ MoveWindow(uint hWnd, int X, int Y, int nWidth, int nHeight, int bRepaint)
+	public static int /*stdcall*/ MoveWindow(ulong hWnd, int X, int Y, int nWidth, int nHeight, int bRepaint)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ SetWindowPos(uint hWnd, uint hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags)
+	public static int /*stdcall*/ SetWindowPos(ulong hWnd, ulong hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ GetWindowText(uint hWnd, PChar lpString, int nMaxCount)
+	public static int /*stdcall*/ GetWindowText(ulong hWnd, PChar lpString, int nMaxCount)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ GetWindowTextLength(uint hWnd)
+	public static int /*stdcall*/ GetWindowTextLength(ulong hWnd)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ SetWindowText(uint hWnd, PChar lpString)
+	public static int /*stdcall*/ SetWindowText(ulong hWnd, PChar lpString)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ SendMessage(uint hWnd, uint Msg, uint wParam, int lParam)
+	public static long /*stdcall*/ SendMessage(ulong hWnd, uint Msg, ulong wParam, long lParam)
 	{
-		int result = 0 /*Native*/;
+		long result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ PostMessage(uint hWnd, uint Msg, uint wParam, int lParam)
+	public static int /*stdcall*/ PostMessage(ulong hWnd, uint Msg, ulong wParam, long lParam)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ DefWindowProc(uint hWnd, uint Msg, uint wParam, int lParam)
+	public static long /*stdcall*/ DefWindowProc(ulong hWnd, uint Msg, ulong wParam, long lParam)
 	{
-		int result = 0 /*Native*/;
+		long result = 0 /*Native*/;
 		return result;
 	}
 	public static void /*stdcall*/ PostQuitMessage(int nExitCode)
 	{
 	}
-	public static int /*stdcall*/ PeekMessage(ref TMsg lpMsg, uint hWnd, uint wMsgFilterMin, uint wMsgFilterMax, uint wRemoveMsg)
+	public static int /*stdcall*/ PeekMessage(ref TMsg lpMsg, ulong hWnd, uint wMsgFilterMin, uint wMsgFilterMax, uint wRemoveMsg)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ GetMessage(ref TMsg lpMsg, uint hWnd, uint wMsgFilterMin, uint wMsgFilterMax)
+	public static int /*stdcall*/ GetMessage(ref TMsg lpMsg, ulong hWnd, uint wMsgFilterMin, uint wMsgFilterMax)
 	{
 		int result = 0;
 		return result;
@@ -867,9 +937,9 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ DispatchMessage(TMsg lpMsg)
+	public static long /*stdcall*/ DispatchMessage(TMsg lpMsg)
 	{
-		int result = 0 /*Native*/;
+		long result = 0 /*Native*/;
 		return result;
 	}
 	public static uint /*stdcall*/ RegisterWindowMessage(PChar lpString)
@@ -877,24 +947,24 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 		uint result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ GetWindowLong(uint hWnd, int nIndex)
+	public static int /*stdcall*/ GetWindowLong(ulong hWnd, int nIndex)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ SetWindowLong(uint hWnd, int nIndex, int dwNewLong)
+	public static int /*stdcall*/ SetWindowLong(ulong hWnd, int nIndex, int dwNewLong)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ GetWindowLongPtr(uint hWnd, int nIndex)
+	public static long /*stdcall*/ GetWindowLongPtr(ulong hWnd, int nIndex)
 	{
-		int result = 0 /*Native*/;
+		long result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ SetWindowLongPtr(uint hWnd, int nIndex, int dwNewLong)
+	public static long /*stdcall*/ SetWindowLongPtr(ulong hWnd, int nIndex, long dwNewLong)
 	{
-		int result = 0 /*Native*/;
+		long result = 0 /*Native*/;
 		return result;
 	}
 	public static ushort /*stdcall*/ RegisterClass(TWndClass lpWndClass)
@@ -907,71 +977,91 @@ public delegate int TFNWndProc(uint hWnd, uint Msg, uint wParam, int lParam);
 		ushort result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ UnregisterClass(PChar lpClassName, uint hInstance)
+	public static int /*stdcall*/ UnregisterClass(PChar lpClassName, ulong hInstance)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ CreateWindowEx(uint dwExStyle, PChar lpClassName, PChar lpWindowName, uint dwStyle, int X, int Y, int nWidth, int nHeight, uint hWndParent, uint hMenu, uint hInstance, Pointer lpParam)
+	public static ulong /*stdcall*/ CreateWindowEx(uint dwExStyle, PChar lpClassName, PChar lpWindowName, uint dwStyle, int X, int Y, int nWidth, int nHeight, ulong hWndParent, ulong hMenu, ulong hInstance, Pointer lpParam)
 	{
-		uint result = 0 /*Native*/;
+		ulong result = 0 /*Native*/;
 		return result;
 	}
-	public static int /*stdcall*/ InvalidateRect(uint hWnd, Pointer<TRect> lpRect, int bErase)
-	{
-		int result = 0;
-		return result;
-	}
-	public static int /*stdcall*/ UpdateWindow(uint hWnd)
+	public static int /*stdcall*/ InvalidateRect(ulong hWnd, Pointer<TRect> lpRect, int bErase)
 	{
 		int result = 0;
 		return result;
 	}
-	public static uint /*stdcall*/ GetDC(uint hWnd)
+	public static int /*stdcall*/ UpdateWindow(ulong hWnd)
 	{
-		uint result = 0 /*Native*/;
+		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ ReleaseDC(uint hWnd, uint hDC)
+	public static ulong /*stdcall*/ SetCursor(ulong hCursor)
+	{
+		ulong result = 0 /*Native*/;
+		result = 0;
+		return result;
+	}
+	public static ulong /*stdcall*/ GetCursor()
+	{
+		ulong result = 0 /*Native*/;
+		result = 0;
+		return result;
+	}
+	public static ulong /*stdcall*/ GetDC(ulong hWnd)
+	{
+		ulong result = 0 /*Native*/;
+		return result;
+	}
+	public static int /*stdcall*/ ReleaseDC(ulong hWnd, ulong hDC)
 	{
 		int result = 0;
 		return result;
 	}
 
 /* Registry */
-	public static int /*stdcall*/ RegOpenKeyEx(uint hKey, PChar lpSubKey, uint ulOptions, uint samDesired, ref uint phkResult)
+	public static int /*stdcall*/ RegOpenKeyEx(ulong hKey, PChar lpSubKey, uint ulOptions, uint samDesired, ref ulong phkResult)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ RegCreateKeyEx(uint hKey, PChar lpSubKey, uint Reserved, PChar lpClass, uint dwOptions, uint samDesired, Pointer<TSecurityAttributes> lpSecurityAttributes, ref uint phkResult, Pointer<uint> lpdwDisposition)
+	public static int /*stdcall*/ RegCreateKeyEx(ulong hKey, PChar lpSubKey, uint Reserved, PChar lpClass, uint dwOptions, uint samDesired, Pointer<TSecurityAttributes> lpSecurityAttributes, ref ulong phkResult, Pointer<uint> lpdwDisposition)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ RegCloseKey(uint hKey)
+	public static int /*stdcall*/ RegCloseKey(ulong hKey)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ RegQueryValueEx(uint hKey, PChar lpValueName, Pointer<uint> lpReserved, Pointer<uint> lpType, Pointer<byte> lpData, Pointer<uint> lpcbData)
+	public static int /*stdcall*/ RegQueryValueEx(ulong hKey, PChar lpValueName, Pointer<uint> lpReserved, Pointer<uint> lpType, Pointer<byte> lpData, Pointer<uint> lpcbData)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ RegSetValueEx(uint hKey, PChar lpValueName, uint Reserved, uint dwType, Pointer<byte> lpData, uint cbData)
+	public static int /*stdcall*/ RegSetValueEx(ulong hKey, PChar lpValueName, uint Reserved, uint dwType, Pointer<byte> lpData, uint cbData)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ RegDeleteValue(uint hKey, PChar lpValueName)
+	public static int /*stdcall*/ RegDeleteValue(ulong hKey, PChar lpValueName)
 	{
 		int result = 0;
 		return result;
 	}
-	public static int /*stdcall*/ RegDeleteKey(uint hKey, PChar lpSubKey)
+	public static int /*stdcall*/ RegDeleteKey(ulong hKey, PChar lpSubKey)
 	{
 		int result = 0;
+		return result;
+	}
+
+/* Returns the key state, including the high-order pressed bit. */
+	public static short /*stdcall*/ GetKeyState(int nVirtKey)
+	{
+		short result = 0;
+		result = 0;
 		return result;
 	}
 	

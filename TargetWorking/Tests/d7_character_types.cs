@@ -77,10 +77,10 @@ namespace D7_character_types
             result = result && (UnicodeValue == 'T');
             UnicodeValue = '\v';
             result = result && (UnicodeValue == Chr(11));
-            UnicodeValue = ((char)90);
+            UnicodeValue = ((char)(90));
             result = result && (UnicodeValue == 'Z');
             AnsiValue = (byte)'b';
-            result = result && (AnsiValue == ((byte)98));
+            result = result && (AnsiValue == ((byte)(98)));
             return result;
         }
 
@@ -104,7 +104,7 @@ namespace D7_character_types
             Flag = true;
             Number = 314;
             LargeNumber = 9001;
-            result = ((int)('D') == 68) && ((int)('\x3a9') == 0x03A9) && (Convert.ToInt32(Flag) == 1) && ((int)(Number) == 314) && ((int)(LargeNumber) == 9001);
+            result = ((int)('D') == 68) && ((int)(((char)('\x3a9'))) == 0x03A9) && (Convert.ToInt32(Flag) == 1) && ((int)(Number) == 314) && ((int)(LargeNumber) == 9001);
             return result;
         }
 
@@ -129,7 +129,7 @@ namespace D7_character_types
             char LineSeparator = '\0';
             char GreekOmega = '\0';
             LineSeparator = Chr(0x2028);
-            GreekOmega = ((char)0x03A9);
+            GreekOmega = ((char)(0x03A9));
             result = (LineSeparator == '\x2028') && ((int)(LineSeparator) == 0x2028) && (GreekOmega == '\x3a9') && ((int)(GreekOmega) == 0x03A9);
             return result;
         }

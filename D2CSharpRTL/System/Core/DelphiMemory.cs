@@ -566,6 +566,16 @@ namespace System
             return new string(FBuffer, 0, length);
         }
 
+        // Materialize a UTF-16 buffer without requiring a terminating NUL.
+        public string Commit(int length)
+        {
+            if (FBuffer == null)
+                throw new ObjectDisposedException(nameof(Utf16StringBuffer));
+            if ((uint)length > (uint)FBuffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            return new string(FBuffer, 0, length);
+        }
+
         public void Dispose()
         {
             FBuffer = null;

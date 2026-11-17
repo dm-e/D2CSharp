@@ -694,6 +694,9 @@ procedure VarCopy(var Dest: Variant; const Source: Variant);
 procedure VarCast(var Dest: Variant; const Source: Variant; VarType: Integer);
 procedure VarArrayRedim(var A: Variant; HighBound: Integer);
 
+var
+  ReportMemoryLeaksOnShutdown: Boolean;
+
 implementation
 
 { TMetaClass }

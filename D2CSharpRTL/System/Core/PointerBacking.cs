@@ -187,6 +187,8 @@ namespace System
             if (type.IsEnum)
                 return SizeOf(Enum.GetUnderlyingType(type));
 
+            if (type == typeof(TSet)) return TSet.DelphiSizeOf;
+
             if (type == typeof(bool) ||
                 type == typeof(byte) ||
                 type == typeof(sbyte))
@@ -217,6 +219,12 @@ namespace System
 
             if (type == typeof(decimal))
                 return 16;
+
+            foreach (Type contract in type.GetInterfaces())
+            {
+                if (contract.IsGenericType && contract.GetGenericTypeDefinition() == typeof(IPointer<>))
+                    return D2C.PointerSize;
+            }
 
             if (type == typeof(IntPtr) ||
                 type == typeof(UIntPtr) ||
@@ -265,7 +273,7 @@ namespace System
             Type type,
             ConcurrentDictionary<Type, bool> visited)
         {
-            if (type.IsPointer || type.IsEnum || type.IsPrimitive)
+            if (type == typeof(TSet) || type.IsPointer || type.IsEnum || type.IsPrimitive)
                 return true;
 
             if (type == typeof(decimal) ||
@@ -300,6 +308,34 @@ namespace System
 
     internal static class PointerBackingRegistry
     {
+        // A native address is an alias of its managed backing while a caller
+        // owns a pin. Recover that alias on address -> pointer conversions.
+        private static readonly ConcurrentDictionary<PointerBacking, IntPtr> FPinned = new();
+
+        internal static void RegisterPin(PointerBacking backing, IntPtr address) =>
+            FPinned[backing] = address;
+
+        internal static void UnregisterPin(PointerBacking backing) =>
+            FPinned.TryRemove(backing, out _);
+
+        internal static bool TryResolvePin(IntPtr address, int capacity, out PointerView view)
+        {
+            ulong requested = unchecked((ulong)address.ToInt64());
+            foreach (var entry in FPinned)
+            {
+                ulong start = unchecked((ulong)entry.Value.ToInt64());
+                if (requested < start || entry.Key.ByteLength < 0) continue;
+                ulong delta = requested - start;
+                if (delta > (ulong)entry.Key.ByteLength) continue;
+                nint offset = checked((nint)delta);
+                nint length = capacity == 0 ? entry.Key.ByteLength - offset : capacity;
+                view = new PointerView(entry.Key, offset, length);
+                return true;
+            }
+            view = default;
+            return false;
+        }
+
         private static readonly ConditionalWeakTable<Array, ManagedArrayBacking> FArrays =
             new ConditionalWeakTable<Array, ManagedArrayBacking>();
 
@@ -329,6 +365,9 @@ namespace System
 
     internal abstract class PointerBacking
     {
+        internal static bool CompatibleReferenceTypes(Type left, Type right) =>
+            !left.IsValueType && !right.IsValueType &&
+            (left.IsAssignableFrom(right) || right.IsAssignableFrom(left));
         internal abstract nint ByteLength { get; }
         internal virtual int ValueSize<T>() => DelphiTypeLayout.SizeOf<T>();
         internal virtual bool IsReadOnly => false;
@@ -401,20 +440,24 @@ namespace System
     internal sealed class ReferenceBacking<TValue> : PointerBacking
     {
         private static readonly ConditionalWeakTable<Ref<TValue>, ReferenceBacking<TValue>> FLocations = new();
+        private static readonly ConditionalWeakTable<Ref<TValue>, ReferenceBacking<TValue>> FStorageLocations = new();
         internal Ref<TValue> Location { get; }
         private readonly int FSize;
+        private readonly bool FByteView;
 
-        private ReferenceBacking(Ref<TValue> location, int size)
+        private ReferenceBacking(Ref<TValue> location, int size, bool byteView)
         {
             Location = location;
             FSize = size;
+            FByteView = byteView;
         }
 
-        internal static ReferenceBacking<TValue> ForLocation(Ref<TValue> location, int size)
+        internal static ReferenceBacking<TValue> ForLocation(Ref<TValue> location, int size, bool byteView = false)
         {
             if (location == null) throw new ArgumentNullException(nameof(location));
             if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
-            var backing = FLocations.GetValue(location, key => new ReferenceBacking<TValue>(key, size));
+            var locations = byteView ? FStorageLocations : FLocations;
+            var backing = locations.GetValue(location, key => new ReferenceBacking<TValue>(key, size, byteView));
             if (backing.FSize != size) throw new ArgumentException("The location already has a different size.", nameof(size));
             return backing;
         }
@@ -423,7 +466,7 @@ namespace System
         internal override int ValueSize<T>() => typeof(T) == typeof(TValue) ? FSize : base.ValueSize<T>();
         internal override bool TryReadValue<T>(nint offset, out T value)
         {
-            if (offset == 0 && typeof(T) == typeof(TValue))
+            if (offset == 0 && (typeof(T) == typeof(TValue) || CompatibleReferenceTypes(typeof(T), typeof(TValue))))
             {
                 value = (T)(object)Location.Value!;
                 return true;
@@ -433,12 +476,24 @@ namespace System
         }
         internal override bool TryWriteValue<T>(nint offset, T value)
         {
-            if (offset != 0 || typeof(T) != typeof(TValue)) return false;
+            if (offset != 0 || (typeof(T) != typeof(TValue) && !CompatibleReferenceTypes(typeof(T), typeof(TValue)))) return false;
             Location.Value = (TValue)(object)value!;
             return true;
         }
-        internal override byte ReadByte(nint offset) => throw NoByteView();
-        internal override void WriteByte(nint offset, byte value) => throw NoByteView();
+        internal override byte ReadByte(nint offset)
+        {
+            ValidateRange(offset, 1);
+            if (!FByteView || !DelphiTypeLayout.IsByteAddressable<TValue>()) throw NoByteView();
+            return DelphiValueCodec.ToBytes(Location.Value, typeof(TValue), FSize)[checked((int)offset)];
+        }
+        internal override void WriteByte(nint offset, byte value)
+        {
+            ValidateRange(offset, 1);
+            if (!FByteView || !DelphiTypeLayout.IsByteAddressable<TValue>()) throw NoByteView();
+            byte[] bytes = DelphiValueCodec.ToBytes(Location.Value, typeof(TValue), FSize);
+            bytes[checked((int)offset)] = value;
+            Location.Value = (TValue)DelphiValueCodec.FromBytes(bytes, typeof(TValue));
+        }
         internal override PointerPin Pin(nint offset) => throw NoByteView();
         internal override IntPtr GetPersistentAddress(nint offset) => throw NoByteView();
         private static NotSupportedException NoByteView() => new("This typed variable has no raw byte representation.");
@@ -465,6 +520,8 @@ namespace System
                     IntPtr address = IntPtr.Add(
                         FPin.AddrOfPinnedObject(), checked((int)absoluteOffset));
                     int nextCount = checked(FPinCount + 1);
+                    if (allocated)
+                        PointerBackingRegistry.RegisterPin(this, FPin.AddrOfPinnedObject());
                     PointerPin pin = new PointerPin(address, ReleasePin);
                     FPinCount = nextCount;
                     return pin;
@@ -472,7 +529,10 @@ namespace System
                 catch
                 {
                     if (allocated)
+                    {
+                        PointerBackingRegistry.UnregisterPin(this);
                         FPin.Free();
+                    }
                     throw;
                 }
             }
@@ -503,7 +563,10 @@ namespace System
             lock (FPinLock)
             {
                 if (--FPinCount == 0)
+                {
+                    PointerBackingRegistry.UnregisterPin(this);
                     FPin.Free();
+                }
             }
         }
     }
@@ -519,12 +582,6 @@ namespace System
         internal ManagedArrayBacking(Array array)
         {
             FArray = array ?? throw new ArgumentNullException(nameof(array));
-
-            if (array.Rank != 1)
-            {
-                throw new NotSupportedException(
-                    "Only one-dimensional array pointer views are supported.");
-            }
 
             FElementType = array.GetType().GetElementType()
                 ?? throw new InvalidOperationException(
@@ -553,7 +610,7 @@ namespace System
 
             int elementIndex = offset / FElementSize;
             int byteInElement = offset % FElementSize;
-            object? element = FArray.GetValue(FLowerBound + elementIndex);
+            object? element = GetElement(elementIndex);
             byte[] bytes = DelphiValueCodec.ToBytes(
                 element,
                 FElementType,
@@ -576,24 +633,33 @@ namespace System
 
             int elementIndex = offset / FElementSize;
             int byteInElement = offset % FElementSize;
-            int actualIndex = FLowerBound + elementIndex;
-            object? element = FArray.GetValue(actualIndex);
+            object? element = GetElement(elementIndex);
             byte[] bytes = DelphiValueCodec.ToBytes(
                 element,
                 FElementType,
                 FElementSize);
 
             bytes[byteInElement] = value;
-            FArray.SetValue(
-                DelphiValueCodec.FromBytes(bytes, FElementType),
-                actualIndex);
+            SetElement(elementIndex, DelphiValueCodec.FromBytes(bytes, FElementType));
         }
 
         internal override bool TryReadValue<T>(
             nint absoluteOffset,
             out T value)
         {
-            if (typeof(T) != FElementType ||
+            // Reading a reference slot as PPointer returns the referenced identity.
+            if (typeof(T) == typeof(Pointer) && !FElementType.IsValueType &&
+                absoluteOffset >= 0 && absoluteOffset % FElementSize == 0)
+            {
+                nint index = absoluteOffset / FElementSize;
+                if (index < FArray.Length)
+                {
+                    value = (T)(object)Pointer.FromManagedReference(
+                        GetElement(checked((int)index)));
+                    return true;
+                }
+            }
+            if ((typeof(T) != FElementType && !CompatibleReferenceTypes(typeof(T), FElementType)) ||
                 absoluteOffset < 0 ||
                 absoluteOffset % FElementSize != 0)
             {
@@ -609,8 +675,7 @@ namespace System
                 return false;
             }
 
-            object? item = FArray.GetValue(
-                FLowerBound + checked((int)elementIndex));
+            object? item = GetElement(checked((int)elementIndex));
 
             value = item == null ? default! : (T)item;
             return true;
@@ -620,7 +685,7 @@ namespace System
             nint absoluteOffset,
             T value)
         {
-            if (typeof(T) != FElementType ||
+            if ((typeof(T) != FElementType && !CompatibleReferenceTypes(typeof(T), FElementType)) ||
                 absoluteOffset < 0 ||
                 absoluteOffset % FElementSize != 0)
             {
@@ -632,11 +697,31 @@ namespace System
             if (elementIndex < 0 || elementIndex >= FArray.Length)
                 return false;
 
-            FArray.SetValue(
-                value,
-                FLowerBound + checked((int)elementIndex));
+            SetElement(checked((int)elementIndex), value);
 
             return true;
+        }
+
+        private int[] GetIndices(int linearIndex)
+        {
+            int[] indices = new int[FArray.Rank];
+            for (int dimension = indices.Length - 1; dimension >= 0; dimension--)
+            {
+                int length = FArray.GetLength(dimension);
+                indices[dimension] = FArray.GetLowerBound(dimension) + linearIndex % length;
+                linearIndex /= length;
+            }
+            return indices;
+        }
+
+        private object? GetElement(int linearIndex) => FArray.Rank == 1
+            ? FArray.GetValue(FLowerBound + linearIndex)
+            : FArray.GetValue(GetIndices(linearIndex));
+
+        private void SetElement(int linearIndex, object? value)
+        {
+            if (FArray.Rank == 1) FArray.SetValue(value, FLowerBound + linearIndex);
+            else FArray.SetValue(value, GetIndices(linearIndex));
         }
 
         internal override PointerPin Pin(nint absoluteOffset)
@@ -1060,6 +1145,11 @@ namespace System
             if (IsNull || other.IsNull)
                 return IsNull && other.IsNull;
 
+            // Separate borrowed wrappers can denote the same native address.
+            // Comparing their backing objects would make resource IDs unequal.
+            if (Backing is NativeMemoryBacking && other.Backing is NativeMemoryBacking)
+                return GetPersistentAddress() == other.GetPersistentAddress();
+
             return ReferenceEquals(Backing, other.Backing) &&
                    ByteOffset == other.ByteOffset;
         }
@@ -1071,6 +1161,9 @@ namespace System
 
         public override int GetHashCode()
         {
+            if (!IsNull && Backing is NativeMemoryBacking)
+                return GetPersistentAddress().GetHashCode();
+
             return IsNull
                 ? 0
                 : HashCode.Combine(Backing, ByteOffset);
@@ -1110,7 +1203,9 @@ namespace System
 
             byte[] result;
 
-            if (type == typeof(bool))
+            if (type == typeof(TSet))
+                result = ((TSet)value).ToBytes();
+            else if (type == typeof(bool))
                 result = new[] { (bool)value ? (byte)1 : (byte)0 };
             else if (type == typeof(byte))
                 result = new[] { (byte)value };
@@ -1203,6 +1298,7 @@ namespace System
                 return Enum.ToObject(type, FromBytes(bytes, underlying));
             }
 
+            if (type == typeof(TSet)) return TSet.FromBytes(bytes);
             if (type == typeof(bool))
                 return bytes[0] != 0;
             if (type == typeof(byte))

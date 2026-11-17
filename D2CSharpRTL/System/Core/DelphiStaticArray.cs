@@ -128,6 +128,18 @@ namespace System
         internal object? AssignElementValue(object? source, object? target) =>
             FAssignElement == null ? source : FAssignElement(source, target);
 
+        // Derive one-dimensional array metadata for an integral number of elements.
+        internal DelphiStaticArrayInfo ForAllocationBytes(int byteCount)
+        {
+            if (byteCount == ByteSize)
+                return this;
+            if (Rank != 1 || byteCount <= 0 || byteCount > ByteSize || byteCount % ElementSize != 0)
+                throw new NotSupportedException(
+                    "A partial static-array allocation must contain a whole number of elements in one dimension.");
+            return new DelphiStaticArrayInfo(ElementType, ElementSize, FLowerBounds,
+                new[] { byteCount / ElementSize }, FCloneElement, FAssignElement, FCreateElement);
+        }
+
         public Type ElementType { get; }
         public int ElementSize { get; }
         public int Rank => FLengths.Length;

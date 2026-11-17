@@ -749,7 +749,7 @@ public static partial class TypesInterface
         public static TRectF CreateRecord() => new TRectF();
     }
 
-    public static TPoint Point(int x, int y) => new TPoint(x, y);
+    public static TPoint point(int x, int y) => new TPoint(x, y);
 
     public static TSmallPoint SmallPoint(int x, int y) =>
         new TSmallPoint(checked((short)x), checked((short)y));

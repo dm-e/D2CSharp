@@ -127,7 +127,7 @@ namespace System
     }
 
     /// <summary>
-    /// Immutable, byte-preserving representation of Delphi's AnsiString.
+    /// Byte-preserving representation of Delphi's AnsiString.
     /// The indexer and instance methods use normal zero-based C# indexes. The
     /// generator passes its already translated Index - 1 values to RTL helpers.
     /// </summary>
@@ -284,6 +284,10 @@ namespace System
         {
             return AsSpan().ToArray();
         }
+
+        // PAnsiChar addresses the existing bytes; pointer writes also affect shared aliases.
+        // Ordinary AnsiString operations continue to create replacement values.
+        internal byte[] GetPointerBuffer() => FBuffer;
 
         internal byte[] ToNullTerminatedByteArray()
         {

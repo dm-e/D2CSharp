@@ -83,7 +83,7 @@ namespace D7_arrays
         public static bool CheckArrayLiterals()
         {
             bool result = false;
-            result = AcceptMixedValues(new TVarRec[] { TVarRec.From('Q'), TVarRec.From(17), TVarRec.From(true) }) && AcceptMarkers(new TSet() << '!' << '?');
+            result = AcceptMixedValues(new TVarRec[] { TVarRec.From('Q'), TVarRec.From(17), TVarRec.From(true) }) && AcceptMarkers((new TSet() << '!' << '?'));
             return result;
         }
 
@@ -117,14 +117,14 @@ namespace D7_arrays
             Grid[1, 5 - 3] = 'Z';
             OpcodeLengthOk = OpcodeTable.Length == 65536;
             OpcodeLowOk = 0 /*# Low(OpcodeTable) */ == 0;
-            OpcodeHighOk = OpcodeTable.Length - 1 == 65535;
+            OpcodeHighOk = 65535 /*# High(OpcodeTable) */ == 65535;
             OpcodeValueOk = OpcodeTable[0x1234] == 0x5A;
-            SamplesLengthOk = Samples.Length == 5;
+            SamplesLengthOk = 5 /*# Length(Samples) */ == 5;
             SamplesLowOk = 2 /*# Low(Samples) */ == 2;
             SamplesHighOk = 6 /*# High(Samples) */ == 6;
             Sample3Ok = Samples[3 - 2] == 9;
             Sample6Ok = Samples[6 - 2] == 36;
-            GridLengthOk = Grid.GetLength(0) == 2;
+            GridLengthOk = 2 /*# Length(Grid) */ == 2;
             GridFirstValueOk = Grid[0, 3 - 3] == 'A';
             GridLastValueOk = Grid[1, 5 - 3] == 'Z';
             result = OpcodeLengthOk && OpcodeLowOk && OpcodeHighOk && OpcodeValueOk && SamplesLengthOk && SamplesLowOk && SamplesHighOk && Sample3Ok && Sample6Ok && GridLengthOk && GridFirstValueOk && GridLastValueOk;
@@ -134,37 +134,37 @@ namespace D7_arrays
         public static bool CheckDynamicArrays()
         {
             bool result = false;
-            int[] Values = new int[] { };
-            string[][] Matrix = new string[][] { };
+            int[] Values = null;
+            string[][] Matrix = null;
             int Row = 0;
             int Column = 0;
             string Joined = string.Empty;
-            Array.Resize(ref Values, 4);
-            for (Row = 0; Row <= Values.Length - 1 /*# High(Values) */; Row++)
+            SetLength(ref Values, 4);
+            for (Row = 0; Row <= Length(Values) - 1 /*# High(Values) */; Row++)
             {
                 Values[Row] = (Row + 1) * 10;
             }
-            Array.Resize(ref Matrix, 2);
-            Array.Resize(ref Matrix[0], 2);
-            Array.Resize(ref Matrix[1], 3);
+            SetLength(ref Matrix, 2);
+            SetLength(ref Matrix[0], 2);
+            SetLength(ref Matrix[1], 3);
             Joined = "";
-            for (Row = 0; Row <= Matrix.Length - 1 /*# High(Matrix) */; Row++)
+            for (Row = 0; Row <= Length(Matrix) - 1 /*# High(Matrix) */; Row++)
             {
-                for (Column = 0; Column <= Matrix[Row].Length - 1 /*# High(Matrix[Row]) */; Column++)
+                for (Column = 0; Column <= Length(Matrix[Row]) - 1 /*# High(Matrix[Row]) */; Column++)
                 {
                     Matrix[Row][Column] = (Row * 3 + Column).ToString();
                     Joined = Joined + Matrix[Row][Column];
                 }
             }
-            result = (Values.Length == 4) && (Values[0] == 10) && (Values[3] == 40) && (Matrix[0].Length == 2) && (Matrix[1].Length == 3) && (Joined == "01345");
+            result = (Length(Values) == 4) && (Values[0] == 10) && (Values[3] == 40) && (Length(Matrix[0]) == 2) && (Length(Matrix[1]) == 3) && (Joined == "01345");
             return result;
         }
 
         public static void FillLetterBuffer(ref char[] ABuffer)
         {
             int Index = 0;
-            Array.Resize(ref ABuffer, 4);
-            for (Index = 0; Index <= ABuffer.Length - 1 /*# High(ABuffer) */; Index++)
+            SetLength(ref ABuffer, 4);
+            for (Index = 0; Index <= Length(ABuffer) - 1 /*# High(ABuffer) */; Index++)
             {
                 ABuffer[Index] = Chr((int)('K') + Index);
             }
@@ -197,7 +197,7 @@ namespace D7_arrays
         public static bool CheckOpenArrays()
         {
             bool result = false;
-            char[] Buffer = new char[] { };
+            char[] Buffer = null;
             char[] FixedText = new char[4/*# range 0..3*/];
             Ref<char[]> __d2cArrayLocation_FixedText = new Ref<char[]>(() => FixedText, __d2cArrayValue => FixedText = __d2cArrayValue);
             FillLetterBuffer(ref Buffer);

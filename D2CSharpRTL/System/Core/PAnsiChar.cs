@@ -23,12 +23,19 @@ namespace System
 {
     /// <summary>
     /// Byte pointer used for Delphi PAnsiChar. Pointer indexes are zero-based.
-    /// Constructors copy string values into writable, null-terminated storage,
-    /// matching the existing PChar compatibility layer.
+    /// AnsiString constructors reference its writable, null-terminated storage,
+    /// so pointer writes affect the original string bytes.
     /// </summary>
     public struct PAnsiChar : IPointer<byte>, IEquatable<PAnsiChar>
     {
         private Pointer<byte> FPointer;
+
+        // Explicit Delphi casts expose UTF-16 bytes; the string constructor encodes ANSI.
+        public static PAnsiChar FromUnicodeString(string? value) => string.IsNullOrEmpty(value)
+            ? default : new PAnsiChar(new PChar(value).AsPointer().ToPointer());
+
+        public static PAnsiChar FromUnicodeLocation(Func<string> getter, Action<string> setter) =>
+            new PAnsiChar(StringPointer.FromLocation(new Ref<string>(getter, setter)));
         private ushort FCodePage;
 
         public static int DelphiSizeOf => D2C.PointerSize;
@@ -68,7 +75,7 @@ namespace System
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             FPointer = new Pointer<byte>(
-                value.ToNullTerminatedByteArray(),
+                value.GetPointerBuffer(),
                 index);
             FCodePage = value.CodePage;
         }

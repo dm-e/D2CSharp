@@ -38,10 +38,12 @@ uses
   System.SysUtils;
 
 const
-  fmCreate = $FF00;
+  fmCreate = $FFFF;
   MaxListSize = $07FFFFFF;
 
 type
+  EStringListError = class(Exception);
+  THelpContext = -MaxInt..MaxInt;
   TSeekOrigin = (soBeginning, soCurrent, soEnd);
   TStreamOwnership = (soReference, soOwned);
 
@@ -576,12 +578,20 @@ type
     procedure SetSize(NewSize: Longint); overload; virtual;
     procedure SetSize(const NewSize: Int64); overload; virtual;
   public
-    function Read(var Buffer; Count: Longint): Longint; virtual; abstract;
-    function Write(const Buffer; Count: Longint): Longint; virtual; abstract;
+    function Read(var Buffer; Count: Longint): Longint; overload; virtual; abstract;
+    function Read(Buffer: TBytes; Offset, Count: Longint): Longint; overload; virtual;
+    function Read(var Buffer: TBytes; Count: Longint): Longint; overload;
+    function Write(const Buffer; Count: Longint): Longint; overload; virtual; abstract;
+    function Write(const Buffer: TBytes; Offset, Count: Longint): Longint; overload; virtual;
+    function Write(const Buffer: TBytes; Count: Longint): Longint; overload;
     function Seek(Offset: Longint; Origin: Word): Longint; overload; virtual;
     function Seek(const Offset: Int64; Origin: TSeekOrigin): Int64; overload; virtual;
-    procedure ReadBuffer(var Buffer; Count: Longint);
-    procedure WriteBuffer(const Buffer; Count: Longint);
+    procedure ReadBuffer(var Buffer; Count: Longint); overload;
+    procedure ReadBuffer(var Buffer: TBytes; Count: NativeInt); overload; inline;
+    procedure ReadBuffer(var Buffer: TBytes; Offset, Count: NativeInt); overload;
+    procedure WriteBuffer(const Buffer; Count: Longint); overload;
+    procedure WriteBuffer(const Buffer: TBytes; Count: NativeInt); overload; inline;
+    procedure WriteBuffer(const Buffer: TBytes; Offset, Count: NativeInt); overload;
     function CopyFrom(Source: TStream; Count: Int64): Int64;
     function ReadByte: Byte;
     procedure WriteByte(Value: Byte);
@@ -594,8 +604,10 @@ type
     FHandle: THandle;
   public
     constructor Create(AHandle: THandle);
-    function Read(var Buffer; Count: Longint): Longint; override;
-    function Write(const Buffer; Count: Longint): Longint; override;
+    function Read(var Buffer; Count: Longint): Longint; overload; override;
+    function Read(Buffer: TBytes; Offset, Count: Longint): Longint; overload; override;
+    function Write(const Buffer; Count: Longint): Longint; overload; override;
+    function Write(const Buffer: TBytes; Offset, Count: Longint): Longint; overload; override;
     function Seek(const Offset: Int64; Origin: TSeekOrigin): Int64; override;
     property Handle: THandle read FHandle;
   end;
@@ -661,6 +673,26 @@ type
     property Encoding: TEncoding read FEncoding;
   end;
 
+
+  { Additional stream types. }
+  TBufferedFileStream = class(TFileStream)
+  public
+    constructor Create(const AFileName: string; Mode: Word;
+      BufferSize: Integer = 32768); overload;
+    constructor Create(const AFileName: string; Mode: Word;
+      Rights: Cardinal; BufferSize: Integer = 32768); overload;
+    procedure FlushBuffer;
+  end;
+
+  TPointerStream = class(TCustomMemoryStream)
+  private
+    FReadOnly: Boolean;
+  public
+    constructor Create(Ptr: Pointer; const Size: NativeInt;
+      ReadOnly: Boolean = False);
+    function Write(const Buffer; Count: Longint): Longint; override;
+    property ReadOnly: Boolean read FReadOnly;
+  end;
 
   TBytesStream = class(TMemoryStream)
   private
@@ -728,34 +760,74 @@ type
     property Current: string read GetCurrent;
   end;
 
-  TStringReader = class(TObject)
+  TTextReader = class(TObject)
+  public
+    function Peek: Integer; virtual; abstract;
+    function Read: Integer; overload; virtual; abstract;
+    function Read(var Buffer: array of Char; Index, Count: Integer): Integer; overload; virtual; abstract;
+    function ReadBlock(var Buffer: array of Char; Index, Count: Integer): Integer; virtual;
+    function ReadLine: string; virtual; abstract;
+    function ReadToEnd: string; virtual; abstract;
+    function GetEnumerator: TTextReaderEnumerator;
+  end;
+
+  TTextReaderEnumerator = class(TObject)
+  private
+    FReader: TTextReader;
+    FCurrent: string;
+  public
+    constructor Create(AReader: TTextReader);
+    function MoveNext: Boolean;
+    property Current: string read FCurrent;
+  end;
+
+  TTextWriter = class(TObject)
+  private
+    FNewLine: string;
+  public
+    constructor Create;
+    procedure Close; virtual;
+    procedure Flush; virtual;
+    procedure Write(Value: Boolean); overload; virtual;
+    procedure Write(Value: Char); overload; virtual;
+    procedure Write(Value: Integer); overload; virtual;
+    procedure Write(Value: Int64); overload; virtual;
+    procedure Write(Value: Single); overload; virtual;
+    procedure Write(Value: Double); overload; virtual;
+    procedure Write(const Value: string); overload; virtual;
+    procedure WriteLine; overload; virtual;
+    procedure WriteLine(const Value: string); overload; virtual;
+    property NewLine: string read FNewLine write FNewLine;
+  end;
+
+  TStringReader = class(TTextReader)
   private
     FData: string;
     FPosition: Integer;
   public
     constructor Create(const AString: string);
-    function Peek: Integer;
-    function Read: Integer; overload;
-    function Read(var Buffer: array of Char; Index, Count: Integer): Integer; overload;
-    function ReadLine: string;
-    function ReadToEnd: string;
+    function Peek: Integer; override;
+    function Read: Integer; overload; override;
+    function Read(var Buffer: array of Char; Index, Count: Integer): Integer; overload; override;
+    function ReadLine: string; override;
+    function ReadToEnd: string; override;
   end;
 
-  TStringWriter = class(TObject)
+  TStringWriter = class(TTextWriter)
   private
     FBuilder: System.SysUtils.TStringBuilder;
   public
     constructor Create; overload;
     constructor Create(ABuilder: System.SysUtils.TStringBuilder); overload;
-    procedure Write(const Value: string); overload;
-    procedure Write(Value: Char); overload;
-    procedure WriteLine; overload;
-    procedure WriteLine(const Value: string); overload;
+    procedure Write(const Value: string); overload; override;
+    procedure Write(Value: Char); overload; override;
+    procedure WriteLine; overload; override;
+    procedure WriteLine(const Value: string); overload; override;
     function ToString: string; override;
     property Builder: System.SysUtils.TStringBuilder read FBuilder;
   end;
 
-  TStreamReader = class(TObject)
+  TStreamReader = class(TTextReader)
   private
     FStream: TStream;
     FEncoding: TEncoding;
@@ -770,18 +842,18 @@ type
       DetectBOM: Boolean = True; BufferSize: Integer = 1024); overload;
     destructor Destroy; override;
     procedure Close;
-    function Peek: Integer;
-    function Read: Integer; overload;
-    function Read(var Buffer: array of Char; Index, Count: Integer): Integer; overload;
-    function ReadBlock(var Buffer: array of Char; Index, Count: Integer): Integer;
-    function ReadLine: string;
-    function ReadToEnd: string;
+    function Peek: Integer; override;
+    function Read: Integer; overload; override;
+    function Read(var Buffer: array of Char; Index, Count: Integer): Integer; overload; override;
+    function ReadBlock(var Buffer: array of Char; Index, Count: Integer): Integer; override;
+    function ReadLine: string; override;
+    function ReadToEnd: string; override;
     property BaseStream: TStream read FStream;
     property CurrentEncoding: TEncoding read FEncoding;
     property EndOfStream: Boolean read GetEndOfStream;
   end;
 
-  TStreamWriter = class(TObject)
+  TStreamWriter = class(TTextWriter)
   private
     FStream: TStream;
     FEncoding: TEncoding;
@@ -796,12 +868,12 @@ type
     constructor Create(const Filename: string; Append: Boolean;
       Encoding: TEncoding; BufferSize: Integer = 1024); overload;
     destructor Destroy; override;
-    procedure Close;
-    procedure Flush;
-    procedure Write(const Value: string); overload;
-    procedure Write(Value: Char); overload;
-    procedure WriteLine; overload;
-    procedure WriteLine(const Value: string); overload;
+    procedure Close; override;
+    procedure Flush; override;
+    procedure Write(const Value: string); overload; override;
+    procedure Write(Value: Char); overload; override;
+    procedure WriteLine; overload; override;
+    procedure WriteLine(const Value: string); overload; override;
     property AutoFlush: Boolean read FAutoFlush write FAutoFlush;
     property BaseStream: TStream read FStream;
     property Encoding: TEncoding read FEncoding;
@@ -861,46 +933,6 @@ type
     property Client: TObject read FClient;
   end;
 
-
-  TTextReader = class(TObject)
-  public
-    function Peek: Integer; virtual; abstract;
-    function Read: Integer; overload; virtual; abstract;
-    function Read(var Buffer: array of Char; Index, Count: Integer): Integer; overload; virtual;
-    function ReadBlock(var Buffer: array of Char; Index, Count: Integer): Integer; virtual;
-    function ReadLine: string; virtual;
-    function ReadToEnd: string; virtual;
-    function GetEnumerator: TTextReaderEnumerator;
-  end;
-
-  TTextReaderEnumerator = class(TObject)
-  private
-    FReader: TTextReader;
-    FCurrent: string;
-  public
-    constructor Create(AReader: TTextReader);
-    function MoveNext: Boolean;
-    property Current: string read FCurrent;
-  end;
-
-  TTextWriter = class(TObject)
-  private
-    FNewLine: string;
-  public
-    constructor Create;
-    procedure Close; virtual;
-    procedure Flush; virtual;
-    procedure Write(Value: Boolean); overload; virtual;
-    procedure Write(Value: Char); overload; virtual;
-    procedure Write(Value: Integer); overload; virtual;
-    procedure Write(Value: Int64); overload; virtual;
-    procedure Write(Value: Single); overload; virtual;
-    procedure Write(Value: Double); overload; virtual;
-    procedure Write(const Value: string); overload; virtual;
-    procedure WriteLine; overload; virtual;
-    procedure WriteLine(const Value: string); overload; virtual;
-    property NewLine: string read FNewLine write FNewLine;
-  end;
 
   TBinaryReader = class(TObject)
   private
@@ -2031,11 +2063,47 @@ begin
   Result := 0;
 end;
 
+function TStream.Read(Buffer: TBytes; Offset, Count: Longint): Longint;
+begin
+  Result := 0;
+end;
+
+function TStream.Read(var Buffer: TBytes; Count: Longint): Longint;
+begin
+  Result := 0;
+end;
+
+function TStream.Write(const Buffer: TBytes; Offset, Count: Longint): Longint;
+begin
+  Result := 0;
+end;
+
+function TStream.Write(const Buffer: TBytes; Count: Longint): Longint;
+begin
+  Result := 0;
+end;
+
 procedure TStream.ReadBuffer(var Buffer; Count: Longint);
 begin
 end;
 
+procedure TStream.ReadBuffer(var Buffer: TBytes; Count: NativeInt);
+begin
+end;
+
+procedure TStream.ReadBuffer(var Buffer: TBytes; Offset, Count: NativeInt);
+begin
+end;
+
 procedure TStream.WriteBuffer(const Buffer; Count: Longint);
+begin
+end;
+
+procedure TStream.WriteBuffer(const Buffer: TBytes; Count: NativeInt);
+begin
+end;
+
+procedure TStream.WriteBuffer(const Buffer: TBytes; Offset, Count: NativeInt);
 begin
 end;
 
@@ -2065,7 +2133,17 @@ begin
   Result := 0;
 end;
 
+function THandleStream.Read(Buffer: TBytes; Offset, Count: Longint): Longint;
+begin
+  Result := 0;
+end;
+
 function THandleStream.Write(const Buffer; Count: Longint): Longint;
+begin
+  Result := 0;
+end;
+
+function THandleStream.Write(const Buffer: TBytes; Offset, Count: Longint): Longint;
 begin
   Result := 0;
 end;
@@ -2191,6 +2269,39 @@ end;
 
 procedure TStringStream.WriteString(const AString: string);
 begin
+end;
+
+{ TBufferedFileStream }
+
+constructor TBufferedFileStream.Create(const AFileName: string; Mode: Word;
+  BufferSize: Integer);
+begin
+  inherited Create(AFileName, Mode);
+end;
+
+constructor TBufferedFileStream.Create(const AFileName: string; Mode: Word;
+  Rights: Cardinal; BufferSize: Integer);
+begin
+  inherited Create(AFileName, Mode, Rights);
+end;
+
+procedure TBufferedFileStream.FlushBuffer;
+begin
+end;
+
+{ TPointerStream }
+
+constructor TPointerStream.Create(Ptr: Pointer; const Size: NativeInt;
+  ReadOnly: Boolean);
+begin
+  inherited Create;
+  FReadOnly := ReadOnly;
+  SetPointer(Ptr, Size);
+end;
+
+function TPointerStream.Write(const Buffer; Count: Longint): Longint;
+begin
+  Result := 0;
 end;
 
 { TBytesStream }
@@ -2729,26 +2840,10 @@ end;
 
 { TTextReader }
 
-function TTextReader.Read(var Buffer: array of Char;
-  Index, Count: Integer): Integer;
-begin
-  Result := 0;
-end;
-
 function TTextReader.ReadBlock(var Buffer: array of Char;
   Index, Count: Integer): Integer;
 begin
   Result := 0;
-end;
-
-function TTextReader.ReadLine: string;
-begin
-  Result := '';
-end;
-
-function TTextReader.ReadToEnd: string;
-begin
-  Result := '';
 end;
 
 function TTextReader.GetEnumerator: TTextReaderEnumerator;

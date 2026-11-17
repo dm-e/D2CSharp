@@ -110,7 +110,6 @@ type
   LPVOID = Pointer;
   LPCVOID = Pointer;
 
-  CHAR = AnsiChar;
   PCHARA = PAnsiChar;
   LPSTR = PAnsiChar;
   LPCSTR = PAnsiChar;
@@ -297,6 +296,19 @@ type
   PWin32FindData = ^TWin32FindData;
 
 const
+  { Virtual-key codes; Pascal identifiers are case-insensitive. }
+  VK_SHIFT = $10;
+  vkTab = $09;
+  vkPrior = $21;
+  vkNext = $22;
+  vkEnd = $23;
+  vkHome = $24;
+  vkLeft = $25;
+  vkUp = $26;
+  vkRight = $27;
+  vkDown = $28;
+  vkDelete = $2E;
+
   MAX_PATH = 260;
 
   INVALID_HANDLE_VALUE = THandle(-1);
@@ -487,6 +499,10 @@ const
 { Error handling and timing }
 
 function GetLastError: DWORD; stdcall;
+function CharLower(lpsz: LPWSTR): LPWSTR; stdcall;
+function CharLowerW(lpsz: LPWSTR): LPWSTR; stdcall;
+function CharUpper(lpsz: LPWSTR): LPWSTR; stdcall;
+function CharUpperW(lpsz: LPWSTR): LPWSTR; stdcall;
 procedure SetLastError(dwErrCode: DWORD); stdcall;
 function GetTickCount: DWORD; stdcall;
 procedure Sleep(dwMilliseconds: DWORD); stdcall;
@@ -675,6 +691,8 @@ function CreateWindowEx(dwExStyle: DWORD; lpClassName, lpWindowName: PChar;
 function InvalidateRect(hWnd: HWND; lpRect: PRect; bErase: BOOL): BOOL; stdcall;
 function UpdateWindow(hWnd: HWND): BOOL; stdcall;
 
+function SetCursor(hCursor: HCURSOR): HCURSOR; stdcall;
+function GetCursor: HCURSOR; stdcall;
 function GetDC(hWnd: HWND): HDC; stdcall;
 function ReleaseDC(hWnd: HWND; hDC: HDC): Integer; stdcall;
 
@@ -694,11 +712,28 @@ function RegSetValueEx(hKey: HKEY; lpValueName: PChar; Reserved, dwType: DWORD;
 function RegDeleteValue(hKey: HKEY; lpValueName: PChar): LONG; stdcall;
 function RegDeleteKey(hKey: HKEY; lpSubKey: PChar): LONG; stdcall;
 
+{ Returns the key state, including the high-order pressed bit. }
+function GetKeyState(nVirtKey: Integer): SmallInt; stdcall;
+
 implementation
+
+function GetKeyState(nVirtKey: Integer): SmallInt;
+begin
+  Result := 0;
+end;
 
 function GetLastError: DWORD;
 begin
 end;
+
+function CharLower(lpsz: LPWSTR): LPWSTR;
+begin Result := lpsz end;
+function CharLowerW(lpsz: LPWSTR): LPWSTR;
+begin Result := lpsz end;
+function CharUpper(lpsz: LPWSTR): LPWSTR;
+begin Result := lpsz end;
+function CharUpperW(lpsz: LPWSTR): LPWSTR;
+begin Result := lpsz end;
 
 procedure SetLastError(dwErrCode: DWORD);
 begin
@@ -1173,6 +1208,12 @@ end;
 function UpdateWindow(hWnd: HWND): BOOL;
 begin
 end;
+
+function SetCursor(hCursor: HCURSOR): HCURSOR;
+begin Result := 0; end;
+
+function GetCursor: HCURSOR;
+begin Result := 0; end;
 
 function GetDC(hWnd: HWND): HDC;
 begin

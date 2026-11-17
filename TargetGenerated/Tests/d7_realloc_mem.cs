@@ -51,20 +51,20 @@ namespace D7_realloc_mem
             {
                 for (Index = 0; Index <= 3; Index++)
                 {
-                    RawMemory.Write<byte>(Index, (byte)(Index + 10));
+                    (RawMemory).As<byte>()[Index] = (byte)(Index + 10);
                 }
-                ReallocMem(ref RawMemory, DelphiStaticArrayInfo.Create<byte>(new int[] { 0 }, new int[] { 8 }).ByteSize);
+                ReallocMem(ref RawMemory, (8 * (int)DelphiTypeSize.Byte));
                 for (Index = 4; Index <= 7; Index++)
                 {
-                    RawMemory.Write<byte>(Index, (byte)(Index + 10));
+                    (RawMemory).As<byte>()[Index] = (byte)(Index + 10);
                 }
-                CheckResult1 = (RawMemory.As<byte>()[0] == 10);
+                CheckResult1 = ((RawMemory).As<byte>()[0] == 10);
                 result = CheckResult1;
-                CheckResult2 = (RawMemory.As<byte>()[3] == 13);
+                CheckResult2 = ((RawMemory).As<byte>()[3] == 13);
                 result = result && CheckResult2;
-                CheckResult3 = (RawMemory.As<byte>()[4] == 14);
+                CheckResult3 = ((RawMemory).As<byte>()[4] == 14);
                 result = result && CheckResult3;
-                CheckResult4 = (RawMemory.As<byte>()[7] == 17);
+                CheckResult4 = ((RawMemory).As<byte>()[7] == 17);
                 result = result && CheckResult4;
             }
             finally

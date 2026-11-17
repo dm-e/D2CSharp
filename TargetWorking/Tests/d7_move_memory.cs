@@ -57,11 +57,13 @@ namespace D7_move_memory
             {
                 Source[Index] = (byte)((Index + 1) * 10);
             }
-            FillChar(ref Target, Target.Length, (byte)0);
-            Move(new UntypedPointer(Source, 2), new UntypedPointer(Target, 1), 4);
+            FillChar(new UntypedPointer(Target), (8 * (int)DelphiTypeSize.Byte), 0);
+            SystemInterface.Move(new UntypedPointer(Source, (2) - (0)), new UntypedPointer(Target, (1) - (0)), 4);
             SourceText = "abcdefgh";
             TargetText = "--------";
-            Move(SourceText, 3 - 1, ref TargetText, 2 - 1, 4);
+            using AnsiStringBuffer tmp0 = new AnsiStringBuffer(TargetText);
+            SystemInterface.Move(new UntypedPointer(SourceText.ToByteArray(), 3 - 1), tmp0.GetPointer(2 - 1), 4);
+            TargetText = tmp0.Commit(TargetText.Length);
             CheckResult1 = (Target[0] == 0);
             result = CheckResult1;
             CheckResult2 = (Target[1] == 30);

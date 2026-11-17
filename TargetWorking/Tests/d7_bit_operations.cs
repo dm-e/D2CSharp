@@ -64,11 +64,11 @@ namespace D7_bit_operations
         [StructLayout(LayoutKind.Explicit, Size = 4)]
         public struct TLongWordParts
         {
-            [FieldOffset(0)]
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
             public uint Value;
-            [FieldOffset(0)]
+            [global::System.Runtime.InteropServices.FieldOffset(0)]
             public ushort LowPart;
-            [FieldOffset(2)]
+            [global::System.Runtime.InteropServices.FieldOffset(2)]
             public ushort HighPart;
             public static TLongWordParts CreateRecord()
             {
