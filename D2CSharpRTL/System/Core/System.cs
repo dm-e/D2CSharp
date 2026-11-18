@@ -298,6 +298,13 @@ namespace System
 
 		public static TVarData CreateRecord() { return new TVarData(); }
 	};
+
+	public enum TTextLineBreakStyle : byte
+    {
+            tlbsCRLF,
+            tlbsLF
+    };
+
   /* Basic placeholder types needed by the D2CSharp parser. */
     public enum TFloatSpecial
     {

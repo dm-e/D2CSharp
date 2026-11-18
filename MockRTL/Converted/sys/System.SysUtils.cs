@@ -3308,8 +3308,6 @@ public class SysutilsInterface
                    ffCurrency };
 	public enum TReplaceFlag : byte {rfReplaceAll,
                    rfIgnoreCase };
-	public enum TTextLineBreakStyle : byte {tlbsCRLF,
-                          tlbsLF };
 	public enum TStringSplitOptions : byte {None,
                           ExcludeEmpty,
                           ExcludeLastEmpty };
@@ -4656,7 +4654,7 @@ public delegate long TGrowCollectionFunc(long OldCapacity, long NewCount);
 		string result = string.Empty;
 		return result;
 	}
-	public static string AdjustLineBreaks(string S, TTextLineBreakStyle Style = TTextLineBreakStyle.tlbsCRLF)
+	public static string AdjustLineBreaks(string S, TTextLineBreakStyle Style = System.SystemInterface.TTextLineBreakStyle.tlbsCRLF)
 	{
 		string result = string.Empty;
 		return result;

@@ -2391,8 +2391,6 @@ public class SysutilsInterface
                    ffCurrency };
 	public enum TReplaceFlag {rfReplaceAll,
                    rfIgnoreCase };
-	public enum TTextLineBreakStyle {tlbsCRLF,
-                          tlbsLF };
 	public enum TFilenameCaseMatch {mkNone,
                          mkExactMatch,
                          mkSingleMatch,

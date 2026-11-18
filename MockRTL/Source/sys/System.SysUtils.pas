@@ -89,11 +89,6 @@ type
   );
   TReplaceFlags = set of TReplaceFlag;
 
-  TTextLineBreakStyle = (
-    tlbsCRLF,
-    tlbsLF
-  );
-
   TStringSplitOptions = (
     None,
     ExcludeEmpty,
@@ -466,6 +461,8 @@ type
   end;
 
 
+  TLocaleID = Cardinal;
+
  TFormatSettings = record
   public
     type
@@ -779,8 +776,6 @@ type
     Time: Integer;
     Date: Integer;
   end;
-
-  TLocaleID = Cardinal;
 
   TSysLocale = packed record
     DefaultLCID: TLocaleID;

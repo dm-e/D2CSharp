@@ -111,6 +111,14 @@ type
 
   PResStringRec = ^TResStringRec;
 
+  TTextLineBreakStyle = (
+    tlbsLF,
+    tlbsCRLF
+  );
+  {$NODEFINE TTextLineBreakStyle}
+  {$NODEFINE tlbsLF}
+  {$NODEFINE tlbsCRLF}
+
   TFloatSpecial = (
     fsZero,
     fsNZero,
